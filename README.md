@@ -5,7 +5,7 @@ vous-même signalée comme problématique, un écran vous rappelle vos valeurs e
 voulez vraiment continuer. Le but n'est pas de bloquer, mais de créer une pause consciente.
 
 Cahier des charges : [pitch-dev-android-ios.md](pitch-dev-android-ios.md).
-Licence : [GPL v3](LICENSE).
+Licence : [GPL v2](LICENSE).
 
 ## Stack
 
