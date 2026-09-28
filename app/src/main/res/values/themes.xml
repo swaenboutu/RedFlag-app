@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Conscience" parent="Theme.Material3.DayNight.NoActionBar" />
+
+    <style name="Theme.Conscience.Interstitial" parent="Theme.Conscience" />
+</resources>

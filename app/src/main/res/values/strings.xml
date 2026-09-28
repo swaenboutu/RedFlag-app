@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Anglais (en-US) : langue par défaut. Le français est dans values-fr. Garder les deux fichiers synchronisés. -->
+<resources>
+    <string name="app_name">Conscience Numérique</string>
+
+    <string name="banner_service_off">Friction is off. Turn on the accessibility service to be alerted before opening an app you have flagged.</string>
+    <string name="banner_action">Turn on</string>
+    <string name="main_hint">Tap an app to choose the issues you associate with it.</string>
+    <string name="problems_none">No issues</string>
+
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
+
+    <string name="menu_problems">Issues</string>
+    <string name="problems_title">Issues</string>
+    <string name="problems_manage_hint">Tap an issue to edit it and manage the apps linked to it.</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_link">Link</string>
+    <string name="action_link_apps">Link to apps</string>
+    <string name="action_unlink">Unlink</string>
+    <string name="action_delete_problem">Delete this issue</string>
+    <string name="action_reset_label">Restore original</string>
+    <string name="dialog_edit_title">Edit issue</string>
+    <string name="detail_linked_apps">Linked apps</string>
+    <string name="detail_no_apps">No app linked to this issue yet.</string>
+    <string name="picker_apps_title">Choose apps</string>
+    <string name="picker_apps_search">Search apps</string>
+    <string name="dialog_delete_title">Delete this issue?</string>
+    <string name="dialog_delete_message">“%1$s” will be removed from %2$s.</string>
+    <string name="error_already_exists">This issue already exists.</string>
+    <plurals name="apps_count">
+        <item quantity="one">%d app</item>
+        <item quantity="other">%d apps</item>
+    </plurals>
+    <string name="picker_custom_hint">Write your own issue (any language)</string>
+
+    <string name="interstitial_message">You have flagged %1$s for the following issues:</string>
+    <string name="interstitial_question">Is it really important to open it right now?</string>
+    <string name="btn_continue">Yes, continue</string>
+    <string name="btn_back">No, go back</string>
+    <string name="btn_pause">Don\'t ask again for 1 hour</string>
+
+    <string name="accessibility_service_label">Conscience Numérique</string>
+    <string name="accessibility_service_description">Only detects the name of the app that comes to the foreground, in order to show a reminder before you open an app you have flagged. No screen content is read and no data leaves your device.</string>
+
+    <string name="category_mental">Mental health &amp; attention</string>
+    <string name="category_social">Social ethics</string>
+    <string name="category_environment">Environmental impact</string>
+    <string name="category_exploitation">Human exploitation</string>
+    <string name="category_privacy">Data &amp; privacy</string>
+    <string name="category_economic">Economic practices</string>
+    <string name="category_political">Political ethics</string>
+    <string name="category_custom">Custom</string>
+
+    <string name="problem_addictive_design">Addictive design (dark patterns, infinite scroll, manipulative notifications)</string>
+    <string name="problem_social_comparison">Social anxiety &amp; comparison</string>
+    <string name="problem_fomo">FOMO (Fear Of Missing Out)</string>
+    <string name="problem_sleep_impact">Negative impact on sleep</string>
+    <string name="problem_sexism">Sexism / stereotyped representations</string>
+    <string name="problem_racism">Racism / discrimination</string>
+    <string name="problem_harassment">Harassment &amp; community toxicity</string>
+    <string name="problem_hate_content">Hate speech</string>
+    <string name="problem_carbon_footprint">High carbon footprint from servers</string>
+    <string name="problem_planned_obsolescence">Encouraged planned obsolescence</string>
+    <string name="problem_overconsumption">Encouraged overconsumption</string>
+    <string name="problem_worker_exploitation">Worker exploitation (warehouses, delivery workers, content moderators…)</string>
+    <string name="problem_child_labor">Child labor in the supply chain</string>
+    <string name="problem_subcontractor_conditions">Subcontractor working conditions</string>
+    <string name="problem_excessive_data">Excessive personal data collection</string>
+    <string name="problem_data_resale">Selling data to third parties</string>
+    <string name="problem_surveillance">Surveillance &amp; tracking</string>
+    <string name="problem_predatory_monetization">Predatory monetization (loot boxes, in-app purchases targeting children)</string>
+    <string name="problem_monopoly">Monopoly &amp; competition crushing</string>
+    <string name="problem_tax_evasion">Tax evasion</string>
+    <string name="problem_misinformation">Misinformation / fake news</string>
+    <string name="problem_polarization">Polarization algorithm</string>
+    <string name="problem_authoritarian_funding">Funding of authoritarian regimes</string>
+</resources>

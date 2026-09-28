@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Français (fr-FR). Garder synchronisé avec values/strings.xml (anglais). -->
+<resources>
+    <string name="app_name">Conscience Numérique</string>
+
+    <string name="banner_service_off">La friction est inactive. Activez le service d\'accessibilité pour être alerté avant d\'ouvrir une application que vous avez signalée.</string>
+    <string name="banner_action">Activer</string>
+    <string name="main_hint">Touchez une application pour choisir les problématiques que vous lui associez.</string>
+    <string name="problems_none">Aucune problématique</string>
+
+    <string name="save">Enregistrer</string>
+    <string name="cancel">Annuler</string>
+    <string name="add">Ajouter</string>
+
+    <string name="menu_problems">Problématiques</string>
+    <string name="problems_title">Problématiques</string>
+    <string name="problems_manage_hint">Touchez une problématique pour la modifier et gérer les applications qui lui sont liées.</string>
+    <string name="action_delete">Supprimer</string>
+    <string name="action_edit">Modifier</string>
+    <string name="action_link">Lier</string>
+    <string name="action_link_apps">Lier à des applications</string>
+    <string name="action_unlink">Dissocier</string>
+    <string name="action_delete_problem">Supprimer cette problématique</string>
+    <string name="action_reset_label">Rétablir l\'original</string>
+    <string name="dialog_edit_title">Modifier la problématique</string>
+    <string name="detail_linked_apps">Applications liées</string>
+    <string name="detail_no_apps">Aucune application n\'est encore liée à cette problématique.</string>
+    <string name="picker_apps_title">Choisir des applications</string>
+    <string name="picker_apps_search">Rechercher une application</string>
+    <string name="dialog_delete_title">Supprimer cette problématique ?</string>
+    <string name="dialog_delete_message">« %1$s » sera retirée de %2$s.</string>
+    <string name="error_already_exists">Cette problématique existe déjà.</string>
+    <plurals name="apps_count">
+        <item quantity="one">%d application</item>
+        <item quantity="other">%d applications</item>
+    </plurals>
+    <string name="picker_custom_hint">Écrivez votre propre problématique (dans la langue de votre choix)</string>
+
+    <string name="interstitial_message">Vous avez défini %1$s comme ayant les problématiques suivantes :</string>
+    <string name="interstitial_question">Est-ce vraiment important de l\'ouvrir maintenant ?</string>
+    <string name="btn_continue">Oui, continuer</string>
+    <string name="btn_back">Non, revenir en arrière</string>
+    <string name="btn_pause">Ne plus me demander pendant 1 h</string>
+
+    <string name="accessibility_service_label">Conscience Numérique</string>
+    <string name="accessibility_service_description">Détecte uniquement le nom de l\'application qui passe au premier plan, pour afficher un rappel avant l\'ouverture d\'une application que vous avez signalée. Aucun contenu d\'écran n\'est lu et aucune donnée ne quitte votre appareil.</string>
+
+    <string name="category_mental">Bien-être mental &amp; attention</string>
+    <string name="category_social">Éthique sociale</string>
+    <string name="category_environment">Impact environnemental</string>
+    <string name="category_exploitation">Exploitation humaine</string>
+    <string name="category_privacy">Données &amp; vie privée</string>
+    <string name="category_economic">Pratiques économiques</string>
+    <string name="category_political">Éthique politique</string>
+    <string name="category_custom">Personnalisé</string>
+
+    <string name="problem_addictive_design">Conception addictive (dark patterns, scroll infini, notifications manipulatrices)</string>
+    <string name="problem_social_comparison">Anxiété sociale &amp; comparaison</string>
+    <string name="problem_fomo">FOMO (Fear Of Missing Out)</string>
+    <string name="problem_sleep_impact">Impact négatif sur le sommeil</string>
+    <string name="problem_sexism">Sexisme / représentations stéréotypées</string>
+    <string name="problem_racism">Racisme / discrimination</string>
+    <string name="problem_harassment">Harcèlement &amp; toxicité communautaire</string>
+    <string name="problem_hate_content">Contenu haineux</string>
+    <string name="problem_carbon_footprint">Empreinte carbone élevée des serveurs</string>
+    <string name="problem_planned_obsolescence">Obsolescence programmée encouragée</string>
+    <string name="problem_overconsumption">Surconsommation encouragée</string>
+    <string name="problem_worker_exploitation">Exploitation des travailleurs (entrepôts, livreurs, modérateurs de contenu…)</string>
+    <string name="problem_child_labor">Travail des enfants dans la supply chain</string>
+    <string name="problem_subcontractor_conditions">Conditions de travail des sous-traitants</string>
+    <string name="problem_excessive_data">Collecte excessive de données personnelles</string>
+    <string name="problem_data_resale">Revente de données à des tiers</string>
+    <string name="problem_surveillance">Surveillance &amp; tracking</string>
+    <string name="problem_predatory_monetization">Monétisation prédatrice (loot boxes, achats in-app ciblant les enfants)</string>
+    <string name="problem_monopoly">Monopole &amp; écrasement de la concurrence</string>
+    <string name="problem_tax_evasion">Évasion fiscale</string>
+    <string name="problem_misinformation">Désinformation / fake news</string>
+    <string name="problem_polarization">Algorithme de polarisation</string>
+    <string name="problem_authoritarian_funding">Financement de régimes autoritaires</string>
+</resources>
