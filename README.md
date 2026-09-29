@@ -4,6 +4,10 @@ Application de **friction intentionnelle éthique** : quand vous ouvrez une appl
 vous-même signalée comme problématique, un écran vous rappelle vos valeurs et vous demande si vous
 voulez vraiment continuer. Le but n'est pas de bloquer, mais de créer une pause consciente.
 
+Le nom « Conscience Numérique » est provisoire. Pour le changer, il suffit de modifier
+`app_name` dans [brand.xml](app/src/main/res/values/brand.xml) : il est repris partout (icône,
+écrans, service d'accessibilité) ; le titre de ce README est à modifier à la main.
+
 Cahier des charges : [pitch-dev-android-ios.md](pitch-dev-android-ios.md).
 Licence : [GPL v3](LICENSE) (copyleft : toute version modifiée et distribuée doit rester sous GPL, code source ouvert).
 

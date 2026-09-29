@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Nom de l'application : UNIQUE endroit à modifier pour le renommer.
+        Utilisé partout via @string/app_name (icône, écrans, service d'accessibilité) ou getString(R.string.app_name)
+        dans les textes qui le citent. Identique dans toutes les langues, donc non traduisible.
+    -->
+    <string name="app_name" translatable="false">Conscience Numérique</string>
+</resources>

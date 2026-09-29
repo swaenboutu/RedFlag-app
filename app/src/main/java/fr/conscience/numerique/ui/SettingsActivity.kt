@@ -81,7 +81,10 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun showEnabled(enabled: Boolean) {
         binding.activeSwitch.isChecked = enabled
-        binding.activeTitle.setText(if (enabled) R.string.settings_active_title else R.string.settings_inactive_title)
+        binding.activeTitle.text = getString(
+            if (enabled) R.string.settings_active_title else R.string.settings_inactive_title,
+            getString(R.string.app_name),
+        )
         binding.activeDescription.setText(if (enabled) R.string.settings_active_desc else R.string.settings_inactive_desc)
     }
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Français (fr-FR). Garder synchronisé avec values/strings.xml (anglais). -->
 <resources>
-    <string name="app_name">Conscience Numérique</string>
 
     <string name="banner_service_off">La friction est inactive. Activez le service d\'accessibilité pour être alerté avant d\'ouvrir une application que vous avez signalée.</string>
     <string name="banner_action">Activer</string>
@@ -33,9 +32,9 @@
     <string name="nav_problems">Problématiques</string>
     <string name="nav_settings">Réglages</string>
     <string name="settings_title">Réglages</string>
-    <string name="settings_active_title">Ethical One Sec est actif</string>
+    <string name="settings_active_title">%1$s est actif</string>
     <string name="settings_active_desc">Les apps signalées affichent une interruption à leur lancement.</string>
-    <string name="settings_inactive_title">Ethical One Sec est désactivé</string>
+    <string name="settings_inactive_title">%1$s est désactivé</string>
     <string name="settings_inactive_desc">Aucune interruption n’est affichée tant que vous ne le réactivez pas.</string>
     <string name="settings_active_switch">Activer les interruptions</string>
     <string name="settings_section_interruption">Interruption</string>
@@ -50,7 +49,8 @@
     <string name="permissions_granted">Accordées</string>
     <string name="permissions_missing">Non accordées</string>
     <string name="settings_help_title">Comment ça marche</string>
-    <string name="settings_help_body">Ethical One Sec ne vous empêche pas d’utiliser vos applications : il vous donne une seconde pour décider vraiment.\n\nVous associez des problématiques à vos applications. Quand vous en ouvrez une, un écran vous les rappelle et vous demande si c’est vraiment important maintenant.\n\nTout reste sur votre téléphone : rien n’est envoyé, et le service d’accessibilité ne lit aucun contenu d’écran.</string>
+    <!-- À RÉDIGER : texte provisoire (Lorem Ipsum). -->
+    <string name="settings_help_body">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</string>
     <string name="settings_version">Version</string>
     <string name="action_close">Fermer</string>
     <plurals name="duration_minutes">
@@ -114,7 +114,6 @@
     <string name="btn_back">Non, fermer l’app</string>
     <string name="btn_pause">Ne plus me demander pendant %1$s</string>
 
-    <string name="accessibility_service_label">Conscience Numérique</string>
     <string name="accessibility_service_description">Détecte uniquement le nom de l\'application qui passe au premier plan, pour afficher un rappel avant l\'ouverture d\'une application que vous avez signalée. Aucun contenu d\'écran n\'est lu et aucune donnée ne quitte votre appareil.</string>
 
     <string name="category_mental">Bien-être mental &amp; attention</string>

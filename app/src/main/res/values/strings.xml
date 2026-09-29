@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Anglais (en-US) : langue par défaut. Le français est dans values-fr. Garder les deux fichiers synchronisés. -->
 <resources>
-    <string name="app_name">Conscience Numérique</string>
 
     <string name="banner_service_off">Friction is off. Turn on the accessibility service to be alerted before opening an app you have flagged.</string>
     <string name="banner_action">Turn on</string>
@@ -33,9 +32,9 @@
     <string name="nav_problems">Issues</string>
     <string name="nav_settings">Settings</string>
     <string name="settings_title">Settings</string>
-    <string name="settings_active_title">Ethical One Sec is on</string>
+    <string name="settings_active_title">%1$s is on</string>
     <string name="settings_active_desc">Flagged apps show an interruption when they open.</string>
-    <string name="settings_inactive_title">Ethical One Sec is off</string>
+    <string name="settings_inactive_title">%1$s is off</string>
     <string name="settings_inactive_desc">No interruption is shown until you turn it back on.</string>
     <string name="settings_active_switch">Turn interruptions on</string>
     <string name="settings_section_interruption">Interruption</string>
@@ -50,7 +49,8 @@
     <string name="permissions_granted">Granted</string>
     <string name="permissions_missing">Not granted</string>
     <string name="settings_help_title">How it works</string>
-    <string name="settings_help_body">Ethical One Sec doesn’t stop you from using your apps: it gives you one second to really decide.\n\nYou link issues to your apps. When you open one, a screen reminds you of them and asks whether it is really important right now.\n\nEverything stays on your phone: nothing is sent anywhere, and the accessibility service reads no screen content.</string>
+    <!-- TO WRITE: placeholder text (Lorem Ipsum). -->
+    <string name="settings_help_body">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</string>
     <string name="settings_version">Version</string>
     <string name="action_close">Close</string>
     <plurals name="duration_minutes">
@@ -114,7 +114,6 @@
     <string name="btn_back">No, close the app</string>
     <string name="btn_pause">Don’t ask again for %1$s</string>
 
-    <string name="accessibility_service_label">Conscience Numérique</string>
     <string name="accessibility_service_description">Only detects the name of the app that comes to the foreground, in order to show a reminder before you open an app you have flagged. No screen content is read and no data leaves your device.</string>
 
     <string name="category_mental">Mental health &amp; attention</string>
