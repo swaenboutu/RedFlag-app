@@ -54,17 +54,11 @@ abstract class MonitoredAppDao {
     @Upsert
     abstract suspend fun upsert(app: MonitoredApp)
 
-    @Query("DELETE FROM monitored_apps WHERE packageName = :packageName")
-    abstract suspend fun delete(packageName: String)
-
     @Query("UPDATE monitored_apps SET snoozedUntil = :until WHERE packageName = :packageName")
     abstract suspend fun snooze(packageName: String, until: Long)
 
     @Insert
     protected abstract suspend fun insertProblems(problems: List<Problem>)
-
-    @Query("DELETE FROM problems WHERE packageName = :packageName")
-    protected abstract suspend fun deleteProblems(packageName: String)
 
     @Query("UPDATE problems SET customLabel = :newLabel WHERE customLabel = :oldLabel")
     protected abstract suspend fun renameInProblems(oldLabel: String, newLabel: String)
@@ -107,14 +101,6 @@ abstract class MonitoredAppDao {
     open suspend fun unlink(packageName: String, catalogKey: String?, customLabel: String?) {
         deleteProblem(packageName, catalogKey, customLabel)
         deleteAppsWithoutProblems()
-    }
-
-    @Transaction
-    open suspend fun replaceProblems(app: MonitoredApp, problems: List<Problem>) {
-        upsert(app)
-        deleteProblems(app.packageName)
-        insertProblems(problems)
-        insertCustomLabels(problems.mapNotNull { it.customLabel }.map(::CustomProblem))
     }
 
     @Transaction

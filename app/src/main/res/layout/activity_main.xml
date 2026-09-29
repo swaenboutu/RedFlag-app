@@ -4,17 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <TextView
+    <fr.conscience.numerique.ui.HeadingTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="20dp"
-        android:accessibilityHeading="true"
         android:fontFamily="@font/bricolage_grotesque"
         android:includeFontPadding="false"
         android:text="@string/apps_title"
@@ -155,6 +153,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
+            android:gravity="center_horizontal"
             android:padding="24dp"
             android:text="@string/apps_empty"
             android:textAlignment="center"

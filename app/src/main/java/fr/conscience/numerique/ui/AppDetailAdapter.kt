@@ -57,6 +57,7 @@ class AppDetailAdapter(
 
     private fun bindHeader(binding: ItemDetailHeaderBinding, row: DetailRow.Header) = with(binding) {
         val pm = root.context.packageManager
+        appIcon.clipToOutline = true
         appIcon.setImageDrawable(
             try {
                 pm.getApplicationIcon(row.packageName)

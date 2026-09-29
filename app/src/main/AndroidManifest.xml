@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Permet de lister les apps lançables sans la permission QUERY_ALL_PACKAGES. -->
     <queries>
@@ -9,7 +10,12 @@
         </intent>
     </queries>
 
+    <!--
+        allowBackup=false coupe déjà toute sauvegarde ; dataExtractionRules (Android 12+) et localeConfig (Android 13+)
+        sont simplement ignorés sur les versions plus anciennes.
+    -->
     <application
+        tools:ignore="DataExtractionRules,UnusedAttribute"
         android:name=".ConscienceApp"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"

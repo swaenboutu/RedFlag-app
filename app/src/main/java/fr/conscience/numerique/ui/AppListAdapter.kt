@@ -17,7 +17,12 @@ class AppListAdapter(
     private val onClick: (AppItem) -> Unit,
 ) : ListAdapter<AppItem, AppListAdapter.ViewHolder>(Diff) {
 
-    class ViewHolder(val binding: ItemAppBinding) : RecyclerView.ViewHolder(binding.root)
+    class ViewHolder(val binding: ItemAppBinding) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            // Icône aux coins arrondis : `clipToOutline` en XML exige Android 12.
+            binding.icon.clipToOutline = true
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(ItemAppBinding.inflate(LayoutInflater.from(parent.context), parent, false))

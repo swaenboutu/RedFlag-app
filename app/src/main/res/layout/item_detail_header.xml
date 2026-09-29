@@ -13,7 +13,6 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:background="@drawable/bg_icon_18"
-        android:clipToOutline="true"
         android:importantForAccessibility="no" />
 
     <LinearLayout
@@ -23,11 +22,10 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <TextView
+        <fr.conscience.numerique.ui.HeadingTextView
             android:id="@+id/appName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:accessibilityHeading="true"
             android:fontFamily="@font/bricolage_grotesque"
             android:includeFontPadding="false"
             android:textColor="?attr/colorOnSurface"

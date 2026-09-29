@@ -26,12 +26,11 @@
         android:paddingTop="4dp"
         android:paddingEnd="8dp">
 
-        <TextView
+        <fr.conscience.numerique.ui.HeadingTextView
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:accessibilityHeading="true"
             android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
         <ImageButton
@@ -53,10 +52,9 @@
             app:tint="?attr/colorOnSurface" />
     </LinearLayout>
 
-    <TextView
+    <fr.conscience.numerique.ui.HeadingTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:accessibilityHeading="true"
         android:paddingHorizontal="16dp"
         android:paddingTop="24dp"
         android:paddingBottom="4dp"

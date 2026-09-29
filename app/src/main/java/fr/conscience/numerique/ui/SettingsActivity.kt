@@ -32,6 +32,10 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(binding.root)
         BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_settings)
 
+        // Coins arrondis + effets tactiles contenus dans les cartes : `clipToOutline` en XML exige Android 12.
+        listOf(binding.activeCard, binding.cardInterruption, binding.cardApps, binding.cardHelp)
+            .forEach { it.clipToOutline = true }
+
         // Toute la carte bascule l'interrupteur, pas seulement le bouton.
         binding.activeCard.setOnClickListener {
             binding.activeSwitch.toggle()

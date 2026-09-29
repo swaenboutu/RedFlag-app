@@ -1,6 +1,7 @@
 package fr.conscience.numerique.data
 
 import android.content.Context
+import androidx.core.content.edit
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -22,17 +23,17 @@ class SettingsStore(context: Context) {
     val hideSystemApps: StateFlow<Boolean> = _hideSystemApps
 
     fun setInterceptionEnabled(value: Boolean) {
-        prefs.edit().putBoolean(KEY_ENABLED, value).apply()
+        prefs.edit { putBoolean(KEY_ENABLED, value) }
         _interceptionEnabled.value = value
     }
 
     fun setPauseMinutes(value: Int) {
-        prefs.edit().putInt(KEY_PAUSE_MINUTES, value).apply()
+        prefs.edit { putInt(KEY_PAUSE_MINUTES, value) }
         _pauseMinutes.value = value
     }
 
     fun setHideSystemApps(value: Boolean) {
-        prefs.edit().putBoolean(KEY_HIDE_SYSTEM_APPS, value).apply()
+        prefs.edit { putBoolean(KEY_HIDE_SYSTEM_APPS, value) }
         _hideSystemApps.value = value
     }
 

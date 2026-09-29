@@ -40,6 +40,7 @@ class InterstitialActivity : AppCompatActivity() {
         })
 
         binding.title.text = accentedTitle()
+        binding.appIcon.clipToOutline = true
         binding.btnContinue.setOnClickListener { proceed() }
         binding.btnBack.setOnClickListener { decline() }
         binding.btnPause.text = getString(R.string.btn_pause, formatPause(this, container.settings.pauseMinutes.value))

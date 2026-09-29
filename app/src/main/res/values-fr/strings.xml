@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Français (fr-FR). Garder synchronisé avec values/strings.xml (anglais). -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="banner_service_off">La friction est inactive. Activez le service d\'accessibilité pour être alerté avant d\'ouvrir une application que vous avez signalée.</string>
     <string name="banner_action">Activer</string>
@@ -15,11 +15,13 @@
     <plurals name="app_detail_subtitle">
         <item quantity="one">%d problématique associée</item>
         <item quantity="other">%d problématiques associées</item>
+        <item quantity="many">%d problématiques associées</item>
     </plurals>
     <string name="app_detail_question">Qu’est-ce qui vous pose problème ici ?</string>
     <plurals name="app_detail_info">
         <item quantity="one">À chaque lancement de %1$s, vous verrez cette problématique avant d’ouvrir l’app.</item>
         <item quantity="other">À chaque lancement de %1$s, vous verrez ces %2$d problématiques avant d’ouvrir l’app.</item>
+        <item quantity="many">À chaque lancement de %1$s, vous verrez ces %2$d problématiques avant d’ouvrir l’app.</item>
     </plurals>
     <string name="app_detail_info_none">%1$s s’ouvrira normalement, sans rappel.</string>
     <string name="problems_none">Aucune problématique</string>
@@ -56,10 +58,12 @@
     <plurals name="duration_minutes">
         <item quantity="one">%d minute</item>
         <item quantity="other">%d minutes</item>
+        <item quantity="many">%d minutes</item>
     </plurals>
     <plurals name="duration_hours">
         <item quantity="one">%d heure</item>
         <item quantity="other">%d heures</item>
+        <item quantity="many">%d heures</item>
     </plurals>
 
     <string name="problems_title">Vos problématiques</string>
@@ -71,14 +75,17 @@
     <plurals name="theme_problems">
         <item quantity="one">%d problématique</item>
         <item quantity="other">%d problématiques</item>
+        <item quantity="many">%d problématiques</item>
     </plurals>
     <plurals name="theme_checked">
         <item quantity="one">%d cochée</item>
         <item quantity="other">%d cochées</item>
+        <item quantity="many">%d cochées</item>
     </plurals>
     <plurals name="theme_apps_flagged">
         <item quantity="one">%d app signalée</item>
         <item quantity="other">%d apps signalées</item>
+        <item quantity="many">%d apps signalées</item>
     </plurals>
     <string name="action_delete">Supprimer</string>
     <string name="action_back">Retour</string>
@@ -101,13 +108,16 @@
     <plurals name="apps_count">
         <item quantity="one">%d application</item>
         <item quantity="other">%d applications</item>
+        <item quantity="many">%d applications</item>
     </plurals>
     <string name="picker_custom_hint">Écrivez votre propre problématique (dans la langue de votre choix)</string>
 
     <string name="interstitial_title">Une <annotation font="accent">seconde.</annotation></string>
     <plurals name="interstitial_subtitle">
-        <item quantity="one">Vous avez associé cette application à la problématique suivante :</item>
+        <!-- Jamais affiché pour 0 : l'interruption exige au moins une problématique. -->
+        <item quantity="one" tools:ignore="ImpliedQuantity">Vous avez associé cette application à la problématique suivante :</item>
         <item quantity="other">Vous avez associé cette application aux %d problématiques suivantes :</item>
+        <item quantity="many">Vous avez associé cette application aux %d problématiques suivantes :</item>
     </plurals>
     <string name="interstitial_question">Est-ce vraiment important de lancer l’application maintenant ?</string>
     <string name="btn_continue">Oui, lancer %1$s</string>

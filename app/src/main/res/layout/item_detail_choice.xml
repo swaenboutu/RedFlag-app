@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Une problématique à cocher. Le bouton de la case est à droite (mise en page inversée) ; le fond de carte est posé par l'adaptateur. -->
+<!--
+    Une problématique à cocher. La case est à droite : la mise en page est inversée (layoutDirection=rtl) et le texte
+    est ramené à gauche à la main, d'où left/right volontaires. À revoir si une langue de droite à gauche est ajoutée.
+    Le fond de carte est posé par l'adaptateur.
+-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/choiceRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -30,5 +35,6 @@
         android:textColor="?attr/colorOnSurface"
         android:textDirection="locale"
         android:textSize="15sp"
-        app:buttonTint="@null" />
+        app:buttonTint="@null"
+        tools:ignore="RtlHardcoded" />
 </FrameLayout>

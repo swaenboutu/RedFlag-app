@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/interstitial_background">
+    android:layout_height="match_parent">
 
     <!-- Cercle décoratif en haut à droite, en partie hors écran. -->
     <View
@@ -21,6 +21,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            tools:ignore="UseCompoundDrawables"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -34,7 +35,6 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:background="@drawable/bg_app_icon_rounded"
-                android:clipToOutline="true"
                 android:importantForAccessibility="no" />
 
             <TextView
@@ -50,14 +50,13 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
-        <TextView
+        <fr.conscience.numerique.ui.HeadingTextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="24dp"
-            android:accessibilityHeading="true"
             android:fontFamily="@font/bricolage_grotesque_extrabold"
             android:includeFontPadding="false"
             android:text="@string/interstitial_title"
@@ -111,14 +110,13 @@
             android:background="@color/interstitial_divider"
             android:importantForAccessibility="no" />
 
-        <TextView
+        <fr.conscience.numerique.ui.HeadingTextView
             android:id="@+id/question"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
-            android:accessibilityHeading="true"
             android:fontFamily="@font/bricolage_grotesque"
             android:includeFontPadding="false"
             android:text="@string/interstitial_question"

@@ -34,6 +34,12 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    lint {
+        // local.properties est propre à chaque machine et n'est pas versionné : ce contrôle n'a rien à vérifier dans le dépôt
+        // (et il signale à tort un fichier déjà correctement échappé).
+        disable += "PropertyEscape"
+    }
 }
 
 ksp {

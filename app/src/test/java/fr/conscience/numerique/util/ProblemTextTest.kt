@@ -4,7 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
 
-class ProblemParserTest {
+class ProblemTextTest {
     @Test
     fun trimsAndCollapsesWhitespace() {
         assertEquals("trop de pubs", normalizeCustomProblem("  trop   de\tpubs \n"))

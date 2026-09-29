@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -18,13 +17,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <fr.conscience.numerique.ui.HeadingTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="20dp"
-                android:accessibilityHeading="true"
                 android:fontFamily="@font/bricolage_grotesque"
                 android:includeFontPadding="false"
                 android:text="@string/settings_title"
@@ -41,7 +39,6 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="12dp"
                 android:background="@drawable/bg_card_navy"
-                android:clipToOutline="true"
                 android:foreground="?attr/selectableItemBackground"
                 android:gravity="center_vertical"
                 android:minHeight="80dp"
@@ -81,11 +78,13 @@
             </LinearLayout>
 
             <!-- Interruption -->
-            <TextView
+            <fr.conscience.numerique.ui.HeadingTextView
                 style="@style/Widget.Conscience.SettingsSection"
                 android:text="@string/settings_section_interruption" />
 
-            <LinearLayout style="@style/Widget.Conscience.SettingsCard">
+            <LinearLayout
+                android:id="@+id/cardInterruption"
+                style="@style/Widget.Conscience.SettingsCard">
 
                 <include
                     android:id="@+id/rowPause"
@@ -93,11 +92,13 @@
             </LinearLayout>
 
             <!-- Applications -->
-            <TextView
+            <fr.conscience.numerique.ui.HeadingTextView
                 style="@style/Widget.Conscience.SettingsSection"
                 android:text="@string/settings_section_apps" />
 
-            <LinearLayout style="@style/Widget.Conscience.SettingsCard">
+            <LinearLayout
+                android:id="@+id/cardApps"
+                style="@style/Widget.Conscience.SettingsCard">
 
                 <include
                     android:id="@+id/rowList"
@@ -111,11 +112,13 @@
             </LinearLayout>
 
             <!-- Aide -->
-            <TextView
+            <fr.conscience.numerique.ui.HeadingTextView
                 style="@style/Widget.Conscience.SettingsSection"
                 android:text="@string/settings_section_help" />
 
-            <LinearLayout style="@style/Widget.Conscience.SettingsCard">
+            <LinearLayout
+                android:id="@+id/cardHelp"
+                style="@style/Widget.Conscience.SettingsCard">
 
                 <include
                     android:id="@+id/rowHelp"

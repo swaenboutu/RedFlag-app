@@ -24,11 +24,10 @@
             android:orientation="vertical"
             android:paddingVertical="10dp">
 
-            <TextView
+            <fr.conscience.numerique.ui.HeadingTextView
                 android:id="@+id/themeTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:accessibilityHeading="true"
                 android:fontFamily="@font/bricolage_grotesque"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="16sp"

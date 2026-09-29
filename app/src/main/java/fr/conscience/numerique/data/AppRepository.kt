@@ -18,26 +18,6 @@ class AppRepository(private val db: AppDatabase) {
 
     suspend fun find(packageName: String): MonitoredAppWithProblems? = apps.find(packageName)
 
-    /**
-     * Remplace les problématiques d'une app (clés du catalogue + textes libres) ; sans aucune
-     * problématique, l'app est retirée de la surveillance.
-     */
-    suspend fun setProblems(
-        packageName: String,
-        appName: String,
-        catalogKeys: Collection<String>,
-        customLabels: Collection<String>,
-    ) {
-        if (catalogKeys.isEmpty() && customLabels.isEmpty()) {
-            apps.delete(packageName)
-            return
-        }
-        val current = apps.find(packageName)?.app
-        val problems = catalogKeys.map { Problem(packageName = packageName, catalogKey = it) } +
-            customLabels.map { Problem(packageName = packageName, customLabel = it) }
-        apps.replaceProblems(current?.copy(appName = appName) ?: MonitoredApp(packageName, appName), problems)
-    }
-
     /** Ajoute une problématique personnalisée à la liste ; false si elle existe déjà (casse ignorée). */
     suspend fun addCustomProblem(label: String): Boolean {
         if (apps.customLabelsOnce().any { it.equals(label, ignoreCase = true) }) return false

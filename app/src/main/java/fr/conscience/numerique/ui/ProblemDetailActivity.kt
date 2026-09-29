@@ -94,7 +94,7 @@ class ProblemDetailActivity : AppCompatActivity() {
         }
         val builder = MaterialAlertDialogBuilder(this)
             .setTitle(R.string.dialog_edit_title)
-            .setView(input, 48, 16, 48, 0)
+            .setView(dialogInput(input))
             .setPositiveButton(R.string.save) { _, _ ->
                 val label = normalizeCustomProblem(input.text.toString()) ?: return@setPositiveButton
                 viewModel.rename(label) { ok ->
