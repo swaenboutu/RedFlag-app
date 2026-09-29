@@ -36,11 +36,15 @@
     </plurals>
     <string name="picker_custom_hint">Write your own issue (any language)</string>
 
-    <string name="interstitial_message">You have flagged %1$s for the following issues:</string>
-    <string name="interstitial_question">Is it really important to open it right now?</string>
-    <string name="btn_continue">Yes, continue</string>
-    <string name="btn_back">No, go back</string>
-    <string name="btn_pause">Don\'t ask again for 1 hour</string>
+    <string name="interstitial_title">One <annotation font="accent">second.</annotation></string>
+    <plurals name="interstitial_subtitle">
+        <item quantity="one">You have linked this app to the following issue:</item>
+        <item quantity="other">You have linked this app to the following %d issues:</item>
+    </plurals>
+    <string name="interstitial_question">Is it really important to open the app right now?</string>
+    <string name="btn_continue">Yes, open %1$s</string>
+    <string name="btn_back">No, close the app</string>
+    <string name="btn_pause">Don’t ask again for an hour</string>
 
     <string name="accessibility_service_label">Conscience Numérique</string>
     <string name="accessibility_service_description">Only detects the name of the app that comes to the foreground, in order to show a reminder before you open an app you have flagged. No screen content is read and no data leaves your device.</string>

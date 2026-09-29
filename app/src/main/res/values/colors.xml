@@ -2,4 +2,15 @@
 <resources>
     <color name="ic_launcher_background">#2E4A62</color>
     <color name="ic_launcher_foreground">#FFFFFF</color>
+
+    <!-- Écran d'interruption -->
+    <color name="interstitial_background">#1F2A5C</color>
+    <color name="interstitial_circle">#2B3873</color>
+    <color name="interstitial_accent">#FFB547</color>
+    <color name="interstitial_text">#FFFFFF</color>
+    <color name="interstitial_text_muted">#C9CFEA</color>
+    <color name="interstitial_text_subtle">#AEB6DD</color>
+    <color name="interstitial_divider">#34407A</color>
+    <color name="interstitial_outline">#5A67A8</color>
+    <color name="interstitial_scroll_thumb">#8E98C9</color>
 </resources>

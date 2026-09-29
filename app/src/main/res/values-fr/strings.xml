@@ -36,11 +36,15 @@
     </plurals>
     <string name="picker_custom_hint">Écrivez votre propre problématique (dans la langue de votre choix)</string>
 
-    <string name="interstitial_message">Vous avez défini %1$s comme ayant les problématiques suivantes :</string>
-    <string name="interstitial_question">Est-ce vraiment important de l\'ouvrir maintenant ?</string>
-    <string name="btn_continue">Oui, continuer</string>
-    <string name="btn_back">Non, revenir en arrière</string>
-    <string name="btn_pause">Ne plus me demander pendant 1 h</string>
+    <string name="interstitial_title">Une <annotation font="accent">seconde.</annotation></string>
+    <plurals name="interstitial_subtitle">
+        <item quantity="one">Vous avez associé cette application à la problématique suivante :</item>
+        <item quantity="other">Vous avez associé cette application aux %d problématiques suivantes :</item>
+    </plurals>
+    <string name="interstitial_question">Est-ce vraiment important de lancer l’application maintenant ?</string>
+    <string name="btn_continue">Oui, lancer %1$s</string>
+    <string name="btn_back">Non, fermer l’app</string>
+    <string name="btn_pause">Ne plus me demander pendant une heure</string>
 
     <string name="accessibility_service_label">Conscience Numérique</string>
     <string name="accessibility_service_description">Détecte uniquement le nom de l\'application qui passe au premier plan, pour afficher un rappel avant l\'ouverture d\'une application que vous avez signalée. Aucun contenu d\'écran n\'est lu et aucune donnée ne quitte votre appareil.</string>

@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="Theme.Conscience" parent="Theme.Material3.DayNight.NoActionBar" />
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.Conscience" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:fontFamily">@font/inter</item>
+        <item name="fontFamily">@font/inter</item>
 
-    <style name="Theme.Conscience.Interstitial" parent="Theme.Conscience" />
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.Conscience.DisplayLarge</item>
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.Conscience.DisplayMedium</item>
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.Conscience.DisplaySmall</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.Conscience.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.Conscience.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.Conscience.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.Conscience.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.Conscience.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.Conscience.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.Conscience.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.Conscience.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.Conscience.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.Conscience.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.Conscience.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.Conscience.LabelSmall</item>
+    </style>
+
+    <!-- Écran d'interruption : toujours sombre, quel que soit le thème du système. -->
+    <style name="Theme.Conscience.Interstitial" parent="Theme.Conscience">
+        <item name="android:windowBackground">@color/interstitial_background</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+    </style>
 </resources>

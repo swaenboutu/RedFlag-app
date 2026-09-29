@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Typographie : Bricolage Grotesque pour les titres, Inter pour le reste. -->
+<resources>
+    <!-- Titres : Display, Headline, Title -->
+    <style name="TextAppearance.Conscience.DisplayLarge" parent="TextAppearance.Material3.DisplayLarge">
+        <item name="android:fontFamily">@font/bricolage_grotesque</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="TextAppearance.Conscience.DisplayMedium" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="android:fontFamily">@font/bricolage_grotesque</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="TextAppearance.Conscience.DisplaySmall" parent="TextAppearance.Material3.DisplaySmall">
+        <item name="android:fontFamily">@font/bricolage_grotesque</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="TextAppearance.Conscience.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:fontFamily">@font/bricolage_grotesque</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="TextAppearance.Conscience.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:fontFamily">@font/bricolage_grotesque</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="TextAppearance.Conscience.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:fontFamily">@font/bricolage_grotesque</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="TextAppearance.Conscience.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">@font/bricolage_grotesque</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="TextAppearance.Conscience.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:fontFamily">@font/bricolage_grotesque</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="TextAppearance.Conscience.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:fontFamily">@font/bricolage_grotesque</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Texte : Body (Inter 400) et Label (Inter 500) -->
+    <style name="TextAppearance.Conscience.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:fontFamily">@font/inter</item>
+    </style>
+    <style name="TextAppearance.Conscience.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/inter</item>
+    </style>
+    <style name="TextAppearance.Conscience.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:fontFamily">@font/inter</item>
+    </style>
+    <style name="TextAppearance.Conscience.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:fontFamily">@font/inter_medium</item>
+    </style>
+    <style name="TextAppearance.Conscience.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:fontFamily">@font/inter_medium</item>
+    </style>
+    <style name="TextAppearance.Conscience.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:fontFamily">@font/inter_medium</item>
+    </style>
+</resources>
