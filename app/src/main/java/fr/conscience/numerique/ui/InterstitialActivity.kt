@@ -17,13 +17,18 @@ import fr.conscience.numerique.ConscienceApp
 import fr.conscience.numerique.R
 import fr.conscience.numerique.data.displayLabel
 import fr.conscience.numerique.databinding.ActivityInterstitialBinding
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /** Écran de friction : affiché avant qu'une app labelisée ne soit utilisée. */
 class InterstitialActivity : AppCompatActivity() {
     private lateinit var binding: ActivityInterstitialBinding
-    private lateinit var targetPackage: String
+    private val adapter = ProblemPillAdapter()
+    private var loadJob: Job? = null
+
+    /** App actuellement concernée. Change si l'écran est relancé pour une autre app (voir [onNewIntent]). */
+    private var targetPackage: String = ""
 
     private val container get() = (application as ConscienceApp).container
 
@@ -47,17 +52,37 @@ class InterstitialActivity : AppCompatActivity() {
         binding.btnPause.paintFlags = binding.btnPause.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         binding.btnPause.setOnClickListener { pause() }
 
-        val adapter = ProblemPillAdapter()
         binding.problemsList.adapter = adapter
 
-        lifecycleScope.launch {
-            val monitored = container.repository.find(targetPackage)
+        load(targetPackage)
+    }
+
+    /**
+     * L'écran est en `singleTask` : si l'utilisateur le quitte sans répondre (Accueil) puis ouvre une autre app à
+     * interrompre, Android réutilise cette instance au lieu d'en créer une, et appelle ceci. Sans cela, l'écran
+     * resterait figé sur la première app.
+     */
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        val pkg = intent.getStringExtra(EXTRA_PACKAGE) ?: return
+        if (pkg != targetPackage) {
+            targetPackage = pkg
+            load(pkg)
+        }
+    }
+
+    /** Affiche l'app [pkg] ; une demande plus récente annule la précédente. */
+    private fun load(pkg: String) {
+        loadJob?.cancel()
+        loadJob = lifecycleScope.launch {
+            val monitored = container.repository.find(pkg)
             val overrides = container.repository.labelOverrides.first()
-            val appName = monitored?.app?.appName ?: targetPackage
+            val appName = monitored?.app?.appName ?: pkg
             val labels = monitored?.problems.orEmpty().mapNotNull { it.displayLabel(this@InterstitialActivity, overrides) }
 
             binding.appName.text = appName
-            binding.appIcon.setImageDrawable(iconOf(targetPackage))
+            binding.appIcon.setImageDrawable(iconOf(pkg))
             binding.subtitle.text = resources.getQuantityString(R.plurals.interstitial_subtitle, labels.size, labels.size)
             binding.btnContinue.text = getString(R.string.btn_continue, appName)
             adapter.submit(labels)
