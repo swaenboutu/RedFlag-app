@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- La case est décalée du bord de la carte : un CompoundButton dessine son bouton sans tenir compte du padding. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true">
+        <inset
+            android:drawable="@drawable/ic_check_on"
+            android:insetRight="16dp" />
+    </item>
+    <item>
+        <inset
+            android:drawable="@drawable/ic_check_off"
+            android:insetRight="16dp" />
+    </item>
+</selector>

@@ -3,6 +3,20 @@
     <color name="ic_launcher_background">#2E4A62</color>
     <color name="ic_launcher_foreground">#FFFFFF</color>
 
+    <color name="favorite_star">#E88A1A</color>
+
+    <!-- Pastilles de problématiques et encarts d'avertissement -->
+    <color name="warning_container">#FFF0D6</color>
+    <color name="on_warning_container">#7A4A00</color>
+    <color name="checkbox_off">#B9BDCB</color>
+    <color name="filter_selected">#161B2E</color>
+
+    <!-- Barre de navigation -->
+    <color name="nav_indicator">#E3E6F4</color>
+    <color name="nav_icon_active">#1F2A5C</color>
+    <color name="nav_label_active">#161B2E</color>
+    <color name="nav_inactive">#646B80</color>
+
     <!-- Écran d'interruption -->
     <color name="interstitial_background">#1F2A5C</color>
     <color name="interstitial_circle">#2B3873</color>

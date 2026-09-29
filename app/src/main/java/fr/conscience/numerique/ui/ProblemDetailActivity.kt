@@ -2,6 +2,7 @@ package fr.conscience.numerique.ui
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
@@ -9,9 +10,11 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import fr.conscience.numerique.R
 import fr.conscience.numerique.data.ProblemCatalog
@@ -41,7 +44,9 @@ class ProblemDetailActivity : AppCompatActivity() {
         val adapter = LinkedAppsAdapter { viewModel.unlink(it.packageName) }
         binding.linkedApps.adapter = adapter
 
+        binding.back.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
         binding.edit.setOnClickListener { showEditDialog() }
+        binding.favorite.setOnClickListener { viewModel.toggleFavorite() }
         binding.linkApps.setOnClickListener {
             val linked = ArrayList(state?.linkedApps.orEmpty().map { it.packageName })
             pickApps.launch(AppPickerActivity.intent(this, linked))
@@ -53,12 +58,26 @@ class ProblemDetailActivity : AppCompatActivity() {
                 viewModel.state.collect { current ->
                     state = current ?: return@collect
                     binding.title.text = titleOf(current)
+                    showFavorite(current.favorite)
                     binding.noApps.visibility = if (current.linkedApps.isEmpty()) View.VISIBLE else View.GONE
                     binding.deleteProblem.visibility = if (current.ref.customLabel != null) View.VISIBLE else View.GONE
                     adapter.submitList(current.linkedApps)
                 }
             }
         }
+    }
+
+    /** Étoile pleine et ambre quand la problématique est en favori, contour sinon. */
+    private fun showFavorite(favorite: Boolean) = with(binding.favorite) {
+        setImageResource(if (favorite) R.drawable.ic_star_filled else R.drawable.ic_star_outline)
+        imageTintList = ColorStateList.valueOf(
+            if (favorite) {
+                ContextCompat.getColor(context, R.color.favorite_star)
+            } else {
+                MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnSurface)
+            },
+        )
+        contentDescription = getString(if (favorite) R.string.action_favorite_remove else R.string.action_favorite_add)
     }
 
     private fun titleOf(state: DetailState): String {

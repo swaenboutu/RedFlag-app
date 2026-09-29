@@ -44,9 +44,8 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".ui.ProblemPickerActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:name=".ui.AppDetailActivity"
+            android:exported="false" />
 
         <activity
             android:name=".ui.InterstitialActivity"

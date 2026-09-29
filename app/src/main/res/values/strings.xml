@@ -5,23 +5,63 @@
 
     <string name="banner_service_off">Friction is off. Turn on the accessibility service to be alerted before opening an app you have flagged.</string>
     <string name="banner_action">Turn on</string>
-    <string name="main_hint">Tap an app to choose the issues you associate with it.</string>
+    <string name="apps_title">Your apps</string>
+    <string name="apps_hint">Tap an app to link issues to it.</string>
+    <string name="apps_empty">No app found</string>
+    <string name="search_hint">Search an app</string>
+    <string name="filter_all">All</string>
+    <string name="filter_flagged">Flagged (%d)</string>
+    <string name="filter_unflagged">Not flagged</string>
+
+    <plurals name="app_detail_subtitle">
+        <item quantity="one">%d issue linked</item>
+        <item quantity="other">%d issues linked</item>
+    </plurals>
+    <string name="app_detail_question">What bothers you here?</string>
+    <plurals name="app_detail_info">
+        <item quantity="one">Every time you open %1$s, you will see this issue before the app opens.</item>
+        <item quantity="other">Every time you open %1$s, you will see these %2$d issues before the app opens.</item>
+    </plurals>
+    <string name="app_detail_info_none">%1$s will open normally, with no reminder.</string>
     <string name="problems_none">No issues</string>
 
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="add">Add</string>
 
-    <string name="menu_problems">Issues</string>
-    <string name="problems_title">Issues</string>
-    <string name="problems_manage_hint">Tap an issue to edit it and manage the apps linked to it.</string>
+    <string name="nav_apps">Apps</string>
+    <string name="nav_problems">Issues</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_settings_soon">Settings are coming soon</string>
+
+    <string name="problems_title">Your issues</string>
+    <string name="problems_manage_hint">Tap a theme to open or close it.</string>
+    <string name="action_new_problem">+  New issue</string>
+    <string name="dialog_new_problem_title">New issue</string>
+    <string name="custom_empty">No issues yet</string>
+    <string name="apps_none">No app</string>
+    <plurals name="theme_problems">
+        <item quantity="one">%d issue</item>
+        <item quantity="other">%d issues</item>
+    </plurals>
+    <plurals name="theme_checked">
+        <item quantity="one">%d checked</item>
+        <item quantity="other">%d checked</item>
+    </plurals>
+    <plurals name="theme_apps_flagged">
+        <item quantity="one">%d app flagged</item>
+        <item quantity="other">%d apps flagged</item>
+    </plurals>
     <string name="action_delete">Delete</string>
+    <string name="action_back">Back</string>
     <string name="action_edit">Edit</string>
     <string name="action_link">Link</string>
     <string name="action_link_apps">Link to apps</string>
     <string name="action_unlink">Unlink</string>
     <string name="action_delete_problem">Delete this issue</string>
     <string name="action_reset_label">Restore original</string>
+    <string name="action_favorite_add">Add to favorites</string>
+    <string name="action_favorite_remove">Remove from favorites</string>
     <string name="dialog_edit_title">Edit issue</string>
     <string name="detail_linked_apps">Linked apps</string>
     <string name="detail_no_apps">No app linked to this issue yet.</string>
@@ -56,6 +96,8 @@
     <string name="category_privacy">Data &amp; privacy</string>
     <string name="category_economic">Economic practices</string>
     <string name="category_political">Political ethics</string>
+    <string name="category_linked">Linked to this app</string>
+    <string name="category_favorites">Your favorites</string>
     <string name="category_custom">Custom</string>
 
     <string name="problem_addictive_design">Addictive design (dark patterns, infinite scroll, manipulative notifications)</string>

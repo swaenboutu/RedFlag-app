@@ -1,7 +1,6 @@
 package fr.conscience.numerique.ui
 
 import android.os.Bundle
-import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -10,10 +9,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import fr.conscience.numerique.R
 import fr.conscience.numerique.databinding.ActivityProblemsManagerBinding
-import fr.conscience.numerique.util.normalizeCustomProblem
 import kotlinx.coroutines.launch
 
-/** Liste toutes les problématiques ; chacune ouvre son écran de détail. On peut aussi en ajouter. */
+/** « Vos problématiques » : thèmes repliables, chaque problématique ouvre son détail. */
 class ProblemsManagerActivity : AppCompatActivity() {
     private val viewModel: ProblemsManagerViewModel by viewModels()
     private lateinit var binding: ActivityProblemsManagerBinding
@@ -23,29 +21,35 @@ class ProblemsManagerActivity : AppCompatActivity() {
         binding = ActivityProblemsManagerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val adapter = ProblemsManagerAdapter { row ->
-            row.toRef()?.let { startActivity(ProblemDetailActivity.intent(this, it)) }
-        }
+        val adapter = ProblemsManagerAdapter(
+            onThemeClick = { viewModel.toggle(it.id) },
+            onProblemClick = { row -> row.toRef()?.let { startActivity(ProblemDetailActivity.intent(this, it)) } },
+        )
         binding.list.adapter = adapter
-
-        binding.addCustom.setOnClickListener { addCustom() }
-        binding.customInput.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) addCustom()
-            true
-        }
+        binding.newProblem.setOnClickListener { addProblem() }
+        BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_problems)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.rows.collect { adapter.submitList(it) }
+                viewModel.rows.collect { rows ->
+                    // Si la liste est en haut, elle y reste : sans cela, une carte ajoutée en tête (« Vos favoris »)
+                    // apparaîtrait au-dessus de la partie visible.
+                    val atTop = !binding.list.canScrollVertically(-1)
+                    adapter.submitList(rows) { if (atTop) binding.list.scrollToPosition(0) }
+                }
             }
         }
     }
 
-    private fun addCustom() {
-        val text = normalizeCustomProblem(binding.customInput.text.toString()) ?: return
-        viewModel.add(text) { added ->
+    override fun onResume() {
+        super.onResume()
+        BottomNav.select(binding.bottomBar.bottomNav, R.id.nav_problems)
+    }
+
+    private fun addProblem() = showNewProblemDialog(this) { label ->
+        viewModel.add(label) { added ->
             if (added) {
-                binding.customInput.text.clear()
+                viewModel.expandCustom()
             } else {
                 Toast.makeText(this, R.string.error_already_exists, Toast.LENGTH_SHORT).show()
             }

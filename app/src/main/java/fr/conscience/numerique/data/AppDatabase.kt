@@ -11,9 +11,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         Problem::class,
         CustomProblem::class,
         CatalogOverride::class,
+        Favorite::class,
         ChoiceEvent::class,
     ],
-    version = 3,
+    version = 4,
     exportSchema = true,
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -39,5 +40,12 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
             "CREATE TABLE IF NOT EXISTS `catalog_overrides` " +
                 "(`catalogKey` TEXT NOT NULL, `label` TEXT NOT NULL, PRIMARY KEY(`catalogKey`))",
         )
+    }
+}
+
+/** v4 : problématiques favorites. */
+val MIGRATION_3_4 = object : Migration(3, 4) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("CREATE TABLE IF NOT EXISTS `favorites` (`id` TEXT NOT NULL, PRIMARY KEY(`id`))")
     }
 }

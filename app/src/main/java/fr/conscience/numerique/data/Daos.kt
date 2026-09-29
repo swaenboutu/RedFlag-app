@@ -30,6 +30,18 @@ abstract class MonitoredAppDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract suspend fun insertCustomLabels(labels: List<CustomProblem>)
 
+    @Query("SELECT * FROM favorites")
+    abstract fun observeFavorites(): Flow<List<Favorite>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    abstract suspend fun insertFavorite(favorite: Favorite)
+
+    @Query("DELETE FROM favorites WHERE id = :id")
+    abstract suspend fun deleteFavorite(id: String)
+
+    @Query("UPDATE OR REPLACE favorites SET id = :newId WHERE id = :oldId")
+    protected abstract suspend fun renameFavorite(oldId: String, newId: String)
+
     @Query("SELECT * FROM catalog_overrides")
     abstract fun observeOverrides(): Flow<List<CatalogOverride>>
 
@@ -110,6 +122,7 @@ abstract class MonitoredAppDao {
         deleteCustomLabel(oldLabel)
         insertCustomLabels(listOf(CustomProblem(newLabel)))
         renameInProblems(oldLabel, newLabel)
+        renameFavorite(CUSTOM_PREFIX + oldLabel, CUSTOM_PREFIX + newLabel)
     }
 
     /** Retire la problématique de toutes les apps ; celles qui n'en ont plus sortent de la surveillance. */
@@ -117,6 +130,7 @@ abstract class MonitoredAppDao {
     open suspend fun deleteCustom(label: String) {
         deleteProblemsWithLabel(label)
         deleteCustomLabel(label)
+        deleteFavorite(CUSTOM_PREFIX + label)
         deleteAppsWithoutProblems()
     }
 }

@@ -47,6 +47,10 @@ data class CustomProblem(@PrimaryKey val label: String)
 @Entity(tableName = "catalog_overrides")
 data class CatalogOverride(@PrimaryKey val catalogKey: String, val label: String)
 
+/** Problématique mise en favori ; [id] encode la référence : « catalog:clé » ou « custom:texte ». */
+@Entity(tableName = "favorites")
+data class Favorite(@PrimaryKey val id: String)
+
 @Entity(tableName = "choice_events", indices = [Index("packageName")])
 data class ChoiceEvent(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
@@ -68,3 +72,15 @@ data class RefusalCount(val packageName: String, val refusals: Int)
 data class ProblemRef(val catalogKey: String? = null, val customLabel: String? = null)
 
 fun Problem.matches(ref: ProblemRef) = catalogKey == ref.catalogKey && customLabel == ref.customLabel
+
+private const val CATALOG_PREFIX = "catalog:"
+const val CUSTOM_PREFIX = "custom:"
+
+fun ProblemRef.favoriteId(): String =
+    catalogKey?.let { CATALOG_PREFIX + it } ?: (CUSTOM_PREFIX + customLabel.orEmpty())
+
+fun favoriteRef(id: String): ProblemRef? = when {
+    id.startsWith(CATALOG_PREFIX) -> ProblemRef(catalogKey = id.removePrefix(CATALOG_PREFIX))
+    id.startsWith(CUSTOM_PREFIX) -> ProblemRef(customLabel = id.removePrefix(CUSTOM_PREFIX))
+    else -> null
+}

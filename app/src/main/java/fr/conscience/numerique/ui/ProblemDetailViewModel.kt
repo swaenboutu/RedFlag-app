@@ -27,6 +27,7 @@ data class DetailState(
     /** Intitulé choisi par l'utilisateur pour une problématique du catalogue, s'il y en a un. */
     val override: String?,
     val linkedApps: List<LinkedApp>,
+    val favorite: Boolean,
 )
 
 class ProblemDetailViewModel(application: Application, private val handle: SavedStateHandle) :
@@ -39,12 +40,12 @@ class ProblemDetailViewModel(application: Application, private val handle: Saved
         .map { ProblemRef(catalogKey, it) }
 
     val state: StateFlow<DetailState?> =
-        combine(ref, repository.monitoredApps, repository.labelOverrides) { ref, apps, overrides ->
+        combine(ref, repository.monitoredApps, repository.labelOverrides, repository.favorites) { ref, apps, overrides, favorites ->
             val linked = apps
                 .filter { app -> app.problems.any { it.matches(ref) } }
                 .map { LinkedApp(it.app.packageName, it.app.appName) }
                 .sortedBy { it.appName.lowercase() }
-            DetailState(ref, ref.catalogKey?.let(overrides::get), linked)
+            DetailState(ref, ref.catalogKey?.let(overrides::get), linked, ref in favorites)
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     /** Renomme n'importe quelle problématique ; [onResult] reçoit false si le nom est déjà pris. */
@@ -61,6 +62,11 @@ class ProblemDetailViewModel(application: Application, private val handle: Saved
                 onResult(false)
             }
         }
+    }
+
+    fun toggleFavorite() {
+        val current = state.value ?: return
+        viewModelScope.launch { repository.setFavorite(current.ref, !current.favorite) }
     }
 
     /** Rétablit l'intitulé d'origine (traduit) d'une problématique du catalogue. */

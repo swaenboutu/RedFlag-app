@@ -6,13 +6,24 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
+    <ImageButton
+        android:id="@+id/back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/action_back"
+        android:src="@drawable/ic_arrow_back"
+        app:tint="?attr/colorOnSurface" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingStart="16dp"
-        android:paddingTop="16dp"
+        android:paddingTop="4dp"
         android:paddingEnd="8dp">
 
         <TextView
@@ -22,6 +33,15 @@
             android:layout_weight="1"
             android:accessibilityHeading="true"
             android:textAppearance="?attr/textAppearanceHeadlineSmall" />
+
+        <ImageButton
+            android:id="@+id/favorite"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/action_favorite_add"
+            android:src="@drawable/ic_star_outline"
+            app:tint="?attr/colorOnSurface" />
 
         <ImageButton
             android:id="@+id/edit"

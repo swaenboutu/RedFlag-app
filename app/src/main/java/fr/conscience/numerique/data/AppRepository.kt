@@ -10,6 +10,8 @@ class AppRepository(private val db: AppDatabase) {
     val monitoredApps: Flow<List<MonitoredAppWithProblems>> get() = apps.observeAll()
     val customLabels: Flow<List<String>> get() = apps.observeCustomLabels()
     val problems: Flow<List<Problem>> get() = apps.observeProblems()
+    val favorites: Flow<Set<ProblemRef>>
+        get() = apps.observeFavorites().map { list -> list.mapNotNull { favoriteRef(it.id) }.toSet() }
     val labelOverrides: Flow<Map<String, String>>
         get() = apps.observeOverrides().map { list -> list.associate { it.catalogKey to it.label } }
     val refusals: Flow<List<RefusalCount>> get() = events.observeRefusals()
@@ -53,6 +55,10 @@ class AppRepository(private val db: AppDatabase) {
     }
 
     suspend fun deleteCustomProblem(label: String) = apps.deleteCustom(label)
+
+    suspend fun setFavorite(ref: ProblemRef, favorite: Boolean) {
+        if (favorite) apps.insertFavorite(Favorite(ref.favoriteId())) else apps.deleteFavorite(ref.favoriteId())
+    }
 
     suspend fun setCatalogLabel(catalogKey: String, label: String) =
         apps.upsertOverride(CatalogOverride(catalogKey, label))

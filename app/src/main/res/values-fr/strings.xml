@@ -5,23 +5,63 @@
 
     <string name="banner_service_off">La friction est inactive. Activez le service d\'accessibilité pour être alerté avant d\'ouvrir une application que vous avez signalée.</string>
     <string name="banner_action">Activer</string>
-    <string name="main_hint">Touchez une application pour choisir les problématiques que vous lui associez.</string>
+    <string name="apps_title">Vos applications</string>
+    <string name="apps_hint">Touchez une app pour lui associer des problématiques.</string>
+    <string name="apps_empty">Aucune application trouvée</string>
+    <string name="search_hint">Rechercher une application</string>
+    <string name="filter_all">Toutes</string>
+    <string name="filter_flagged">Signalées (%d)</string>
+    <string name="filter_unflagged">Non signalées</string>
+
+    <plurals name="app_detail_subtitle">
+        <item quantity="one">%d problématique associée</item>
+        <item quantity="other">%d problématiques associées</item>
+    </plurals>
+    <string name="app_detail_question">Qu’est-ce qui vous pose problème ici ?</string>
+    <plurals name="app_detail_info">
+        <item quantity="one">À chaque lancement de %1$s, vous verrez cette problématique avant d’ouvrir l’app.</item>
+        <item quantity="other">À chaque lancement de %1$s, vous verrez ces %2$d problématiques avant d’ouvrir l’app.</item>
+    </plurals>
+    <string name="app_detail_info_none">%1$s s’ouvrira normalement, sans rappel.</string>
     <string name="problems_none">Aucune problématique</string>
 
     <string name="save">Enregistrer</string>
     <string name="cancel">Annuler</string>
     <string name="add">Ajouter</string>
 
-    <string name="menu_problems">Problématiques</string>
-    <string name="problems_title">Problématiques</string>
-    <string name="problems_manage_hint">Touchez une problématique pour la modifier et gérer les applications qui lui sont liées.</string>
+    <string name="nav_apps">Applications</string>
+    <string name="nav_problems">Problématiques</string>
+    <string name="nav_settings">Réglages</string>
+    <string name="nav_settings_soon">Les réglages arrivent bientôt</string>
+
+    <string name="problems_title">Vos problématiques</string>
+    <string name="problems_manage_hint">Touchez un thème pour l’ouvrir ou le refermer.</string>
+    <string name="action_new_problem">+  Nouvelle problématique</string>
+    <string name="dialog_new_problem_title">Nouvelle problématique</string>
+    <string name="custom_empty">Aucune problématique pour l’instant</string>
+    <string name="apps_none">Aucune application</string>
+    <plurals name="theme_problems">
+        <item quantity="one">%d problématique</item>
+        <item quantity="other">%d problématiques</item>
+    </plurals>
+    <plurals name="theme_checked">
+        <item quantity="one">%d cochée</item>
+        <item quantity="other">%d cochées</item>
+    </plurals>
+    <plurals name="theme_apps_flagged">
+        <item quantity="one">%d app signalée</item>
+        <item quantity="other">%d apps signalées</item>
+    </plurals>
     <string name="action_delete">Supprimer</string>
+    <string name="action_back">Retour</string>
     <string name="action_edit">Modifier</string>
     <string name="action_link">Lier</string>
     <string name="action_link_apps">Lier à des applications</string>
     <string name="action_unlink">Dissocier</string>
     <string name="action_delete_problem">Supprimer cette problématique</string>
     <string name="action_reset_label">Rétablir l\'original</string>
+    <string name="action_favorite_add">Ajouter aux favoris</string>
+    <string name="action_favorite_remove">Retirer des favoris</string>
     <string name="dialog_edit_title">Modifier la problématique</string>
     <string name="detail_linked_apps">Applications liées</string>
     <string name="detail_no_apps">Aucune application n\'est encore liée à cette problématique.</string>
@@ -56,6 +96,8 @@
     <string name="category_privacy">Données &amp; vie privée</string>
     <string name="category_economic">Pratiques économiques</string>
     <string name="category_political">Éthique politique</string>
+    <string name="category_linked">Associées à cette app</string>
+    <string name="category_favorites">Vos favoris</string>
     <string name="category_custom">Personnalisé</string>
 
     <string name="problem_addictive_design">Conception addictive (dark patterns, scroll infini, notifications manipulatrices)</string>

@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.Conscience" parent="Theme.Material3.DayNight.NoActionBar">
+    <!-- Thème clair aux couleurs de la charte (bleu nuit, gris bleuté). -->
+    <style name="Theme.Conscience" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">#1F2A5C</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondaryContainer">#E3E6F4</item>
+        <item name="colorOnSecondaryContainer">#1F2A5C</item>
+        <item name="android:colorBackground">#F3F4F8</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+        <item name="colorSurface">#FFFFFF</item>
+        <item name="colorOnSurface">#161B2E</item>
+        <item name="colorOnSurfaceVariant">#646B80</item>
+        <item name="colorOutlineVariant">#E2E4EC</item>
+
         <item name="android:fontFamily">@font/inter</item>
         <item name="fontFamily">@font/inter</item>
 
@@ -21,12 +34,38 @@
         <item name="textAppearanceLabelSmall">@style/TextAppearance.Conscience.LabelSmall</item>
     </style>
 
-    <!-- Écran d'interruption : toujours sombre, quel que soit le thème du système. -->
+    <!-- Écran d'interruption : toujours sombre. -->
     <style name="Theme.Conscience.Interstitial" parent="Theme.Conscience">
         <item name="android:windowBackground">@color/interstitial_background</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+    </style>
+
+    <!-- Filtres de la liste des applications -->
+    <style name="Widget.Conscience.FilterChip" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:background">@drawable/bg_filter_chip</item>
+        <item name="android:fontFamily">@font/inter_medium</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingHorizontal">12dp</item>
+        <item name="android:textColor">@color/filter_chip_text</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!-- Barre de navigation du bas -->
+    <style name="Widget.Conscience.NavIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/nav_indicator</item>
+    </style>
+    <style name="TextAppearance.Conscience.NavActive" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:fontFamily">@font/inter</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    <style name="TextAppearance.Conscience.NavInactive" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:fontFamily">@font/inter_medium</item>
+        <item name="android:textSize">12sp</item>
     </style>
 </resources>

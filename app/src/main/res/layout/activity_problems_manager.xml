@@ -3,58 +3,61 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="20dp"
         android:accessibilityHeading="true"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="16dp"
+        android:fontFamily="@font/bricolage_grotesque"
+        android:includeFontPadding="false"
         android:text="@string/problems_title"
-        android:textAppearance="?attr/textAppearanceTitleLarge" />
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="28sp"
+        android:textStyle="bold" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="4dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="20dp"
         android:text="@string/problems_manage_hint"
-        android:textAppearance="?attr/textAppearanceBodyMedium" />
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textSize="13sp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/newProblem"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
+        android:fontFamily="@font/inter"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="@string/action_new_problem"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:cornerRadius="23dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="20dp"
         android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingBottom="8dp">
-
-        <EditText
-            android:id="@+id/customInput"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:autofillHints="none"
-            android:hint="@string/picker_custom_hint"
-            android:imeOptions="actionDone"
-            android:inputType="textCapSentences"
-            android:maxLines="1"
-            android:minHeight="48dp" />
-
-        <Button
-            android:id="@+id/addCustom"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add" />
-    </LinearLayout>
+    <include
+        android:id="@+id/bottomBar"
+        layout="@layout/view_bottom_nav" />
 </LinearLayout>
