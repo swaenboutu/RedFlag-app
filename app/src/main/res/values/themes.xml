@@ -43,6 +43,43 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
     </style>
 
+    <!-- Écran Réglages -->
+    <style name="Widget.Conscience.Switch" parent="Widget.Material3.CompoundButton.MaterialSwitch">
+        <item name="thumbIcon">@null</item>
+        <item name="thumbTint">@color/interstitial_text</item>
+        <item name="trackTint">@color/switch_track</item>
+        <item name="trackDecorationTint">@android:color/transparent</item>
+    </style>
+    <style name="Widget.Conscience.SettingsSection" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">20dp</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:layout_marginEnd">20dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:accessibilityHeading">true</item>
+        <item name="android:fontFamily">@font/inter_semibold</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="Widget.Conscience.SettingsCard" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">12dp</item>
+        <item name="android:layout_marginEnd">12dp</item>
+        <item name="android:background">@drawable/bg_card_white</item>
+        <item name="android:clipToOutline">true</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+    <style name="Widget.Conscience.SettingsDivider" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:background">?attr/colorOutlineVariant</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
+
     <!-- Filtres de la liste des applications -->
     <style name="Widget.Conscience.FilterChip" parent="">
         <item name="android:layout_width">wrap_content</item>

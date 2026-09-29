@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Les problématiques restent des références : leur libellé est résolu à l'affichage, dans la langue courante.
@@ -71,7 +72,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppsState())
 
     init {
-        viewModelScope.launch(Dispatchers.IO) { installed.value = container.installedApps.list() }
+        // Recharge la liste quand le réglage « Liste affichée » change.
+        viewModelScope.launch {
+            container.settings.hideSystemApps.collect { hide ->
+                installed.value = withContext(Dispatchers.IO) { container.installedApps.list(hide) }
+            }
+        }
     }
 
     fun setQuery(text: String) {

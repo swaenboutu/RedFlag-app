@@ -11,6 +11,10 @@
     <color name="checkbox_off">#B9BDCB</color>
     <color name="filter_selected">#161B2E</color>
 
+    <color name="brand_navy">#1F2A5C</color>
+    <color name="status_ok">#1F9D6B</color>
+    <color name="status_warning">#E0475B</color>
+
     <!-- Barre de navigation -->
     <color name="nav_indicator">#E3E6F4</color>
     <color name="nav_icon_active">#1F2A5C</color>

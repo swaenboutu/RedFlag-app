@@ -2,7 +2,6 @@ package fr.conscience.numerique.ui
 
 import android.app.Activity
 import android.content.Intent
-import android.widget.Toast
 import com.google.android.material.navigation.NavigationBarView
 import fr.conscience.numerique.R
 
@@ -29,7 +28,9 @@ object BottomNav {
                     false
                 }
                 else -> {
-                    Toast.makeText(activity, R.string.nav_settings_soon, Toast.LENGTH_SHORT).show()
+                    activity.startActivity(
+                        Intent(activity, SettingsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION),
+                    )
                     false
                 }
             }

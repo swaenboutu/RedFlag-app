@@ -32,7 +32,35 @@
     <string name="nav_apps">Apps</string>
     <string name="nav_problems">Issues</string>
     <string name="nav_settings">Settings</string>
-    <string name="nav_settings_soon">Settings are coming soon</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_active_title">Ethical One Sec is on</string>
+    <string name="settings_active_desc">Flagged apps show an interruption when they open.</string>
+    <string name="settings_inactive_title">Ethical One Sec is off</string>
+    <string name="settings_inactive_desc">No interruption is shown until you turn it back on.</string>
+    <string name="settings_active_switch">Turn interruptions on</string>
+    <string name="settings_section_interruption">Interruption</string>
+    <string name="settings_section_apps">Apps</string>
+    <string name="settings_section_help">Help</string>
+    <string name="settings_pause_title">Pause duration</string>
+    <string name="settings_pause_subtitle">“Don’t ask again” link</string>
+    <string name="settings_list_title">Displayed list</string>
+    <string name="list_all">Installed apps</string>
+    <string name="list_no_system">Without system apps</string>
+    <string name="settings_permissions_title">Android permissions</string>
+    <string name="permissions_granted">Granted</string>
+    <string name="permissions_missing">Not granted</string>
+    <string name="settings_help_title">How it works</string>
+    <string name="settings_help_body">Ethical One Sec doesn’t stop you from using your apps: it gives you one second to really decide.\n\nYou link issues to your apps. When you open one, a screen reminds you of them and asks whether it is really important right now.\n\nEverything stays on your phone: nothing is sent anywhere, and the accessibility service reads no screen content.</string>
+    <string name="settings_version">Version</string>
+    <string name="action_close">Close</string>
+    <plurals name="duration_minutes">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%d hour</item>
+        <item quantity="other">%d hours</item>
+    </plurals>
 
     <string name="problems_title">Your issues</string>
     <string name="problems_manage_hint">Tap a theme to open or close it.</string>
@@ -84,7 +112,7 @@
     <string name="interstitial_question">Is it really important to open the app right now?</string>
     <string name="btn_continue">Yes, open %1$s</string>
     <string name="btn_back">No, close the app</string>
-    <string name="btn_pause">Don’t ask again for an hour</string>
+    <string name="btn_pause">Don’t ask again for %1$s</string>
 
     <string name="accessibility_service_label">Conscience Numérique</string>
     <string name="accessibility_service_description">Only detects the name of the app that comes to the foreground, in order to show a reminder before you open an app you have flagged. No screen content is read and no data leaves your device.</string>

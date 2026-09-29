@@ -1,6 +1,5 @@
 package fr.conscience.numerique.ui
 
-import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -13,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import fr.conscience.numerique.R
 import fr.conscience.numerique.databinding.ActivityMainBinding
-import fr.conscience.numerique.service.FrictionAccessibilityService
+import fr.conscience.numerique.service.isFrictionServiceEnabled
 import kotlinx.coroutines.launch
 
 /** « Vos applications » : recherche, filtres, et une carte avec les problématiques associées à chaque app. */
@@ -57,14 +56,6 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         BottomNav.select(binding.bottomBar.bottomNav, R.id.nav_apps)
-        binding.serviceBanner.visibility = if (isServiceEnabled()) View.GONE else View.VISIBLE
-    }
-
-    private fun isServiceEnabled(): Boolean {
-        val enabled = Settings.Secure.getString(contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES)
-            ?: return false
-        val mine = ComponentName(this, FrictionAccessibilityService::class.java)
-        // Android stocke la forme courte ("pkg/.Classe") ou complète : comparer les composants, pas les chaînes.
-        return enabled.split(':').any { ComponentName.unflattenFromString(it) == mine }
+        binding.serviceBanner.visibility = if (isFrictionServiceEnabled(this)) View.GONE else View.VISIBLE
     }
 }

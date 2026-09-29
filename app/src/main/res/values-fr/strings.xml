@@ -32,7 +32,35 @@
     <string name="nav_apps">Applications</string>
     <string name="nav_problems">Problématiques</string>
     <string name="nav_settings">Réglages</string>
-    <string name="nav_settings_soon">Les réglages arrivent bientôt</string>
+    <string name="settings_title">Réglages</string>
+    <string name="settings_active_title">Ethical One Sec est actif</string>
+    <string name="settings_active_desc">Les apps signalées affichent une interruption à leur lancement.</string>
+    <string name="settings_inactive_title">Ethical One Sec est désactivé</string>
+    <string name="settings_inactive_desc">Aucune interruption n’est affichée tant que vous ne le réactivez pas.</string>
+    <string name="settings_active_switch">Activer les interruptions</string>
+    <string name="settings_section_interruption">Interruption</string>
+    <string name="settings_section_apps">Applications</string>
+    <string name="settings_section_help">Aide</string>
+    <string name="settings_pause_title">Durée de la pause</string>
+    <string name="settings_pause_subtitle">Lien « Ne plus me demander »</string>
+    <string name="settings_list_title">Liste affichée</string>
+    <string name="list_all">Apps installées</string>
+    <string name="list_no_system">Sans les apps système</string>
+    <string name="settings_permissions_title">Autorisations Android</string>
+    <string name="permissions_granted">Accordées</string>
+    <string name="permissions_missing">Non accordées</string>
+    <string name="settings_help_title">Comment ça marche</string>
+    <string name="settings_help_body">Ethical One Sec ne vous empêche pas d’utiliser vos applications : il vous donne une seconde pour décider vraiment.\n\nVous associez des problématiques à vos applications. Quand vous en ouvrez une, un écran vous les rappelle et vous demande si c’est vraiment important maintenant.\n\nTout reste sur votre téléphone : rien n’est envoyé, et le service d’accessibilité ne lit aucun contenu d’écran.</string>
+    <string name="settings_version">Version</string>
+    <string name="action_close">Fermer</string>
+    <plurals name="duration_minutes">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%d heure</item>
+        <item quantity="other">%d heures</item>
+    </plurals>
 
     <string name="problems_title">Vos problématiques</string>
     <string name="problems_manage_hint">Touchez un thème pour l’ouvrir ou le refermer.</string>
@@ -84,7 +112,7 @@
     <string name="interstitial_question">Est-ce vraiment important de lancer l’application maintenant ?</string>
     <string name="btn_continue">Oui, lancer %1$s</string>
     <string name="btn_back">Non, fermer l’app</string>
-    <string name="btn_pause">Ne plus me demander pendant une heure</string>
+    <string name="btn_pause">Ne plus me demander pendant %1$s</string>
 
     <string name="accessibility_service_label">Conscience Numérique</string>
     <string name="accessibility_service_description">Détecte uniquement le nom de l\'application qui passe au premier plan, pour afficher un rappel avant l\'ouverture d\'une application que vous avez signalée. Aucun contenu d\'écran n\'est lu et aucune donnée ne quitte votre appareil.</string>

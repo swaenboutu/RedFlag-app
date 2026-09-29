@@ -44,6 +44,10 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ui.SettingsActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.AppDetailActivity"
             android:exported="false" />
 

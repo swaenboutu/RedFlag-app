@@ -39,7 +39,7 @@ class AppPickerViewModel(application: Application, handle: SavedStateHandle) : A
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            apps.value = container.installedApps.list()
+            apps.value = container.installedApps.list(container.settings.hideSystemApps.value)
                 .filter { it.packageName !in excluded }
                 .sortedBy { it.label.lowercase() }
         }

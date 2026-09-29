@@ -34,6 +34,7 @@ class FrictionAccessibilityService : AccessibilityService() {
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         if (event.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return
+        if (!container.settings.interceptionEnabled.value) return
         val pkg = event.packageName?.toString() ?: return
         if (pkg == packageName || pkg == SYSTEM_UI || isInputMethod(pkg)) return
 

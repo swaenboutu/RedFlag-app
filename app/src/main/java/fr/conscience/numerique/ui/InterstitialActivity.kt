@@ -42,6 +42,7 @@ class InterstitialActivity : AppCompatActivity() {
         binding.title.text = accentedTitle()
         binding.btnContinue.setOnClickListener { proceed() }
         binding.btnBack.setOnClickListener { decline() }
+        binding.btnPause.text = getString(R.string.btn_pause, formatPause(this, container.settings.pauseMinutes.value))
         binding.btnPause.paintFlags = binding.btnPause.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         binding.btnPause.setOnClickListener { pause() }
 
@@ -103,14 +104,14 @@ class InterstitialActivity : AppCompatActivity() {
 
     private fun pause() {
         lifecycleScope.launch {
-            container.repository.snooze(targetPackage, System.currentTimeMillis() + PAUSE_MILLIS)
+            val pauseMillis = container.settings.pauseMinutes.value * 60_000L
+            container.repository.snooze(targetPackage, System.currentTimeMillis() + pauseMillis)
             proceed()
         }
     }
 
     companion object {
         private const val EXTRA_PACKAGE = "package"
-        private const val PAUSE_MILLIS = 60 * 60 * 1000L
 
         fun intent(context: Context, packageName: String) =
             Intent(context, InterstitialActivity::class.java)
