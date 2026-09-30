@@ -34,6 +34,16 @@
     <string name="onboarding_problems_title">What matters to you?</string>
     <string name="onboarding_problems_body">Select the issues that matter to you. They will be added to your favorites, so you can find them easily later.</string>
     <string name="onboarding_continue">Continue</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_apps_step">Issue %1$d of %2$d</string>
+    <string name="onboarding_apps_body">Select the apps this issue applies to. You can change this at any time.</string>
+    <string name="onboarding_permission_title">You\'re almost there</string>
+    <string name="onboarding_permission_body">To warn you before you open an app you have flagged, %1$s needs Android\'s accessibility service. It only detects the name of the app coming to the foreground: no screen content is read and no data leaves your device.\n\nIn the settings that open, find “%1$s” and turn it on.</string>
+    <string name="onboarding_permission_action">Open accessibility settings</string>
+    <string name="onboarding_permission_enabled">All set: the service is on.</string>
+    <string name="onboarding_finish">Finish</string>
+    <string name="onboarding_later">Later</string>
     <string name="onboarding_counter">%1$d / %2$d selected</string>
     <string name="onboarding_counter_full">%1$d / %2$d selected · uncheck one to pick another</string>
     <string name="nav_apps">Apps</string>

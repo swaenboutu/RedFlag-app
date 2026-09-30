@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import fr.conscience.numerique.ConscienceApp
 import fr.conscience.numerique.R
 import fr.conscience.numerique.databinding.ActivityOnboardingProblemsBinding
 import kotlinx.coroutines.launch
@@ -27,11 +26,9 @@ class OnboardingProblemsActivity : AppCompatActivity() {
         )
         binding.list.adapter = adapter
 
-        // L'accueil est terminé seulement ici : quitter l'app avant recommence l'accueil au prochain lancement.
+        // L'accueil n'est marqué comme terminé qu'à la dernière étape : quitter avant le recommence au prochain lancement.
         binding.btnContinue.setOnClickListener {
-            (application as ConscienceApp).container.settings.onboardingDone = true
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+            startActivity(Intent(this, OnboardingAppsActivity::class.java))
         }
 
         lifecycleScope.launch {

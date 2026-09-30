@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Une application à cocher, dans la carte blanche de la liste (fond posé par l'adaptateur). La case est à droite :
+    même astuce que item_detail_choice (layoutDirection=rtl sur la case, texte ramené à gauche à la main).
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/appRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="12dp"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/colorOutlineVariant"
+        android:importantForAccessibility="no" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="14dp">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_icon_12"
+            android:importantForAccessibility="no" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/choice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@drawable/sel_check"
+            android:ellipsize="end"
+            android:fontFamily="@font/inter_medium"
+            android:gravity="left|center_vertical"
+            android:layoutDirection="rtl"
+            android:maxLines="1"
+            android:minHeight="64dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="16dp"
+            android:textAlignment="gravity"
+            android:textColor="?attr/colorOnSurface"
+            android:textDirection="locale"
+            android:textSize="15sp"
+            app:buttonTint="@null"
+            tools:ignore="RtlHardcoded" />
+    </LinearLayout>
+</LinearLayout>

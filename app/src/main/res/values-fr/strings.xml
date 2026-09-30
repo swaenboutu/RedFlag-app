@@ -36,6 +36,16 @@
     <string name="onboarding_problems_title">Ce qui compte pour vous</string>
     <string name="onboarding_problems_body">Sélectionnez les problématiques qui vous importent. Elles seront ajoutées à vos favoris, pour les retrouver facilement ensuite.</string>
     <string name="onboarding_continue">Continuer</string>
+    <string name="onboarding_next">Suivant</string>
+    <string name="onboarding_skip">Passer</string>
+    <string name="onboarding_apps_step">Problématique %1$d sur %2$d</string>
+    <string name="onboarding_apps_body">Sélectionnez les applications concernées par cette problématique. Vous pourrez modifier ce choix à tout moment.</string>
+    <string name="onboarding_permission_title">Vous y êtes presque</string>
+    <string name="onboarding_permission_body">Pour vous prévenir avant l\'ouverture d\'une application signalée, %1$s a besoin du service d\'accessibilité d\'Android. Il détecte uniquement le nom de l\'application qui passe au premier plan : aucun contenu de l\'écran n\'est lu et aucune donnée ne quitte votre téléphone.\n\nDans les réglages qui s\'ouvrent, cherchez « %1$s » et activez-le.</string>
+    <string name="onboarding_permission_action">Ouvrir les réglages d\'accessibilité</string>
+    <string name="onboarding_permission_enabled">Tout est prêt : le service est activé.</string>
+    <string name="onboarding_finish">Terminer</string>
+    <string name="onboarding_later">Plus tard</string>
     <string name="onboarding_counter">%1$d / %2$d sélectionnées</string>
     <string name="onboarding_counter_full">%1$d / %2$d sélectionnées · décochez-en une pour en choisir une autre</string>
     <string name="nav_apps">Applications</string>
