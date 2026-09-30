@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import fr.conscience.numerique.ConscienceApp
+import fr.conscience.numerique.container
 import fr.conscience.numerique.data.ProblemRef
 import fr.conscience.numerique.data.matches
 import kotlinx.coroutines.flow.SharingStarted
@@ -32,7 +32,7 @@ data class DetailState(
 
 class ProblemDetailViewModel(application: Application, private val handle: SavedStateHandle) :
     AndroidViewModel(application) {
-    private val repository = (application as ConscienceApp).container.repository
+    private val repository = application.container.repository
     private val catalogKey: String? = handle[DetailArgs.CATALOG_KEY]
 
     /** Le texte libre est dans le SavedStateHandle : il change quand on renomme. */

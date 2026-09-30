@@ -3,10 +3,11 @@ package fr.conscience.numerique.ui
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import fr.conscience.numerique.ConscienceApp
+import fr.conscience.numerique.container
 import fr.conscience.numerique.data.InstalledApp
 import fr.conscience.numerique.data.ProblemCatalog
 import fr.conscience.numerique.data.ProblemRef
+import fr.conscience.numerique.data.displayLabel
 import fr.conscience.numerique.data.matches
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +36,7 @@ sealed interface AppsRow {
  * Le choix n'est enregistré qu'avec « Suivant » ; « Skip » passe à la suite sans rien changer.
  */
 class OnboardingAppsViewModel(application: Application) : AndroidViewModel(application) {
-    private val container = (application as ConscienceApp).container
+    private val container = application.container
     private val repository = container.repository
 
     private val steps = MutableStateFlow<List<AppsStep>?>(null)
@@ -72,12 +73,9 @@ class OnboardingAppsViewModel(application: Application) : AndroidViewModel(appli
             val favorites = repository.favorites.first()
             val overrides = repository.labelOverrides.first()
             val context = getApplication<Application>()
-            val chosen = ProblemCatalog.categories.flatMap { it.problems }
-                .map { ProblemRef(catalogKey = it.key) }
-                .filter { it in favorites }
+            val chosen = ProblemCatalog.allRefs.filter { it in favorites }
             steps.value = chosen.mapIndexed { i, ref ->
-                val problem = checkNotNull(ProblemCatalog.find(checkNotNull(ref.catalogKey)))
-                AppsStep(i + 1, chosen.size, ref, overrides[problem.key] ?: context.getString(problem.label))
+                AppsStep(i + 1, chosen.size, ref, ref.displayLabel(context, ref.catalogKey?.let(overrides::get)))
             }
             apps.value = withContext(Dispatchers.IO) {
                 container.installedApps.list(container.settings.hideSystemApps.value).sortedBy { it.label.lowercase() }

@@ -4,11 +4,12 @@ import android.app.Application
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import fr.conscience.numerique.ConscienceApp
+import fr.conscience.numerique.container
 import fr.conscience.numerique.R
 import fr.conscience.numerique.data.PredefinedProblem
 import fr.conscience.numerique.data.ProblemCatalog
 import fr.conscience.numerique.data.ProblemRef
+import fr.conscience.numerique.data.toRef
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -61,7 +62,7 @@ private sealed interface Entry {
 }
 
 class ProblemsManagerViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = (application as ConscienceApp).container.repository
+    private val repository = application.container.repository
 
     /** Les favoris s'affichent ouverts la première fois ; l'utilisateur peut les refermer. */
     private val expanded = MutableStateFlow(setOf(R.string.category_favorites))
@@ -77,7 +78,7 @@ class ProblemsManagerViewModel(application: Application) : AndroidViewModel(appl
         monitored.forEach { entry ->
             val app = LinkedApp(entry.app.packageName, entry.app.appName)
             entry.problems.forEach { p ->
-                appsByProblem.getOrPut(ProblemRef(p.catalogKey, p.customLabel)) { mutableListOf() }.add(app)
+                appsByProblem.getOrPut(p.toRef()) { mutableListOf() }.add(app)
             }
         }
         fun appsOf(ref: ProblemRef): List<LinkedApp> = appsByProblem[ref].orEmpty().sortedBy { it.appName.lowercase() }
@@ -98,15 +99,12 @@ class ProblemsManagerViewModel(application: Application) : AndroidViewModel(appl
             }
         }
 
-        // Une problématique personnalisée rangée dans un thème s'affiche à la suite de celles du catalogue.
-        val customEntries = custom.map { Entry.Cus(it.label, appsOf(ProblemRef(customLabel = it.label))) }
-        val customByCategory = custom.groupBy({ it.category }, { c -> customEntries.first { it.label == c.label } })
-        val catalogEntries = ProblemCatalog.categories.map { category ->
-            category.title to (
-                category.problems.map { Entry.Cat(it, appsOf(ProblemRef(catalogKey = it.key))) } +
-                    customByCategory[category.key].orEmpty()
-                )
+        fun entryOf(ref: ProblemRef): Entry {
+            val predefined = ref.catalogKey?.let(ProblemCatalog::find)
+            return if (predefined != null) Entry.Cat(predefined, appsOf(ref)) else Entry.Cus(ref.customLabel.orEmpty(), appsOf(ref))
         }
+        val catalogEntries = ProblemCatalog.themeContents(custom).map { it.category.title to it.refs.map(::entryOf) }
+        val customEntries = custom.map { entryOf(ProblemRef(customLabel = it.label)) as Entry.Cus }
 
         buildList {
             // Favoris : d'abord ceux du catalogue (dans l'ordre des thèmes), puis les personnalisés.
@@ -116,7 +114,7 @@ class ProblemsManagerViewModel(application: Application) : AndroidViewModel(appl
             if (favoriteEntries.isNotEmpty()) addSection(R.string.category_favorites, favoriteEntries)
 
             catalogEntries.forEach { (title, entries) -> addSection(title, entries) }
-            addSection(R.string.category_custom, customByCategory[null].orEmpty())
+            addSection(R.string.category_custom, ProblemCatalog.customWithoutTheme(custom).map(::entryOf))
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 

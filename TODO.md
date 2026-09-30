@@ -5,7 +5,7 @@
 ## Liste
 
 - [ ] **Vérifier les points 3 à 6 de la revue de code**
-  - [ ] 3. Factoriser les duplications : libellé d'une problématique (recalculé à 4 endroits), calcul des sections
+  - [x] 3. Factoriser les duplications : libellé d'une problématique (recalculé à 4 endroits), calcul des sections
     (`ProblemsManagerViewModel` / `AppDetailViewModel`), chargement d'icône (3 adaptateurs), `Problem.toRef()`, accès au
     conteneur (`(application as ConscienceApp).container`, 8 fichiers)
   - [ ] 4. Structure : sous-dossiers de `ui/` par écran (apps, problématiques, réglages, interruption), scinder
@@ -37,9 +37,6 @@
 
 - Le nom « Conscience Numérique » est provisoire : `app_name` dans `app/src/main/res/values/brand.xml`. L'identifiant
   de l'app (`fr.conscience.numerique`) ne pourra plus changer après publication : le choisir avant.
-- Version minimale d'Android (26 aujourd'hui) : passer à 28 supprimerait les 7 avertissements de polices variables
-  (graisses fausses sur Android 8.x)
-- Rendu non vérifié sur Android 8 à 11 (l'émulateur actuel est en Android 17)
 - Texte « Comment ça marche » : Lorem Ipsum provisoire
 
 ## Vérifier la parité des langues

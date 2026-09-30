@@ -3,7 +3,7 @@ package fr.conscience.numerique.ui
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import fr.conscience.numerique.ConscienceApp
+import fr.conscience.numerique.container
 import fr.conscience.numerique.data.ProblemCatalog
 import fr.conscience.numerique.data.ProblemRef
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,14 +38,12 @@ sealed interface OnboardingRow {
  * enregistrés aussitôt (l'état affiché vient toujours de la base). Les thèmes sont fermés au départ.
  */
 class OnboardingProblemsViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = (application as ConscienceApp).container.repository
+    private val repository = application.container.repository
     private val expanded = MutableStateFlow(emptySet<Int>())
-
-    private val catalogRefs = ProblemCatalog.categories.flatMap { c -> c.problems.map { ProblemRef(catalogKey = it.key) } }
 
     /** Nombre de problématiques du catalogue déjà cochées (les seules visibles sur cet écran). */
     val selectedCount: StateFlow<Int> = repository.favorites
-        .map { favorites -> catalogRefs.count { it in favorites } }
+        .map { favorites -> ProblemCatalog.allRefs.count { it in favorites } }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0)
 
     val rows: StateFlow<List<OnboardingRow>> = combine(
@@ -53,11 +51,11 @@ class OnboardingProblemsViewModel(application: Application) : AndroidViewModel(a
         repository.labelOverrides,
         expanded,
     ) { favorites, overrides, expanded ->
-        val full = catalogRefs.count { it in favorites } >= MAX_SELECTION
+        val full = ProblemCatalog.allRefs.count { it in favorites } >= MAX_SELECTION
         buildList {
             add(OnboardingRow.Header)
             ProblemCatalog.categories.forEach { category ->
-                val refs = category.problems.map { ProblemRef(catalogKey = it.key) }
+                val refs = category.refs
                 val open = category.title in expanded
                 add(OnboardingRow.Theme(category.title, refs.size, refs.count { it in favorites }, open))
                 if (!open) return@forEach

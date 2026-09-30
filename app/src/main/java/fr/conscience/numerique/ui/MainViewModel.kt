@@ -3,7 +3,7 @@ package fr.conscience.numerique.ui
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import fr.conscience.numerique.ConscienceApp
+import fr.conscience.numerique.container
 import fr.conscience.numerique.data.InstalledApp
 import fr.conscience.numerique.data.Problem
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +38,7 @@ data class AppsState(
 )
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-    private val container = (application as ConscienceApp).container
+    private val container = application.container
     private val installed = MutableStateFlow<List<InstalledApp>?>(null)
     private val query = MutableStateFlow("")
     private val filter = MutableStateFlow(AppFilter.ALL)

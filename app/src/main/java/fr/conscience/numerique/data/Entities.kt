@@ -74,6 +74,8 @@ data class RefusalCount(val packageName: String, val refusals: Int)
 /** Identifie une problématique : une entrée du catalogue ([catalogKey]) ou un texte libre ([customLabel]). */
 data class ProblemRef(val catalogKey: String? = null, val customLabel: String? = null)
 
+fun Problem.toRef() = ProblemRef(catalogKey, customLabel)
+
 fun Problem.matches(ref: ProblemRef) = catalogKey == ref.catalogKey && customLabel == ref.customLabel
 
 private const val CATALOG_PREFIX = "catalog:"

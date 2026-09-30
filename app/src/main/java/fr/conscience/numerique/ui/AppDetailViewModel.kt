@@ -4,10 +4,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import fr.conscience.numerique.ConscienceApp
+import fr.conscience.numerique.container
 import fr.conscience.numerique.R
 import fr.conscience.numerique.data.ProblemCatalog
 import fr.conscience.numerique.data.ProblemRef
+import fr.conscience.numerique.data.toRef
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -47,7 +48,7 @@ sealed interface DetailRow {
  * des problématiques : l'état affiché vient toujours de la base.
  */
 class AppDetailViewModel(application: Application, handle: SavedStateHandle) : AndroidViewModel(application) {
-    private val repository = (application as ConscienceApp).container.repository
+    private val repository = application.container.repository
     private val packageName: String = checkNotNull(handle[AppDetailArgs.PACKAGE])
     private val appName: String = handle[AppDetailArgs.LABEL] ?: packageName
 
@@ -62,19 +63,14 @@ class AppDetailViewModel(application: Application, handle: SavedStateHandle) : A
         expanded,
     ) { monitored, custom, overrides, favorites, expanded ->
         val current = monitored.firstOrNull { it.app.packageName == packageName }?.problems.orEmpty()
-            .map { ProblemRef(it.catalogKey, it.customLabel) }.toSet()
+            .map { it.toRef() }.toSet()
 
-        // Une problématique personnalisée rangée dans un thème s'affiche à la suite de celles du catalogue.
-        val customByCategory = custom.groupBy({ it.category }, { ProblemRef(customLabel = it.label) })
-        val catalogSections = ProblemCatalog.categories.map { category ->
-            category.title to (
-                category.problems.map { ProblemRef(catalogKey = it.key) } + customByCategory[category.key].orEmpty()
-                )
-        }
+        val themes = ProblemCatalog.themeContents(custom)
         val knownLabels = custom.map { it.label }.toSet()
-        val customRefs = (customByCategory[null].orEmpty() + current.filter { it.customLabel != null && it.customLabel !in knownLabels })
+        // Les personnalisées sans thème, plus celles déjà associées à l'app mais absentes de la liste.
+        val customRefs = (ProblemCatalog.customWithoutTheme(custom) + current.filter { it.customLabel != null && it.customLabel !in knownLabels })
             .distinct()
-        val allRefs = catalogSections.flatMap { it.second } + customRefs
+        val allRefs = themes.flatMap { it.refs } + customRefs
 
         fun MutableList<DetailRow>.section(id: Int, refs: List<ProblemRef>) {
             val open = id in expanded
@@ -94,7 +90,7 @@ class AppDetailViewModel(application: Application, handle: SavedStateHandle) : A
             if (linked.isNotEmpty()) section(R.string.category_linked, linked)
             val favoriteRefs = allRefs.filter { it in favorites }
             if (favoriteRefs.isNotEmpty()) section(R.string.category_favorites, favoriteRefs)
-            catalogSections.forEach { (title, refs) -> section(title, refs) }
+            themes.forEach { section(it.category.title, it.refs) }
             section(R.string.category_custom, customRefs)
 
             add(DetailRow.Info(appName, current.size))

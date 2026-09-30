@@ -17,7 +17,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import fr.conscience.numerique.R
-import fr.conscience.numerique.data.ProblemCatalog
+import fr.conscience.numerique.data.displayLabel
 import fr.conscience.numerique.data.ProblemRef
 import fr.conscience.numerique.databinding.ActivityProblemDetailBinding
 import fr.conscience.numerique.util.normalizeCustomProblem
@@ -80,10 +80,7 @@ class ProblemDetailActivity : AppCompatActivity() {
         contentDescription = getString(if (favorite) R.string.action_favorite_remove else R.string.action_favorite_add)
     }
 
-    private fun titleOf(state: DetailState): String {
-        val predefined = state.ref.catalogKey?.let(ProblemCatalog::find)
-        return if (predefined != null) state.override ?: getString(predefined.label) else state.ref.customLabel.orEmpty()
-    }
+    private fun titleOf(state: DetailState): String = state.ref.displayLabel(this, state.override)
 
     private fun showEditDialog() {
         val current = state ?: return

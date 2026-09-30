@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import fr.conscience.numerique.R
-import fr.conscience.numerique.data.ProblemCatalog
+import fr.conscience.numerique.data.displayLabel
 import fr.conscience.numerique.data.ProblemRef
 import fr.conscience.numerique.databinding.ItemDetailChoiceBinding
 import fr.conscience.numerique.databinding.ItemManagerThemeBinding
@@ -46,15 +46,9 @@ class OnboardingProblemsAdapter(
     }
 
     private fun bindTheme(binding: ItemManagerThemeBinding, row: OnboardingRow.Theme) = with(binding) {
-        val resources = root.resources
-        val problems = resources.getQuantityString(R.plurals.theme_problems, row.problemCount, row.problemCount)
         bindThemeCard(
             title = root.context.getString(row.id),
-            subtitle = if (row.checkedCount == 0) {
-                problems
-            } else {
-                "$problems, ${resources.getQuantityString(R.plurals.theme_checked, row.checkedCount, row.checkedCount)}"
-            },
+            subtitle = checkedSubtitle(root.context, row.problemCount, row.checkedCount),
             expanded = row.expanded,
             hasContent = true,
             onClick = { onThemeClick(row.id) },
@@ -62,8 +56,7 @@ class OnboardingProblemsAdapter(
     }
 
     private fun bindChoice(binding: ItemDetailChoiceBinding, row: OnboardingRow.Choice) = with(binding) {
-        val predefined = row.ref.catalogKey?.let(ProblemCatalog::find)
-        choice.text = if (predefined != null) row.override ?: root.context.getString(predefined.label) else row.ref.customLabel
+        choice.text = row.ref.displayLabel(root.context, row.override)
         choice.isChecked = row.checked
         choice.alpha = if (row.selectable) 1f else 0.4f
         choice.setOnClickListener {

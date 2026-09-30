@@ -1,8 +1,10 @@
 package fr.conscience.numerique.ui
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.view.View
 import com.google.android.material.color.MaterialColors
+import fr.conscience.numerique.R
 import fr.conscience.numerique.databinding.ItemManagerThemeBinding
 
 /**
@@ -32,4 +34,15 @@ fun ItemManagerThemeBinding.bindThemeCard(
     root.isClickable = hasContent
     root.setOnClickListener { if (hasContent) onClick() }
     root.applyCard(roundTop = true, roundBottom = !open, gapAfterDp = if (open) 0 else CARD_GAP_DP)
+}
+
+/** « 4 problématiques » : le début de tous les sous-titres de thème. */
+fun problemsSubtitle(context: Context, problemCount: Int): String =
+    context.resources.getQuantityString(R.plurals.theme_problems, problemCount, problemCount)
+
+/** « 4 problématiques, 2 cochées » ; le nombre de cochées n'est ajouté que s'il n'est pas nul. */
+fun checkedSubtitle(context: Context, problemCount: Int, checkedCount: Int): String {
+    val problems = problemsSubtitle(context, problemCount)
+    if (checkedCount == 0) return problems
+    return "$problems, ${context.resources.getQuantityString(R.plurals.theme_checked, checkedCount, checkedCount)}"
 }

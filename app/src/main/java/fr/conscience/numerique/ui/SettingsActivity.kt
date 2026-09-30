@@ -12,7 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import fr.conscience.numerique.ConscienceApp
+import fr.conscience.numerique.container
 import fr.conscience.numerique.R
 import fr.conscience.numerique.data.SettingsStore
 import fr.conscience.numerique.databinding.ActivitySettingsBinding
@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 /** Réglages : interrupteur général, durée de la pause, liste des apps, autorisations, aide. */
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
-    private val settings get() = (application as ConscienceApp).container.settings
+    private val settings get() = container.settings
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

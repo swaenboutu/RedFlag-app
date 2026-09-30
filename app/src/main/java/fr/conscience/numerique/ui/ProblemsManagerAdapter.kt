@@ -1,7 +1,6 @@
 package fr.conscience.numerique.ui
 
 import android.content.Context
-import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +13,7 @@ import com.google.android.material.color.MaterialColors
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.shape.ShapeAppearanceModel
 import fr.conscience.numerique.R
+import fr.conscience.numerique.data.displayLabel
 import fr.conscience.numerique.databinding.ItemManagerProblemBinding
 import fr.conscience.numerique.databinding.ItemManagerThemeBinding
 
@@ -45,7 +45,7 @@ class ProblemsManagerAdapter(
             is ManagerRow.Theme -> bindTheme(holder as ThemeHolder, row)
             is ManagerRow.Catalog -> {
                 val context = holder.itemView.context
-                val label = row.override ?: context.getString(row.problem.label)
+                val label = row.problem.displayLabel(context, row.override)
                 bindProblem(holder as ProblemHolder, row, label, row.apps, row.first, row.last)
             }
             is ManagerRow.Custom -> bindProblem(holder as ProblemHolder, row, row.label, row.apps, row.first, row.last)
@@ -65,7 +65,7 @@ class ProblemsManagerAdapter(
 
     private fun themeSubtitle(context: Context, row: ManagerRow.Theme): String {
         if (row.id == R.string.category_custom && row.problemCount == 0) return context.getString(R.string.custom_empty)
-        val problems = context.resources.getQuantityString(R.plurals.theme_problems, row.problemCount, row.problemCount)
+        val problems = problemsSubtitle(context, row.problemCount)
         if (row.appCount == 0) return problems
         val apps = context.resources.getQuantityString(R.plurals.theme_apps_flagged, row.appCount, row.appCount)
         return "$problems, $apps"
@@ -99,7 +99,6 @@ class ProblemsManagerAdapter(
         val context = container.context
         val density = context.resources.displayMetrics.density
         val ring = MaterialColors.getColor(container, MATERIAL_SURFACE)
-        val pm = context.packageManager
         apps.take(MAX_BADGES).forEachIndexed { index, app ->
             val badge = ShapeableImageView(context).apply {
                 layoutParams = LinearLayout.LayoutParams((27 * density).toInt(), (27 * density).toInt()).apply {
@@ -111,13 +110,7 @@ class ProblemsManagerAdapter(
                 val inset = (1.5f * density).toInt()
                 setPadding(inset, inset, inset, inset)
                 importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-                setImageDrawable(
-                    try {
-                        pm.getApplicationIcon(app.packageName)
-                    } catch (_: PackageManager.NameNotFoundException) {
-                        pm.defaultActivityIcon
-                    },
-                )
+                setImageDrawable(context.iconOf(app.packageName))
             }
             container.addView(badge)
         }

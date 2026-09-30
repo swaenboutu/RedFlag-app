@@ -1,7 +1,6 @@
 package fr.conscience.numerique.ui
 
 import android.content.Context
-import android.content.pm.PackageManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import fr.conscience.numerique.R
-import fr.conscience.numerique.data.ProblemCatalog
+import fr.conscience.numerique.data.displayLabel
 import fr.conscience.numerique.data.ProblemRef
 import fr.conscience.numerique.databinding.ItemDetailChoiceBinding
 import fr.conscience.numerique.databinding.ItemDetailHeaderBinding
@@ -56,15 +55,8 @@ class AppDetailAdapter(
     }
 
     private fun bindHeader(binding: ItemDetailHeaderBinding, row: DetailRow.Header) = with(binding) {
-        val pm = root.context.packageManager
         appIcon.clipToOutline = true
-        appIcon.setImageDrawable(
-            try {
-                pm.getApplicationIcon(row.packageName)
-            } catch (_: PackageManager.NameNotFoundException) {
-                pm.defaultActivityIcon
-            },
-        )
+        appIcon.setImageDrawable(root.context.iconOf(row.packageName))
         appName.text = row.appName
         appSubtitle.text = root.resources.getQuantityString(R.plurals.app_detail_subtitle, row.count, row.count)
     }
@@ -79,19 +71,15 @@ class AppDetailAdapter(
         )
     }
 
-    /** « 4 problématiques, 2 cochées » ; la carte des problématiques associées n'a pas besoin du nombre de cochées. */
+    /** La carte des problématiques associées n'a pas besoin du nombre de cochées. */
     private fun themeSubtitle(context: Context, row: DetailRow.Theme): String {
         if (row.id == R.string.category_custom && row.problemCount == 0) return context.getString(R.string.custom_empty)
-        val problems = context.resources.getQuantityString(R.plurals.theme_problems, row.problemCount, row.problemCount)
-        if (row.id == R.string.category_linked || row.checkedCount == 0) return problems
-        val checked = context.resources.getQuantityString(R.plurals.theme_checked, row.checkedCount, row.checkedCount)
-        return "$problems, $checked"
+        return checkedSubtitle(context, row.problemCount, if (row.id == R.string.category_linked) 0 else row.checkedCount)
     }
 
     private fun bindChoice(binding: ItemDetailChoiceBinding, row: DetailRow.Choice) = with(binding) {
         val context = root.context
-        val predefined = row.ref.catalogKey?.let(ProblemCatalog::find)
-        choice.text = if (predefined != null) row.override ?: context.getString(predefined.label) else row.ref.customLabel
+        choice.text = row.ref.displayLabel(context, row.override)
         choice.isChecked = row.checked
         choice.setOnClickListener { onToggle(row.ref, row.checked) }
         choiceDivider.visibility = if (row.first) View.GONE else View.VISIBLE

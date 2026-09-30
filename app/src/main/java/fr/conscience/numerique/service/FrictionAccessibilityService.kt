@@ -3,7 +3,7 @@ package fr.conscience.numerique.service
 import android.accessibilityservice.AccessibilityService
 import android.view.accessibility.AccessibilityEvent
 import android.view.inputmethod.InputMethodManager
-import fr.conscience.numerique.ConscienceApp
+import fr.conscience.numerique.container
 import fr.conscience.numerique.data.MonitoredAppWithProblems
 import fr.conscience.numerique.ui.InterstitialActivity
 import kotlinx.coroutines.CoroutineScope
@@ -21,8 +21,6 @@ class FrictionAccessibilityService : AccessibilityService() {
 
     @Volatile
     private var monitored: Map<String, MonitoredAppWithProblems> = emptyMap()
-
-    private val container get() = (application as ConscienceApp).container
 
     override fun onServiceConnected() {
         scope.launch {

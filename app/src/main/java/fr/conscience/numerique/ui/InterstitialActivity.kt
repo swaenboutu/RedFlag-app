@@ -2,7 +2,6 @@ package fr.conscience.numerique.ui
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Paint
 import android.os.Bundle
 import android.text.Annotation
@@ -13,7 +12,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import fr.conscience.numerique.ConscienceApp
+import fr.conscience.numerique.container
 import fr.conscience.numerique.R
 import fr.conscience.numerique.data.displayLabel
 import fr.conscience.numerique.databinding.ActivityInterstitialBinding
@@ -29,8 +28,6 @@ class InterstitialActivity : AppCompatActivity() {
 
     /** App actuellement concernée. Change si l'écran est relancé pour une autre app (voir [onNewIntent]). */
     private var targetPackage: String = ""
-
-    private val container get() = (application as ConscienceApp).container
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,12 +97,6 @@ class InterstitialActivity : AppCompatActivity() {
                 styled.setSpan(ForegroundColorSpan(accent), source.getSpanStart(it), source.getSpanEnd(it), 0)
             }
         return styled
-    }
-
-    private fun iconOf(packageName: String) = try {
-        packageManager.getApplicationIcon(packageName)
-    } catch (_: PackageManager.NameNotFoundException) {
-        packageManager.defaultActivityIcon
     }
 
     private fun proceed() {

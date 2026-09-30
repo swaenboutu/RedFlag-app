@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import fr.conscience.numerique.ConscienceApp
+import fr.conscience.numerique.container
 import fr.conscience.numerique.data.InstalledApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +22,7 @@ object AppPickerArgs {
 data class AppPickRow(val app: InstalledApp, val checked: Boolean)
 
 class AppPickerViewModel(application: Application, handle: SavedStateHandle) : AndroidViewModel(application) {
-    private val container = (application as ConscienceApp).container
+    private val container = application.container
     private val excluded: Set<String> = handle.get<ArrayList<String>>(AppPickerArgs.EXCLUDED).orEmpty().toSet()
 
     private val apps = MutableStateFlow<List<InstalledApp>>(emptyList())

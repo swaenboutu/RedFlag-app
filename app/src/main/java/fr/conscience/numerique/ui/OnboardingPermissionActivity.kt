@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import fr.conscience.numerique.ConscienceApp
+import fr.conscience.numerique.container
 import fr.conscience.numerique.R
 import fr.conscience.numerique.databinding.ActivityOnboardingPermissionBinding
 import fr.conscience.numerique.service.isFrictionServiceEnabled
@@ -40,7 +40,7 @@ class OnboardingPermissionActivity : AppCompatActivity() {
 
     /** Fin de l'accueil (avec ou sans le service) : il ne s'affichera plus, et le retour ne mène plus à l'accueil. */
     private fun finishOnboarding() {
-        (application as ConscienceApp).container.settings.onboardingDone = true
+        container.settings.onboardingDone = true
         startActivity(
             Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK),
         )
