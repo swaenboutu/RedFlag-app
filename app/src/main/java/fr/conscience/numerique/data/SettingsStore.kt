@@ -1,6 +1,7 @@
 package fr.conscience.numerique.data
 
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import androidx.core.content.edit
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,13 +23,29 @@ class SettingsStore(context: Context) {
     /** Vrai = la liste des applications masque les apps système (celles mises à jour par l'utilisateur restent). */
     val hideSystemApps: StateFlow<Boolean> = _hideSystemApps
 
-    /** Vrai une fois l'écran d'accueil passé : il ne s'affiche qu'au premier lancement. */
+    /** Version de développement (débogable) : les réglages de debug n'existent pas dans une version de production. */
+    val isDebuggable: Boolean = (context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
+
+    private val _alwaysShowOnboarding = MutableStateFlow(isDebuggable && prefs.getBoolean(KEY_ALWAYS_SHOW_ONBOARDING, false))
+
+    /** Debug : vrai = l'accueil s'affiche à chaque démarrage de l'app (processus neuf), sans effacer les données. */
+    val alwaysShowOnboarding: StateFlow<Boolean> = _alwaysShowOnboarding
+
+    /** Vrai une fois l'écran d'accueil passé : il ne s'affiche qu'au premier lancement (ou à chaque démarrage si forcé). */
     var onboardingDone: Boolean
-        get() = if (ALWAYS_SHOW_ONBOARDING) onboardingSeenThisRun else prefs.getBoolean(KEY_ONBOARDING_DONE, false)
+        get() = if (_alwaysShowOnboarding.value) onboardingSeenThisRun else prefs.getBoolean(KEY_ONBOARDING_DONE, false)
         set(value) {
             onboardingSeenThisRun = value
             prefs.edit { putBoolean(KEY_ONBOARDING_DONE, value) }
         }
+
+    fun setAlwaysShowOnboarding(value: Boolean) {
+        if (!isDebuggable) return
+        prefs.edit { putBoolean(KEY_ALWAYS_SHOW_ONBOARDING, value) }
+        // La session en cours a dépassé l'accueil : il ne réapparaît qu'au prochain démarrage, pas en plein réglage.
+        if (value) onboardingSeenThisRun = true
+        _alwaysShowOnboarding.value = value
+    }
 
     fun setInterceptionEnabled(value: Boolean) {
         prefs.edit { putBoolean(KEY_ENABLED, value) }
@@ -46,13 +63,7 @@ class SettingsStore(context: Context) {
     }
 
     companion object {
-        /**
-         * TEMPORAIRE, pour mettre au point l'accueil : vrai = il s'affiche à chaque démarrage de l'app (processus neuf),
-         * sans effacer les données. À repasser à false une fois l'accueil terminé.
-         */
-        const val ALWAYS_SHOW_ONBOARDING = true
-
-        /** Accueil déjà passé depuis le démarrage du processus : évite de le relancer en boucle en mode temporaire. */
+        /** Accueil déjà passé depuis le démarrage du processus : évite de le relancer en boucle quand il est forcé (réglage de debug). */
         @Volatile
         private var onboardingSeenThisRun = false
 
@@ -65,5 +76,6 @@ class SettingsStore(context: Context) {
         private const val KEY_PAUSE_MINUTES = "pause_minutes"
         private const val KEY_HIDE_SYSTEM_APPS = "hide_system_apps"
         private const val KEY_ONBOARDING_DONE = "onboarding_done"
+        private const val KEY_ALWAYS_SHOW_ONBOARDING = "always_show_onboarding"
     }
 }

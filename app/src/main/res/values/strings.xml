@@ -70,6 +70,9 @@
     <!-- TO WRITE: placeholder text (Lorem Ipsum). -->
     <string name="settings_help_body">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</string>
     <string name="settings_version">Version</string>
+    <string name="settings_section_debug">Debug</string>
+    <string name="settings_debug_onboarding_title">Always show the welcome screens</string>
+    <string name="settings_debug_onboarding_subtitle">Each time the app starts. Development builds only.</string>
     <string name="action_close">Close</string>
     <plurals name="duration_minutes">
         <item quantity="one">%d minute</item>

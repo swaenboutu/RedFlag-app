@@ -130,6 +130,28 @@
                     android:id="@+id/rowVersion"
                     layout="@layout/item_setting_row" />
             </LinearLayout>
+
+            <!-- Debug : visible uniquement dans une version de développement (voir SettingsActivity). -->
+            <LinearLayout
+                android:id="@+id/debugGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <fr.conscience.numerique.ui.HeadingTextView
+                    style="@style/Widget.Conscience.SettingsSection"
+                    android:text="@string/settings_section_debug" />
+
+                <LinearLayout
+                    android:id="@+id/cardDebug"
+                    style="@style/Widget.Conscience.SettingsCard">
+
+                    <include
+                        android:id="@+id/rowOnboarding"
+                        layout="@layout/item_setting_switch_row" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

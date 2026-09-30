@@ -35,6 +35,7 @@ class SettingsActivity : AppCompatActivity() {
         // Coins arrondis + effets tactiles contenus dans les cartes : `clipToOutline` en XML exige Android 12.
         listOf(binding.activeCard, binding.cardInterruption, binding.cardApps, binding.cardHelp)
             .forEach { it.clipToOutline = true }
+        binding.cardDebug.clipToOutline = true
 
         // Toute la carte bascule l'interrupteur, pas seulement le bouton.
         binding.activeCard.setOnClickListener {
@@ -53,15 +54,20 @@ class SettingsActivity : AppCompatActivity() {
         binding.rowVersion.value.text = versionName()
         binding.rowVersion.chevron.visibility = View.GONE
 
+        setupDebug()
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                combine(settings.interceptionEnabled, settings.pauseMinutes, settings.hideSystemApps) { enabled, pause, hide ->
-                    Triple(enabled, pause, hide)
-                }.collect { (enabled, pause, hide) ->
-                    showEnabled(enabled)
-                    binding.rowPause.value.text = formatPause(this@SettingsActivity, pause)
-                    binding.rowList.value.text = getString(if (hide) R.string.list_no_system else R.string.list_all)
+                launch {
+                    combine(settings.interceptionEnabled, settings.pauseMinutes, settings.hideSystemApps) { enabled, pause, hide ->
+                        Triple(enabled, pause, hide)
+                    }.collect { (enabled, pause, hide) ->
+                        showEnabled(enabled)
+                        binding.rowPause.value.text = formatPause(this@SettingsActivity, pause)
+                        binding.rowList.value.text = getString(if (hide) R.string.list_no_system else R.string.list_all)
+                    }
                 }
+                launch { settings.alwaysShowOnboarding.collect { binding.rowOnboarding.toggle.isChecked = it } }
             }
         }
     }
@@ -81,6 +87,19 @@ class SettingsActivity : AppCompatActivity() {
         row.root.isClickable = clickable
         row.root.isFocusable = clickable
         if (clickable) row.root.setOnClickListener { onClick() } else row.root.background = null
+    }
+
+    /** Section « Debug » : n'existe que dans une version de développement, jamais en production. */
+    private fun setupDebug() {
+        if (!settings.isDebuggable) return
+        binding.debugGroup.visibility = View.VISIBLE
+        with(binding.rowOnboarding) {
+            title.setText(R.string.settings_debug_onboarding_title)
+            subtitle.setText(R.string.settings_debug_onboarding_subtitle)
+            // Toute la ligne bascule l'interrupteur, pas seulement le bouton.
+            root.setOnClickListener { toggle.toggle() }
+            toggle.setOnCheckedChangeListener { _, checked -> settings.setAlwaysShowOnboarding(checked) }
+        }
     }
 
     private fun showEnabled(enabled: Boolean) {

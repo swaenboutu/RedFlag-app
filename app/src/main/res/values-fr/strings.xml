@@ -72,6 +72,9 @@
     <!-- À RÉDIGER : texte provisoire (Lorem Ipsum). -->
     <string name="settings_help_body">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</string>
     <string name="settings_version">Version</string>
+    <string name="settings_section_debug">Debug</string>
+    <string name="settings_debug_onboarding_title">Toujours afficher l\'accueil</string>
+    <string name="settings_debug_onboarding_subtitle">À chaque démarrage de l\'app. Versions de développement uniquement.</string>
     <string name="action_close">Fermer</string>
     <plurals name="duration_minutes">
         <item quantity="one">%d minute</item>
