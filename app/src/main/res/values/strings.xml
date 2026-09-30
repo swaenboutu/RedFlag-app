@@ -28,6 +28,14 @@
     <string name="cancel">Cancel</string>
     <string name="add">Add</string>
 
+    <!-- Lorem ipsum provisoire : texte d'accueil à rédiger. -->
+    <string name="onboarding_body">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</string>
+    <string name="onboarding_start">Get started</string>
+    <string name="onboarding_problems_title">What matters to you?</string>
+    <string name="onboarding_problems_body">Select the issues that matter to you. They will be added to your favorites, so you can find them easily later.</string>
+    <string name="onboarding_continue">Continue</string>
+    <string name="onboarding_counter">%1$d / %2$d selected</string>
+    <string name="onboarding_counter_full">%1$d / %2$d selected · uncheck one to pick another</string>
     <string name="nav_apps">Apps</string>
     <string name="nav_problems">Issues</string>
     <string name="nav_settings">Settings</string>

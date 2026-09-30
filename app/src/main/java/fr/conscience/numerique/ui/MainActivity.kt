@@ -10,6 +10,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import fr.conscience.numerique.ConscienceApp
 import fr.conscience.numerique.R
 import fr.conscience.numerique.databinding.ActivityMainBinding
 import fr.conscience.numerique.service.isFrictionServiceEnabled
@@ -22,7 +23,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        if (!(application as ConscienceApp).container.settings.onboardingDone) {
+            startActivity(Intent(this, OnboardingActivity::class.java))
+            finish()
+            return
+        }
+        binding =ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val adapter = AppListAdapter { item ->

@@ -22,6 +22,14 @@ class SettingsStore(context: Context) {
     /** Vrai = la liste des applications masque les apps système (celles mises à jour par l'utilisateur restent). */
     val hideSystemApps: StateFlow<Boolean> = _hideSystemApps
 
+    /** Vrai une fois l'écran d'accueil passé : il ne s'affiche qu'au premier lancement. */
+    var onboardingDone: Boolean
+        get() = if (ALWAYS_SHOW_ONBOARDING) onboardingSeenThisRun else prefs.getBoolean(KEY_ONBOARDING_DONE, false)
+        set(value) {
+            onboardingSeenThisRun = value
+            prefs.edit { putBoolean(KEY_ONBOARDING_DONE, value) }
+        }
+
     fun setInterceptionEnabled(value: Boolean) {
         prefs.edit { putBoolean(KEY_ENABLED, value) }
         _interceptionEnabled.value = value
@@ -38,6 +46,16 @@ class SettingsStore(context: Context) {
     }
 
     companion object {
+        /**
+         * TEMPORAIRE, pour mettre au point l'accueil : vrai = il s'affiche à chaque démarrage de l'app (processus neuf),
+         * sans effacer les données. À repasser à false une fois l'accueil terminé.
+         */
+        const val ALWAYS_SHOW_ONBOARDING = true
+
+        /** Accueil déjà passé depuis le démarrage du processus : évite de le relancer en boucle en mode temporaire. */
+        @Volatile
+        private var onboardingSeenThisRun = false
+
         const val DEFAULT_PAUSE_MINUTES = 60
 
         /** Durées proposées, en minutes. */
@@ -46,5 +64,6 @@ class SettingsStore(context: Context) {
         private const val KEY_ENABLED = "interception_enabled"
         private const val KEY_PAUSE_MINUTES = "pause_minutes"
         private const val KEY_HIDE_SYSTEM_APPS = "hide_system_apps"
+        private const val KEY_ONBOARDING_DONE = "onboarding_done"
     }
 }

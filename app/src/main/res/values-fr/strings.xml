@@ -30,6 +30,14 @@
     <string name="cancel">Annuler</string>
     <string name="add">Ajouter</string>
 
+    <!-- Lorem ipsum provisoire : texte d'accueil à rédiger. -->
+    <string name="onboarding_body">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</string>
+    <string name="onboarding_start">Commencer</string>
+    <string name="onboarding_problems_title">Ce qui compte pour vous</string>
+    <string name="onboarding_problems_body">Sélectionnez les problématiques qui vous importent. Elles seront ajoutées à vos favoris, pour les retrouver facilement ensuite.</string>
+    <string name="onboarding_continue">Continuer</string>
+    <string name="onboarding_counter">%1$d / %2$d sélectionnées</string>
+    <string name="onboarding_counter_full">%1$d / %2$d sélectionnées · décochez-en une pour en choisir une autre</string>
     <string name="nav_apps">Applications</string>
     <string name="nav_problems">Problématiques</string>
     <string name="nav_settings">Réglages</string>
