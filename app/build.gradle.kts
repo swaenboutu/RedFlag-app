@@ -13,6 +13,7 @@ android {
         targetSdk = 37
         versionCode = 1
         versionName = "0.1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -35,10 +36,32 @@ android {
         viewBinding = true
     }
 
+    sourceSets {
+        // Les schémas JSON de Room servent aux tests de migration sur appareil.
+        getByName("androidTest").assets.directories.add("$projectDir/schemas")
+    }
+
+    testOptions {
+        unitTests.all {
+            // StringResourcesTest lit les fichiers de traduction : sans ceci, Gradle ne relance pas les tests quand ils changent.
+            it.inputs.dir("src/main/res")
+        }
+    }
+
     lint {
         // local.properties est propre à chaque machine et n'est pas versionné : ce contrôle n'a rien à vérifier dans le dépôt
         // (et il signale à tort un fichier déjà correctement échappé).
         disable += "PropertyEscape"
+    }
+}
+
+// room-testing (tests de migration) lit les schémas JSON avec kotlinx-serialization 1.8 alors que le reste de l'app est épinglé en 1.7.3 :
+// mélanger les deux versions plante (AbstractMethodError). On aligne tout sur 1.8.1, uniquement pour les tests sur appareil.
+configurations.matching { it.name.contains("AndroidTest", ignoreCase = true) }.configureEach {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "org.jetbrains.kotlinx" && requested.name.startsWith("kotlinx-serialization-")) {
+            useVersion("1.8.1")
+        }
     }
 }
 
@@ -61,4 +84,11 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
+
+    androidTestImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.core.ktx)
+    androidTestImplementation(libs.androidx.room.testing)
+    androidTestImplementation(libs.kotlinx.coroutines.android)
 }

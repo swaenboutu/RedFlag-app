@@ -68,6 +68,60 @@ class StatsTest {
     }
 
     @Test
+    fun `un evenement a 23h59 et un autre a 00h01 tombent sur deux jours differents`() {
+        fun at(day: Int, hour: Int, minute: Int) = ChoiceEvent(
+            packageName = "app",
+            timestamp = LocalDateTime.of(2026, 9, day, hour, minute).atZone(zone).toInstant().toEpochMilli(),
+            proceeded = false,
+        )
+        val buckets = Stats.buckets(listOf(at(29, 23, 59), at(30, 0, 1)), StatsRange.DAY, now, zone)
+        assertEquals(1, buckets[buckets.size - 2].attempts)
+        assertEquals(1, buckets.last().attempts)
+    }
+
+    @Test
+    fun `un evenement dans le futur est ignore`() {
+        val buckets = Stats.buckets(listOf(event(2026, 10, 1, proceeded = false)), StatsRange.DAY, now, zone)
+        assertEquals(0, buckets.sumOf { it.attempts })
+    }
+
+    @Test
+    fun `le fuseau horaire decide du jour`() {
+        // 30 septembre 23h30 à Paris = 30 septembre 21h30 UTC : même jour ; mais 1er octobre 00h30 à Paris = 30 septembre en UTC.
+        val lateParis = ChoiceEvent(
+            packageName = "app",
+            timestamp = LocalDateTime.of(2026, 10, 1, 0, 30).atZone(zone).toInstant().toEpochMilli(),
+            proceeded = false,
+        )
+        val inParis = Stats.buckets(listOf(lateParis), StatsRange.MONTH, LocalDateTime.of(2026, 10, 2, 12, 0).atZone(zone).toInstant(), zone)
+        assertEquals(1, inParis.last().attempts)
+        assertEquals(LocalDate.of(2026, 10, 1), inParis.last().start)
+
+        val utc = ZoneId.of("UTC")
+        val inUtc = Stats.buckets(listOf(lateParis), StatsRange.MONTH, LocalDateTime.of(2026, 10, 2, 12, 0).atZone(utc).toInstant(), utc)
+        assertEquals(1, inUtc[inUtc.size - 2].attempts)
+    }
+
+    @Test
+    fun `fin d'annee, les mois enjambent bien le 1er janvier`() {
+        val newYear = LocalDateTime.of(2027, 1, 15, 12, 0).atZone(zone).toInstant()
+        val buckets = Stats.buckets(emptyList(), StatsRange.MONTH, newYear, zone)
+        assertEquals(LocalDate.of(2026, 2, 1), buckets.first().start)
+        assertEquals(LocalDate.of(2027, 1, 1), buckets.last().start)
+    }
+
+    @Test
+    fun `chaque barre compte bien la somme de ses trois parties`() {
+        val events = listOf(
+            event(2026, 9, 30, proceeded = false),
+            event(2026, 9, 30, proceeded = true),
+            event(2026, 9, 30, proceeded = true, snoozed = true),
+        )
+        val bucket = Stats.buckets(events, StatsRange.DAY, now, zone).last()
+        assertEquals(bucket.blocked + bucket.bypassed + bucket.snoozed, bucket.attempts)
+    }
+
+    @Test
     fun `par annee, les cinq dernieres annees`() {
         val events = listOf(
             event(2026, 1, 2, proceeded = true),

@@ -30,8 +30,12 @@ app/src/main/java/fr/conscience/numerique/
 
 ```
 gradlew.bat :app:assembleDebug
-gradlew.bat :app:testDebugUnitTest
+gradlew.bat :app:testDebugUnitTest         # tests unitaires (sans appareil)
+gradlew.bat :app:connectedDebugAndroidTest # tests sur appareil (émulateur lancé) : migrations, base de données, écrans
 ```
+
+Les tests sur appareil réinstallent l'app : désinstaller d'abord la version déjà présente si l'installation échoue
+(`adb uninstall fr.conscience.numerique`), ce qui efface ses données.
 
 Ouvrir le dossier dans Android Studio, puis lancer sur l'AVD. Activer ensuite le service dans
 *Paramètres > Accessibilité > Conscience Numérique* (la bannière de l'écran principal y renvoie).

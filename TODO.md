@@ -10,9 +10,8 @@
     conteneur (`(application as ConscienceApp).container`, 8 fichiers)
   - [ ] 4. Structure : sous-dossiers de `ui/` par écran (apps, problématiques, réglages, interruption), scinder
     `MonitoredAppDao`, chargement des icônes sur le fil principal et toutes en mémoire au démarrage (petit cache)
-  - [ ] 5. Tests : migrations Room 1→4 (les schémas JSON existent), ViewModels testables via une fabrique
-    (`ViewModelProvider.Factory`), test de l'écran d'interruption relancé pour deux apps différentes
-    (bug déjà corrigé, sans test de non-régression)
+  - [ ] 5. Tests : il reste les ViewModels testables via une fabrique (`ViewModelProvider.Factory`) et des tests d'écrans
+    (accueil, statistiques). Déjà fait : tests unitaires, migrations Room 1→6, dépôt de données, écran d'interruption
   - [ ] 6. Décision de conception : identifier une problématique personnalisée par un identifiant plutôt que par son texte
     (renommer touche aujourd'hui 3 tables)
 - [ ] **Essai à blanc de la publication sur le Play Store** (voir si l'app passerait la revue)
