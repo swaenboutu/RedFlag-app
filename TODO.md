@@ -29,13 +29,6 @@
     dont les 23 problématiques du catalogue
   - Ajouter la langue dans `res/xml/locales_config.xml`
   - Les pluriels espagnols ont une forme `many` en plus
-- [ ] **Onboarding**, dans cet ordre :
-  1. un écran explicatif
-  2. un écran pour mettre des problématiques en favoris
-  3. l'association d'une problématique à une application installée
-  - L'écran des favoris et celui du choix d'apps existent déjà : les réutiliser. Demander aussi l'activation du service
-    d'accessibilité (il n'y a pas encore d'écran guidé pour ça, seulement le bandeau)
-  - Pas de dark patterns (exigence du pitch)
 - [ ] **FAQ** : l'application, son fonctionnement, son côté éthique et sa politique de confidentialité
   - Remplacera le Lorem Ipsum de « Comment ça marche » (Réglages), texte `settings_help_body`
   - La politique de confidentialité sert aussi pour le Play Store (point ci-dessus)

@@ -36,15 +36,6 @@ gradlew.bat :app:testDebugUnitTest
 Ouvrir le dossier dans Android Studio, puis lancer sur l'AVD. Activer ensuite le service dans
 *Paramètres > Accessibilité > Conscience Numérique* (la bannière de l'écran principal y renvoie).
 
-## État de la V1
-
-Fait : liste des apps, labellisation (champ libre + suggestions), interception via le service
-d'accessibilité, interstitiel Oui / Non / pause 1 h, journal des choix en base.
-
-À faire : écran de statistiques, réglage de fréquence (chaque ouverture / 1re du jour), durées de
-pause configurables, onboarding d'activation du service, tests instrumentés, politique de
-confidentialité.
-
 ## Problématiques et langues
 
 Le catalogue prédéfini (7 catégories, 23 problématiques) est dans `data/ProblemCatalog.kt`. Chaque
