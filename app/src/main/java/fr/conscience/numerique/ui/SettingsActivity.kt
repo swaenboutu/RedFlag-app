@@ -1,5 +1,6 @@
 package fr.conscience.numerique.ui
 
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -100,6 +101,20 @@ class SettingsActivity : AppCompatActivity() {
             root.setOnClickListener { toggle.toggle() }
             toggle.setOnCheckedChangeListener { _, checked -> settings.setAlwaysShowOnboarding(checked) }
         }
+        setupRow(binding.rowReset, R.string.settings_debug_reset_title, R.string.settings_debug_reset_subtitle) { confirmReset() }
+        binding.rowReset.chevron.visibility = View.GONE
+    }
+
+    /** Efface toutes les données de l'app (base, réglages), comme « Effacer les données » d'Android ; l'app se ferme. */
+    private fun confirmReset() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.settings_debug_reset_confirm_title)
+            .setMessage(R.string.settings_debug_reset_confirm_message)
+            .setPositiveButton(R.string.settings_debug_reset_confirm_action) { _, _ ->
+                (getSystemService(ACTIVITY_SERVICE) as ActivityManager).clearApplicationUserData()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     private fun showEnabled(enabled: Boolean) {

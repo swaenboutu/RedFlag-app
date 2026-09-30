@@ -73,6 +73,11 @@
     <string name="settings_section_debug">Debug</string>
     <string name="settings_debug_onboarding_title">Always show the welcome screens</string>
     <string name="settings_debug_onboarding_subtitle">Each time the app starts. Development builds only.</string>
+    <string name="settings_debug_reset_title">Reset the app</string>
+    <string name="settings_debug_reset_subtitle">Erase everything, as on a first launch.</string>
+    <string name="settings_debug_reset_confirm_title">Reset the app?</string>
+    <string name="settings_debug_reset_confirm_message">All settings, linked apps, favorites, custom issues and history will be erased, and the app will close.</string>
+    <string name="settings_debug_reset_confirm_action">Erase everything</string>
     <string name="action_close">Close</string>
     <plurals name="duration_minutes">
         <item quantity="one">%d minute</item>

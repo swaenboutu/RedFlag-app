@@ -75,6 +75,11 @@
     <string name="settings_section_debug">Debug</string>
     <string name="settings_debug_onboarding_title">Toujours afficher l\'accueil</string>
     <string name="settings_debug_onboarding_subtitle">À chaque démarrage de l\'app. Versions de développement uniquement.</string>
+    <string name="settings_debug_reset_title">Réinitialiser l\'app</string>
+    <string name="settings_debug_reset_subtitle">Efface tout, comme au premier lancement.</string>
+    <string name="settings_debug_reset_confirm_title">Réinitialiser l\'app ?</string>
+    <string name="settings_debug_reset_confirm_message">Tous les réglages, les apps associées, les favoris, les problématiques personnalisées et l\'historique seront effacés, et l\'app se fermera.</string>
+    <string name="settings_debug_reset_confirm_action">Tout effacer</string>
     <string name="action_close">Fermer</string>
     <plurals name="duration_minutes">
         <item quantity="one">%d minute</item>
