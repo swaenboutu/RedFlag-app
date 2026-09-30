@@ -54,8 +54,8 @@
     <string name="nav_settings">Réglages</string>
     <string name="stats_title">Statistiques</string>
     <string name="stats_summary_value">%1$d / %2$d</string>
-    <string name="stats_summary_caption">apps avec une interruption</string>
-    <string name="stats_apps_section">Apps avec une interruption</string>
+    <string name="stats_summary_caption">applications avec une interruption</string>
+    <string name="stats_apps_section">Applications avec une interruption</string>
     <plurals name="stats_attempts">
         <item quantity="one">%d tentative</item>
         <item quantity="many">%d tentatives</item>
@@ -135,9 +135,9 @@
         <item quantity="many">%d cochées</item>
     </plurals>
     <plurals name="theme_apps_flagged">
-        <item quantity="one">%d app signalée</item>
-        <item quantity="other">%d apps signalées</item>
-        <item quantity="many">%d apps signalées</item>
+        <item quantity="one">%d application signalée</item>
+        <item quantity="other">%d applications signalées</item>
+        <item quantity="many">%d applications signalées</item>
     </plurals>
     <string name="action_delete">Supprimer</string>
     <string name="action_back">Retour</string>
@@ -164,7 +164,7 @@
     </plurals>
     <string name="picker_custom_hint">Écrivez votre propre problématique (dans la langue de votre choix)</string>
 
-    <string name="interstitial_title">Une <annotation font="accent">seconde.</annotation></string>
+    <string name="interstitial_title">Une <annotation font="accent">seconde</annotation></string>
     <plurals name="interstitial_subtitle">
         <!-- Jamais affiché pour 0 : l'interruption exige au moins une problématique. -->
         <item quantity="one" tools:ignore="ImpliedQuantity">Vous avez associé cette application à la problématique suivante :</item>
@@ -173,7 +173,7 @@
     </plurals>
     <string name="interstitial_question">Est-ce vraiment important de lancer l’application maintenant ?</string>
     <string name="btn_continue">Oui, lancer %1$s</string>
-    <string name="btn_back">Non, fermer l’app</string>
+    <string name="btn_back">Non, fermer l’application</string>
     <string name="btn_pause">Ne plus me demander pendant %1$s</string>
 
     <string name="accessibility_service_description">Détecte uniquement le nom de l\'application qui passe au premier plan, pour afficher un rappel avant l\'ouverture d\'une application que vous avez signalée. Aucun contenu d\'écran n\'est lu et aucune donnée ne quitte votre appareil.</string>
@@ -201,7 +201,7 @@
     <string name="problem_planned_obsolescence">Obsolescence programmée encouragée</string>
     <string name="problem_overconsumption">Surconsommation encouragée</string>
     <string name="problem_worker_exploitation">Exploitation des travailleurs (entrepôts, livreurs, modérateurs de contenu…)</string>
-    <string name="problem_child_labor">Travail des enfants dans la supply chain</string>
+    <string name="problem_child_labor">Travail des enfants dans la chaîne d’approvisionnement</string>
     <string name="problem_subcontractor_conditions">Conditions de travail des sous-traitants</string>
     <string name="problem_excessive_data">Collecte excessive de données personnelles</string>
     <string name="problem_data_resale">Revente de données à des tiers</string>
