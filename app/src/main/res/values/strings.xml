@@ -84,6 +84,7 @@
     <string name="problems_manage_hint">Tap a theme to open or close it.</string>
     <string name="action_new_problem">+  New issue</string>
     <string name="dialog_new_problem_title">New issue</string>
+    <string name="dialog_new_problem_theme">Theme</string>
     <string name="custom_empty">No issues yet</string>
     <string name="apps_none">No app</string>
     <plurals name="theme_problems">

@@ -68,7 +68,7 @@ class ProblemsManagerViewModel(application: Application) : AndroidViewModel(appl
 
     val rows: StateFlow<List<ManagerRow>> = combine(
         repository.monitoredApps,
-        repository.customLabels,
+        repository.customProblems,
         repository.labelOverrides,
         repository.favorites,
         expanded,
@@ -98,29 +98,37 @@ class ProblemsManagerViewModel(application: Application) : AndroidViewModel(appl
             }
         }
 
+        // Une problématique personnalisée rangée dans un thème s'affiche à la suite de celles du catalogue.
+        val customEntries = custom.map { Entry.Cus(it.label, appsOf(ProblemRef(customLabel = it.label))) }
+        val customByCategory = custom.groupBy({ it.category }, { c -> customEntries.first { it.label == c.label } })
         val catalogEntries = ProblemCatalog.categories.map { category ->
-            category.title to category.problems.map { Entry.Cat(it, appsOf(ProblemRef(catalogKey = it.key))) }
+            category.title to (
+                category.problems.map { Entry.Cat(it, appsOf(ProblemRef(catalogKey = it.key))) } +
+                    customByCategory[category.key].orEmpty()
+                )
         }
-        val customEntries = custom.map { Entry.Cus(it, appsOf(ProblemRef(customLabel = it))) }
 
         buildList {
             // Favoris : d'abord ceux du catalogue (dans l'ordre des thèmes), puis les personnalisés.
             val favoriteEntries: List<Entry> =
-                catalogEntries.flatMap { it.second }.filter { ProblemRef(catalogKey = it.problem.key) in favorites } +
+                catalogEntries.flatMap { it.second }.filterIsInstance<Entry.Cat>().filter { ProblemRef(catalogKey = it.problem.key) in favorites } +
                     customEntries.filter { ProblemRef(customLabel = it.label) in favorites }
             if (favoriteEntries.isNotEmpty()) addSection(R.string.category_favorites, favoriteEntries)
 
             catalogEntries.forEach { (title, entries) -> addSection(title, entries) }
-            addSection(R.string.category_custom, customEntries)
+            addSection(R.string.category_custom, customByCategory[null].orEmpty())
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     fun toggle(themeId: Int) = expanded.update { if (themeId in it) it - themeId else it + themeId }
 
-    fun expandCustom() = expanded.update { it + R.string.category_custom }
+    /** Ouvre le thème [categoryKey] (null = « Personnalisé »), par exemple après y avoir ajouté une problématique. */
+    fun expandTheme(categoryKey: String?) = expanded.update {
+        it + (categoryKey?.let { key -> ProblemCatalog.findCategory(key)?.title } ?: R.string.category_custom)
+    }
 
     /** [onResult] reçoit false si le nom est déjà pris. */
-    fun add(label: String, onResult: (Boolean) -> Unit) {
-        viewModelScope.launch { onResult(repository.addCustomProblem(label)) }
+    fun add(label: String, category: String?, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch { onResult(repository.addCustomProblem(label, category)) }
     }
 }

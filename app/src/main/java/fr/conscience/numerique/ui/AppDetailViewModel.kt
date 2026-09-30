@@ -56,7 +56,7 @@ class AppDetailViewModel(application: Application, handle: SavedStateHandle) : A
 
     val rows: StateFlow<List<DetailRow>> = combine(
         repository.monitoredApps,
-        repository.customLabels,
+        repository.customProblems,
         repository.labelOverrides,
         repository.favorites,
         expanded,
@@ -64,10 +64,16 @@ class AppDetailViewModel(application: Application, handle: SavedStateHandle) : A
         val current = monitored.firstOrNull { it.app.packageName == packageName }?.problems.orEmpty()
             .map { ProblemRef(it.catalogKey, it.customLabel) }.toSet()
 
+        // Une problématique personnalisée rangée dans un thème s'affiche à la suite de celles du catalogue.
+        val customByCategory = custom.groupBy({ it.category }, { ProblemRef(customLabel = it.label) })
         val catalogSections = ProblemCatalog.categories.map { category ->
-            category.title to category.problems.map { ProblemRef(catalogKey = it.key) }
+            category.title to (
+                category.problems.map { ProblemRef(catalogKey = it.key) } + customByCategory[category.key].orEmpty()
+                )
         }
-        val customRefs = (custom + current.mapNotNull { it.customLabel }).distinct().map { ProblemRef(customLabel = it) }
+        val knownLabels = custom.map { it.label }.toSet()
+        val customRefs = (customByCategory[null].orEmpty() + current.filter { it.customLabel != null && it.customLabel !in knownLabels })
+            .distinct()
         val allRefs = catalogSections.flatMap { it.second } + customRefs
 
         fun MutableList<DetailRow>.section(id: Int, refs: List<ProblemRef>) {

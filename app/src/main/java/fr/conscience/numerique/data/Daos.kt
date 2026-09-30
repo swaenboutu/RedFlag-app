@@ -24,6 +24,12 @@ abstract class MonitoredAppDao {
     @Query("SELECT label FROM custom_problems ORDER BY label COLLATE NOCASE")
     abstract fun observeCustomLabels(): Flow<List<String>>
 
+    @Query("SELECT * FROM custom_problems ORDER BY label COLLATE NOCASE")
+    abstract fun observeCustomProblems(): Flow<List<CustomProblem>>
+
+    @Query("SELECT category FROM custom_problems WHERE label = :label")
+    protected abstract suspend fun customCategory(label: String): String?
+
     @Query("SELECT label FROM custom_problems")
     abstract suspend fun customLabelsOnce(): List<String>
 
@@ -105,8 +111,9 @@ abstract class MonitoredAppDao {
 
     @Transaction
     open suspend fun renameCustom(oldLabel: String, newLabel: String) {
+        val category = customCategory(oldLabel)
         deleteCustomLabel(oldLabel)
-        insertCustomLabels(listOf(CustomProblem(newLabel)))
+        insertCustomLabels(listOf(CustomProblem(newLabel, category)))
         renameInProblems(oldLabel, newLabel)
         renameFavorite(CUSTOM_PREFIX + oldLabel, CUSTOM_PREFIX + newLabel)
     }

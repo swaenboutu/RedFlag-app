@@ -9,6 +9,7 @@ class AppRepository(private val db: AppDatabase) {
 
     val monitoredApps: Flow<List<MonitoredAppWithProblems>> get() = apps.observeAll()
     val customLabels: Flow<List<String>> get() = apps.observeCustomLabels()
+    val customProblems: Flow<List<CustomProblem>> get() = apps.observeCustomProblems()
     val problems: Flow<List<Problem>> get() = apps.observeProblems()
     val favorites: Flow<Set<ProblemRef>>
         get() = apps.observeFavorites().map { list -> list.mapNotNull { favoriteRef(it.id) }.toSet() }
@@ -18,10 +19,10 @@ class AppRepository(private val db: AppDatabase) {
 
     suspend fun find(packageName: String): MonitoredAppWithProblems? = apps.find(packageName)
 
-    /** Ajoute une problématique personnalisée à la liste ; false si elle existe déjà (casse ignorée). */
-    suspend fun addCustomProblem(label: String): Boolean {
+    /** Ajoute une problématique personnalisée à la liste, dans le thème [category] (null = « Personnalisé ») ; false si elle existe déjà (casse ignorée). */
+    suspend fun addCustomProblem(label: String, category: String? = null): Boolean {
         if (apps.customLabelsOnce().any { it.equals(label, ignoreCase = true) }) return false
-        apps.insertCustomLabels(listOf(CustomProblem(label)))
+        apps.insertCustomLabels(listOf(CustomProblem(label, category)))
         return true
     }
 

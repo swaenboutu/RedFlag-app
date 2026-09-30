@@ -46,10 +46,10 @@ class ProblemsManagerActivity : AppCompatActivity() {
         BottomNav.select(binding.bottomBar.bottomNav, R.id.nav_problems)
     }
 
-    private fun addProblem() = showNewProblemDialog(this) { label ->
-        viewModel.add(label) { added ->
+    private fun addProblem() = showNewProblemDialog(this) { label, category ->
+        viewModel.add(label, category) { added ->
             if (added) {
-                viewModel.expandCustom()
+                viewModel.expandTheme(category)
             } else {
                 Toast.makeText(this, R.string.error_already_exists, Toast.LENGTH_SHORT).show()
             }

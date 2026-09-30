@@ -8,6 +8,8 @@ import fr.conscience.numerique.R
 data class PredefinedProblem(val key: String, @StringRes val label: Int)
 
 data class ProblemCategory(
+    /** Stable, stockée en base pour rattacher une problématique personnalisée à ce thème. */
+    val key: String,
     val emoji: String,
     @StringRes val title: Int,
     val problems: List<PredefinedProblem>,
@@ -16,7 +18,7 @@ data class ProblemCategory(
 object ProblemCatalog {
     val categories: List<ProblemCategory> = listOf(
         ProblemCategory(
-            "🧠", R.string.category_mental,
+            "mental", "🧠", R.string.category_mental,
             listOf(
                 PredefinedProblem("addictive_design", R.string.problem_addictive_design),
                 PredefinedProblem("social_comparison", R.string.problem_social_comparison),
@@ -25,7 +27,7 @@ object ProblemCatalog {
             ),
         ),
         ProblemCategory(
-            "👥", R.string.category_social,
+            "social", "👥", R.string.category_social,
             listOf(
                 PredefinedProblem("sexism", R.string.problem_sexism),
                 PredefinedProblem("racism", R.string.problem_racism),
@@ -34,7 +36,7 @@ object ProblemCatalog {
             ),
         ),
         ProblemCategory(
-            "🌍", R.string.category_environment,
+            "environment", "🌍", R.string.category_environment,
             listOf(
                 PredefinedProblem("carbon_footprint", R.string.problem_carbon_footprint),
                 PredefinedProblem("planned_obsolescence", R.string.problem_planned_obsolescence),
@@ -42,7 +44,7 @@ object ProblemCatalog {
             ),
         ),
         ProblemCategory(
-            "💼", R.string.category_exploitation,
+            "exploitation", "💼", R.string.category_exploitation,
             listOf(
                 PredefinedProblem("worker_exploitation", R.string.problem_worker_exploitation),
                 PredefinedProblem("child_labor", R.string.problem_child_labor),
@@ -50,7 +52,7 @@ object ProblemCatalog {
             ),
         ),
         ProblemCategory(
-            "🔐", R.string.category_privacy,
+            "privacy", "🔐", R.string.category_privacy,
             listOf(
                 PredefinedProblem("excessive_data", R.string.problem_excessive_data),
                 PredefinedProblem("data_resale", R.string.problem_data_resale),
@@ -58,7 +60,7 @@ object ProblemCatalog {
             ),
         ),
         ProblemCategory(
-            "💰", R.string.category_economic,
+            "economic", "💰", R.string.category_economic,
             listOf(
                 PredefinedProblem("predatory_monetization", R.string.problem_predatory_monetization),
                 PredefinedProblem("monopoly", R.string.problem_monopoly),
@@ -66,7 +68,7 @@ object ProblemCatalog {
             ),
         ),
         ProblemCategory(
-            "🏛️", R.string.category_political,
+            "political", "🏛️", R.string.category_political,
             listOf(
                 PredefinedProblem("misinformation", R.string.problem_misinformation),
                 PredefinedProblem("polarization", R.string.problem_polarization),
@@ -79,6 +81,8 @@ object ProblemCatalog {
         categories.flatMap { it.problems }.associateBy { it.key }
 
     fun find(key: String): PredefinedProblem? = byKey[key]
+
+    fun findCategory(key: String): ProblemCategory? = categories.firstOrNull { it.key == key }
 }
 
 /** Intitulé d'une entrée du catalogue : celui choisi par l'utilisateur, sinon la traduction courante. */
