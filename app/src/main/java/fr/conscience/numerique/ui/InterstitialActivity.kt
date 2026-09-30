@@ -99,10 +99,11 @@ class InterstitialActivity : AppCompatActivity() {
         return styled
     }
 
-    private fun proceed() {
+    /** [snoozed] : le passage vient du lien « Ne plus demander pendant… » (compté à part dans les statistiques). */
+    private fun proceed(snoozed: Boolean = false) {
         container.frictionGate.allow(targetPackage)
         lifecycleScope.launch {
-            container.repository.recordChoice(targetPackage, proceeded = true)
+            container.repository.recordChoice(targetPackage, proceeded = true, snoozed = snoozed)
             finish()
         }
     }
@@ -123,7 +124,7 @@ class InterstitialActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val pauseMillis = container.settings.pauseMinutes.value * 60_000L
             container.repository.snooze(targetPackage, System.currentTimeMillis() + pauseMillis)
-            proceed()
+            proceed(snoozed = true)
         }
     }
 

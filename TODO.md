@@ -15,10 +15,6 @@
     (bug déjà corrigé, sans test de non-régression)
   - [ ] 6. Décision de conception : identifier une problématique personnalisée par un identifiant plutôt que par son texte
     (renommer touche aujourd'hui 3 tables)
-- [ ] **Écran de statistiques**, à ajouter dans le menu (barre du bas)
-  - Les données existent déjà : chaque « Oui » / « Non » est enregistré (`ChoiceEvent`), et `AppRepository.refusals`
-    (nombre de refus par app) est prêt mais jamais lu
-  - Idées du document de conception : déclenchements, Oui contre Non, par app, par semaine ou par mois
 - [ ] **Essai à blanc de la publication sur le Play Store** (voir si l'app passerait la revue)
   - Le point sensible : l'usage du service d'accessibilité doit être justifié et déclaré
   - À préparer : politique de confidentialité en ligne, formulaire « Sécurité des données », captures, icône, signature de

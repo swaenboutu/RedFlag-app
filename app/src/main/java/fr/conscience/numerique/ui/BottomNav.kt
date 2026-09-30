@@ -5,7 +5,7 @@ import android.content.Intent
 import com.google.android.material.navigation.NavigationBarView
 import fr.conscience.numerique.R
 
-/** Barre de navigation commune : Applications, Problématiques, Réglages. */
+/** Barre de navigation commune : Applications, Problématiques, Statistiques, Réglages. */
 object BottomNav {
     /** [current] : identifiant de l'onglet de l'écran qui appelle (R.id.nav_apps, R.id.nav_problems…). */
     fun setup(activity: Activity, nav: NavigationBarView, current: Int) {
@@ -24,6 +24,12 @@ object BottomNav {
                 item.itemId == R.id.nav_problems -> {
                     activity.startActivity(
                         Intent(activity, ProblemsManagerActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION),
+                    )
+                    false
+                }
+                item.itemId == R.id.nav_stats -> {
+                    activity.startActivity(
+                        Intent(activity, StatsActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION),
                     )
                     false
                 }

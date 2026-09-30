@@ -15,6 +15,12 @@
     <color name="status_ok">#1F9D6B</color>
     <color name="status_warning">#E0475B</color>
 
+    <!-- Graphiques des statistiques : fermée (bien), outrepassée, mise en pause. -->
+    <color name="chart_blocked">#1F9D6B</color>
+    <color name="chart_bypassed">#FFB547</color>
+    <color name="chart_snoozed">#1F2A5C</color>
+    <color name="chart_grid">#E2E4EC</color>
+
     <!-- Barre de navigation -->
     <color name="nav_indicator">#E3E6F4</color>
     <color name="nav_icon_active">#1F2A5C</color>

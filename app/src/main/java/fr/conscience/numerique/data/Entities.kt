@@ -1,5 +1,6 @@
 package fr.conscience.numerique.data
 
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -61,6 +62,8 @@ data class ChoiceEvent(
     val timestamp: Long,
     /** true = « Oui, continuer », false = « Non, revenir en arrière ». */
     val proceeded: Boolean,
+    /** true = « Ne plus demander pendant… » (la pause est comptée comme un passage, mais distinguée dans les statistiques). */
+    @ColumnInfo(defaultValue = "0") val snoozed: Boolean = false,
 )
 
 data class MonitoredAppWithProblems(

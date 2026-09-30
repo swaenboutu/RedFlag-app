@@ -14,7 +14,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         Favorite::class,
         ChoiceEvent::class,
     ],
-    version = 5,
+    version = 6,
     exportSchema = true,
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -53,6 +53,13 @@ val MIGRATION_3_4 = object : Migration(3, 4) {
 val MIGRATION_4_5 = object : Migration(4, 5) {
     override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE `custom_problems` ADD COLUMN `category` TEXT")
+    }
+}
+
+/** v6 : les événements distinguent une mise en pause (« Ne plus demander ») d'un simple « Oui ». */
+val MIGRATION_5_6 = object : Migration(5, 6) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE `choice_events` ADD COLUMN `snoozed` INTEGER NOT NULL DEFAULT 0")
     }
 }
 

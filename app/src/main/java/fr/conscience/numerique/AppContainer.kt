@@ -9,6 +9,7 @@ import fr.conscience.numerique.data.MIGRATION_1_2
 import fr.conscience.numerique.data.MIGRATION_2_3
 import fr.conscience.numerique.data.MIGRATION_3_4
 import fr.conscience.numerique.data.MIGRATION_4_5
+import fr.conscience.numerique.data.MIGRATION_5_6
 import fr.conscience.numerique.data.SettingsStore
 import fr.conscience.numerique.service.FrictionGate
 
@@ -16,7 +17,7 @@ import fr.conscience.numerique.service.FrictionGate
 class AppContainer(context: Context) {
     private val database: AppDatabase =
         Room.databaseBuilder(context, AppDatabase::class.java, "conscience.db")
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
             .build()
 
     val settings = SettingsStore(context)

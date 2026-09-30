@@ -133,6 +133,9 @@ interface ChoiceEventDao {
     @Insert
     suspend fun insert(event: ChoiceEvent)
 
+    @Query("SELECT * FROM choice_events ORDER BY timestamp")
+    fun observeAll(): Flow<List<ChoiceEvent>>
+
     @Query(
         "SELECT packageName, COUNT(*) AS refusals FROM choice_events " +
             "WHERE proceeded = 0 GROUP BY packageName",

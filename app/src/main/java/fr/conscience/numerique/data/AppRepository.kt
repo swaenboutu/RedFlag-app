@@ -16,6 +16,7 @@ class AppRepository(private val db: AppDatabase) {
     val labelOverrides: Flow<Map<String, String>>
         get() = apps.observeOverrides().map { list -> list.associate { it.catalogKey to it.label } }
     val refusals: Flow<List<RefusalCount>> get() = events.observeRefusals()
+    val choiceEvents: Flow<List<ChoiceEvent>> get() = events.observeAll()
 
     suspend fun find(packageName: String): MonitoredAppWithProblems? = apps.find(packageName)
 
@@ -57,12 +58,13 @@ class AppRepository(private val db: AppDatabase) {
 
     suspend fun snooze(packageName: String, until: Long) = apps.snooze(packageName, until)
 
-    suspend fun recordChoice(packageName: String, proceeded: Boolean) =
+    suspend fun recordChoice(packageName: String, proceeded: Boolean, snoozed: Boolean = false) =
         events.insert(
             ChoiceEvent(
                 packageName = packageName,
                 timestamp = System.currentTimeMillis(),
                 proceeded = proceeded,
+                snoozed = snoozed,
             ),
         )
 }
