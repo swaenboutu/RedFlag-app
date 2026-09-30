@@ -22,6 +22,7 @@
     <color name="nav_inactive">#646B80</color>
 
     <!-- Écran d'interruption -->
+    <color name="app_background">#F3F4F8</color>
     <color name="interstitial_background">#1F2A5C</color>
     <color name="interstitial_circle">#2B3873</color>
     <color name="interstitial_accent">#FFB547</color>

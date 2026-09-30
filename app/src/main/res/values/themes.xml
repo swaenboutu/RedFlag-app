@@ -6,7 +6,11 @@
         <item name="colorOnPrimary">#FFFFFF</item>
         <item name="colorSecondaryContainer">#E3E6F4</item>
         <item name="colorOnSecondaryContainer">#1F2A5C</item>
-        <item name="android:colorBackground">#F3F4F8</item>
+        <item name="android:colorBackground">@color/app_background</item>
+        <!-- Explicites : avant Android 9/10 (sans affichage bord à bord), sinon fond noir et barres bleu nuit. -->
+        <item name="android:windowBackground">@color/app_background</item>
+        <item name="android:statusBarColor">@color/app_background</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
         <item name="colorSurface">#FFFFFF</item>
