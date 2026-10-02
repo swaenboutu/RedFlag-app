@@ -32,8 +32,8 @@
             <answer>
                 “No, close the app” takes you back to the home screen.
 
-                “Yes, open the app” opens it, and you are not asked again while you keep using it. The choice is forgotten after
-                about 15 minutes without using the app, or as soon as the screen turns off.
+                “Yes, open the app” opens it, and you are not asked again for 15 minutes after you last used it, even if you close the
+                app by mistake and reopen it. The choice is forgotten earlier if the screen turns off.
 
                 The “Don’t ask again for…” link pauses the interruption for that app, for the duration set in Settings.
             </answer>

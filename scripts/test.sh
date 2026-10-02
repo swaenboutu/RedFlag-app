@@ -32,6 +32,31 @@ run_unit() { # $@ = noms de classes (vide = tout)
     "${GRADLE[@]}" :app:testDebugUnitTest "${args[@]}"
 }
 
+# Choisit l'appareil des tests sur appareil. Ils vident les données de l'app : on ne les lance jamais par surprise sur un vrai
+# téléphone branché en même temps qu'un émulateur. Un téléphone seul, ou un appareil choisi avec ANDROID_SERIAL, est accepté.
+pick_device() {
+    local devices count
+    devices=$(adb devices | awk '$2 == "device" { print $1 }')
+    count=$(printf '%s\n' "$devices" | grep -c . || true)
+    if [ "$count" -eq 0 ]; then
+        echo "Aucun émulateur ou téléphone connecté." >&2
+        exit 3
+    fi
+    if [ -n "${ANDROID_SERIAL:-}" ]; then
+        return
+    fi
+    if [ "$count" -gt 1 ]; then
+        local emulator
+        emulator=$(printf '%s\n' "$devices" | grep '^emulator-' | head -1 || true)
+        if [ -z "$emulator" ]; then
+            echo "Plusieurs appareils connectés et aucun émulateur : choisir avec ANDROID_SERIAL=<numéro de série> (adb devices)." >&2
+            exit 3
+        fi
+        echo ">> plusieurs appareils connectés : les tests ne tournent que sur $emulator (les données des autres ne sont pas touchées)"
+        export ANDROID_SERIAL=$emulator
+    fi
+}
+
 APP_ID=fr.conscience.numerique
 
 # Gradle désinstalle l'app à la fin des tests sur appareil : on la remet (en debug), et on réactive son service d'accessibilité
@@ -46,7 +71,7 @@ restore_app() { # $1 = services d'accessibilité actifs avant les tests
 }
 
 run_device() { # $@ = noms complets de classes (vide = tout)
-    adb get-state >/dev/null 2>&1 || { echo "Aucun émulateur ou téléphone connecté." >&2; exit 3; }
+    pick_device
     local args=()
     if [ $# -gt 0 ]; then
         local IFS=,
@@ -94,7 +119,7 @@ device_classes_for_changes() {
                 add ui.HomeAndStatsScreensTest ;;&
             app/schemas/*|*/data/AppDatabase.kt|*/data/Entities.kt) add data.MigrationTest; add data.AppRepositoryTest ;;
             */data/AppRepository.kt|*/data/Daos.kt) add data.AppRepositoryTest ;;
-            */data/SettingsStore.kt) add data.SettingsStoreTest; add ui.ForcedOnboardingTest ;;&
+            */data/SettingsStore.kt) add data.SettingsStoreTest; add ui.ForcedOnboardingTest; add ui.DebugModeScreenTest ;;&
             */data/InstalledAppsProvider.kt) add data.InstalledAppsProviderTest ;;
             */AppContainer.kt|*/ui/InterstitialActivity.kt|*/service/Friction*.kt|*/layout/activity_interstitial.xml|*/layout/item_problem_pill.xml|*/ui/ProblemPillAdapter.kt)
                 add ui.InterstitialActivityTest ;;
@@ -104,6 +129,8 @@ device_classes_for_changes() {
             */ui/Onboarding*.kt|*/layout/activity_onboarding*.xml|*/layout/item_onboarding*.xml) add ui.OnboardingSkipTest ;;&
             # Fenêtres de saisie des problématiques.
             */ui/Dialogs.kt|*/layout/dialog_new_problem.xml) add ui.EditProblemDialogTest ;;
+            # Mode debug (sept appuis sur la version) : le réglage lui-même et la section des Réglages.
+            */data/DebugUnlock.kt) add ui.DebugModeScreenTest ;;&
             # FAQ (et les Réglages qui y mènent, la carte de thème qu'elle partage avec d'autres écrans).
             */ui/Faq*.kt|*/data/Faq.kt|*/layout/activity_faq.xml|*/layout/item_faq_*.xml|*/ui/SettingsActivity.kt|*/layout/activity_settings.xml|*/ui/ThemeCard.kt|*/ui/CardStyle.kt|*/layout/item_manager_theme.xml)
                 add ui.FaqScreenTest ;;

@@ -25,31 +25,42 @@ class FrictionGateTest {
     }
 
     @Test
-    fun `tant que l'app reste au premier plan, l'autorisation est conservee`() {
+    fun `quitter l'app puis y revenir dans le delai ne redemande rien`() {
         gate.allow("a")
-        gate.onOtherAppForeground("a")
+        advance(5 * 60_000L) // l'app est fermée par erreur, puis rouverte quelques minutes plus tard
         assertTrue(gate.isAllowed("a"))
     }
 
     @Test
-    fun `des qu'une autre app passe devant, l'autorisation est oubliee`() {
+    fun `une autre app qui passe devant n'efface pas le Oui`() {
         gate.allow("a")
-        gate.onOtherAppForeground("b")
-        assertFalse(gate.isAllowed("a"))
+        assertFalse("l'autre app n'est pas autorisée pour autant", gate.isAllowed("b"))
+        advance(60_000L)
+        assertTrue(gate.isAllowed("a"))
     }
 
     @Test
-    fun `sans autorisation, un changement d'app ne fait rien`() {
-        gate.onOtherAppForeground("b")
-        assertFalse(gate.isAllowed("b"))
-    }
-
-    @Test
-    fun `autoriser une deuxieme app remplace la premiere`() {
+    fun `plusieurs apps peuvent etre autorisees en meme temps`() {
         gate.allow("a")
         gate.allow("b")
-        assertFalse(gate.isAllowed("a"))
+        assertTrue(gate.isAllowed("a"))
         assertTrue(gate.isAllowed("b"))
+    }
+
+    @Test
+    fun `le delai court depuis le dernier passage de l'app`() {
+        gate.allow("a")
+        advance(10 * 60_000L)
+        assertTrue("un passage prolonge le Oui", gate.isAllowed("a"))
+        advance(10 * 60_000L)
+        assertTrue("10 minutes après le dernier passage, c'est encore valable", gate.isAllowed("a"))
+    }
+
+    @Test
+    fun `revenir apres le delai redemande`() {
+        gate.allow("a")
+        advance(FrictionGate.ALLOW_MILLIS + 1)
+        assertFalse(gate.isAllowed("a"))
     }
 
     // --- Un « Oui » n'est pas éternel ---

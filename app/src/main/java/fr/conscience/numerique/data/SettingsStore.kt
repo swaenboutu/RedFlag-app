@@ -1,7 +1,6 @@
 package fr.conscience.numerique.data
 
 import android.content.Context
-import android.content.pm.ApplicationInfo
 import androidx.core.content.edit
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,10 +22,28 @@ class SettingsStore(context: Context) {
     /** Vrai = la liste des applications masque les apps système (celles mises à jour par l'utilisateur restent). */
     val hideSystemApps: StateFlow<Boolean> = _hideSystemApps
 
-    /** Version de développement (débogable) : les réglages de debug n'existent pas dans une version de production. */
-    val isDebuggable: Boolean = (context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
+    private val _debugMode = MutableStateFlow(prefs.getBoolean(KEY_DEBUG_MODE, false))
 
-    private val _alwaysShowOnboarding = MutableStateFlow(isDebuggable && prefs.getBoolean(KEY_ALWAYS_SHOW_ONBOARDING, false))
+    /**
+     * Mode debug : la section « Debug » des Réglages est visible. Il s'active en appuyant 7 fois sur le numéro de version
+     * (voir [DebugUnlock]), est conservé ensuite, et disparaît avec « Réinitialiser l'application » (qui efface ces réglages).
+     */
+    val debugMode: StateFlow<Boolean> = _debugMode
+
+    fun enableDebugMode() {
+        prefs.edit { putBoolean(KEY_DEBUG_MODE, true) }
+        _debugMode.value = true
+    }
+
+    /** Pour les tests : revient à l'état d'une première utilisation (la réinitialisation de l'app, elle, efface tous les réglages). */
+    @androidx.annotation.VisibleForTesting
+    fun disableDebugMode() {
+        prefs.edit { putBoolean(KEY_DEBUG_MODE, false) }
+        _debugMode.value = false
+        _alwaysShowOnboarding.value = false
+    }
+
+    private val _alwaysShowOnboarding = MutableStateFlow(_debugMode.value && prefs.getBoolean(KEY_ALWAYS_SHOW_ONBOARDING, false))
 
     /**
      * Debug : vrai = l'accueil s'affiche à chaque lancement de l'app depuis son icône, sans effacer les données (voir
@@ -41,7 +58,7 @@ class SettingsStore(context: Context) {
         set(value) = prefs.edit { putBoolean(KEY_ONBOARDING_DONE, value) }
 
     fun setAlwaysShowOnboarding(value: Boolean) {
-        if (!isDebuggable) return
+        if (!_debugMode.value) return
         prefs.edit { putBoolean(KEY_ALWAYS_SHOW_ONBOARDING, value) }
         _alwaysShowOnboarding.value = value
     }
@@ -85,5 +102,6 @@ class SettingsStore(context: Context) {
         private const val KEY_HIDE_SYSTEM_APPS = "hide_system_apps"
         private const val KEY_ONBOARDING_DONE = "onboarding_done"
         private const val KEY_ALWAYS_SHOW_ONBOARDING = "always_show_onboarding"
+        private const val KEY_DEBUG_MODE = "debug_mode"
     }
 }

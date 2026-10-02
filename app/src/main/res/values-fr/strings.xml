@@ -96,8 +96,15 @@
     <string name="settings_help_title">Comment ça marche</string>
     <string name="settings_version">Version</string>
     <string name="settings_section_debug">Debug</string>
+    <plurals name="settings_debug_steps">
+        <item quantity="one">Encore %d appui pour activer le mode debug</item>
+        <item quantity="other">Encore %d appuis pour activer le mode debug</item>
+        <item quantity="many">Encore %d appuis pour activer le mode debug</item>
+    </plurals>
+    <string name="settings_debug_enabled">Mode debug activé</string>
+    <string name="settings_debug_already">Le mode debug est déjà activé</string>
     <string name="settings_debug_onboarding_title">Toujours afficher l\'accueil</string>
-    <string name="settings_debug_onboarding_subtitle">À chaque démarrage de l\'app. Versions de développement uniquement.</string>
+    <string name="settings_debug_onboarding_subtitle">À chaque lancement de l\'app depuis son icône.</string>
     <string name="settings_debug_reset_title">Réinitialiser l\'app</string>
     <string name="settings_debug_reset_subtitle">Efface tout, comme au premier lancement.</string>
     <string name="settings_debug_reset_confirm_title">Réinitialiser l\'app ?</string>

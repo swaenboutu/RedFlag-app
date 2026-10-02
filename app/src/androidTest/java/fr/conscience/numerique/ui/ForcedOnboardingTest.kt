@@ -25,10 +25,13 @@ class ForcedOnboardingTest {
     private val settings get() = context.container.settings
     private var doneBefore = false
     private var alwaysBefore = false
+    private var debugBefore = false
 
     @Before
     fun setUp() {
         doneBefore = settings.onboardingDone
+        debugBefore = settings.debugMode.value
+        settings.enableDebugMode() // le réglage « toujours afficher l'accueil » n'existe qu'en mode debug
         alwaysBefore = settings.alwaysShowOnboarding.value
         settings.onboardingDone = true
     }
@@ -37,6 +40,7 @@ class ForcedOnboardingTest {
     fun tearDown() {
         settings.setAlwaysShowOnboarding(alwaysBefore)
         settings.onboardingDone = doneBefore
+        if (!debugBefore) settings.disableDebugMode()
     }
 
     private fun launcherIntent() = Intent(Intent.ACTION_MAIN)

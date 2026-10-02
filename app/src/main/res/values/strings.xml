@@ -93,8 +93,14 @@
     <string name="settings_help_title">How it works</string>
     <string name="settings_version">Version</string>
     <string name="settings_section_debug">Debug</string>
+    <plurals name="settings_debug_steps">
+        <item quantity="one">%d tap left to turn on debug mode</item>
+        <item quantity="other">%d taps left to turn on debug mode</item>
+    </plurals>
+    <string name="settings_debug_enabled">Debug mode is on</string>
+    <string name="settings_debug_already">Debug mode is already on</string>
     <string name="settings_debug_onboarding_title">Always show the welcome screens</string>
-    <string name="settings_debug_onboarding_subtitle">Each time the app starts. Development builds only.</string>
+    <string name="settings_debug_onboarding_subtitle">Each time the app is launched from its icon.</string>
     <string name="settings_debug_reset_title">Reset the app</string>
     <string name="settings_debug_reset_subtitle">Erase everything, as on a first launch.</string>
     <string name="settings_debug_reset_confirm_title">Reset the app?</string>

@@ -7,6 +7,7 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -15,6 +16,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import fr.conscience.numerique.container
 import fr.conscience.numerique.R
+import fr.conscience.numerique.data.DebugTap
+import fr.conscience.numerique.data.DebugUnlock
 import fr.conscience.numerique.data.SettingsStore
 import fr.conscience.numerique.databinding.ActivitySettingsBinding
 import fr.conscience.numerique.databinding.ItemSettingRowBinding
@@ -51,7 +54,8 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
         }
         setupRow(binding.rowHelp, R.string.settings_help_title) { startActivity(Intent(this, FaqActivity::class.java)) }
-        setupRow(binding.rowVersion, R.string.settings_version, clickable = false)
+        // Sept appuis sur le numéro de version activent le mode debug, comme pour le mode développeur d'Android.
+        setupRow(binding.rowVersion, R.string.settings_version) { onVersionTapped() }
         binding.rowVersion.value.text = versionName()
         binding.rowVersion.chevron.visibility = View.GONE
 
@@ -68,6 +72,7 @@ class SettingsActivity : AppCompatActivity() {
                         binding.rowList.value.text = getString(if (hide) R.string.list_no_system else R.string.list_all)
                     }
                 }
+                launch { settings.debugMode.collect { binding.debugGroup.visibility = if (it) View.VISIBLE else View.GONE } }
                 launch { settings.alwaysShowOnboarding.collect { binding.rowOnboarding.toggle.isChecked = it } }
             }
         }
@@ -90,10 +95,26 @@ class SettingsActivity : AppCompatActivity() {
         if (clickable) row.root.setOnClickListener { onClick() } else row.root.background = null
     }
 
-    /** Section « Debug » : n'existe que dans une version de développement, jamais en production. */
+    private val debugUnlock = DebugUnlock()
+
+    private fun onVersionTapped() {
+        val message = when (val tap = debugUnlock.tap(alreadyEnabled = settings.debugMode.value)) {
+            DebugTap.Nothing -> return
+            is DebugTap.Remaining -> resources.getQuantityString(R.plurals.settings_debug_steps, tap.taps, tap.taps)
+            DebugTap.Unlocked -> {
+                settings.enableDebugMode()
+                getString(R.string.settings_debug_enabled)
+            }
+            DebugTap.AlreadyEnabled -> getString(R.string.settings_debug_already)
+        }
+        debugToast?.cancel()
+        debugToast = Toast.makeText(this, message, Toast.LENGTH_SHORT).also { it.show() }
+    }
+
+    private var debugToast: Toast? = null
+
+    /** Section « Debug » : cachée tant que le mode debug n'est pas activé (voir [onVersionTapped]) ; elle l'est ensuite, pour de bon. */
     private fun setupDebug() {
-        if (!settings.isDebuggable) return
-        binding.debugGroup.visibility = View.VISIBLE
         with(binding.rowOnboarding) {
             title.setText(R.string.settings_debug_onboarding_title)
             subtitle.setText(R.string.settings_debug_onboarding_subtitle)

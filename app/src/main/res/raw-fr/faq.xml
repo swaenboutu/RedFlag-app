@@ -28,8 +28,8 @@
             <answer>
                 « Non, fermer l’application » vous ramène à l’écran d’accueil.
 
-                « Oui, lancer l’application » l’ouvre, et on ne vous redemande rien tant que vous continuez de l’utiliser. Ce choix
-                est oublié après environ 15 minutes sans utiliser l’application, ou dès que l’écran s’éteint.
+                « Oui, lancer l’application » l’ouvre, et on ne vous redemande rien pendant 15 minutes après votre dernière utilisation,
+                même si vous fermez l’application par erreur et la rouvrez. Ce choix est oublié plus tôt si l’écran s’éteint.
 
                 Le lien « Ne plus me demander pendant… » met l’interruption en pause pour cette application, pour la durée choisie
                 dans les Réglages.

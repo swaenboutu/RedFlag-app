@@ -50,4 +50,29 @@ class SettingsStoreTest {
 
         assertTrue(SettingsStore(context).hideSystemApps.value)
     }
+
+    @Test
+    fun debugModeIsOffByDefault() {
+        assertFalse(SettingsStore(context).debugMode.value)
+    }
+
+    @Test
+    fun debugModeIsRememberedAcrossLaunches() {
+        SettingsStore(context).enableDebugMode()
+
+        assertTrue("un nouveau démarrage retrouve le mode debug", SettingsStore(context).debugMode.value)
+    }
+
+    @Test
+    fun forcingTheOnboardingNeedsTheDebugMode() {
+        val store = SettingsStore(context)
+
+        store.setAlwaysShowOnboarding(true)
+        assertFalse("sans mode debug, le réglage est ignoré", store.alwaysShowOnboarding.value)
+
+        store.enableDebugMode()
+        store.setAlwaysShowOnboarding(true)
+        assertTrue(store.alwaysShowOnboarding.value)
+        assertTrue("et il est conservé", SettingsStore(context).alwaysShowOnboarding.value)
+    }
 }
