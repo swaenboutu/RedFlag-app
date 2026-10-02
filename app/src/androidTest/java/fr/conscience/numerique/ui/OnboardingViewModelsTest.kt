@@ -26,38 +26,35 @@ class OnboardingViewModelsTest {
     fun tearDown() = env.close()
 
     @Test
-    fun atMostThreeProblemsCanBeSelected() = runBlocking {
+    fun anyNumberOfProblemsCanBeSelected() = runBlocking {
         val vm = env.viewModel { OnboardingProblemsViewModel(env.container) }
         vm.rows.await { true } // abonne le ViewModel
-        repeat(OnboardingProblemsViewModel.MAX_SELECTION) { i ->
-            vm.toggle(refs[i], checked = false)
+        val chosen = refs.take(8)
+
+        chosen.forEachIndexed { i, ref ->
+            vm.toggle(ref, checked = false)
             vm.selectedCount.await { it == i + 1 }
         }
 
-        vm.toggle(refs[3], checked = false)
-        Thread.sleep(300)
-
-        assertEquals(OnboardingProblemsViewModel.MAX_SELECTION, vm.selectedCount.value)
-        assertFalse("la quatrième n'est pas enregistrée", refs[3] in env.repository.favorites.first())
+        assertEquals("plus de limite à trois", 8, vm.selectedCount.value)
+        assertEquals(chosen.toSet(), env.repository.favorites.first())
     }
 
     @Test
-    fun uncheckingFreesASlotAndOtherBoxesAreDisabledWhenFull() = runBlocking {
+    fun uncheckingAProblemRemovesItFromTheSelection() = runBlocking {
         val vm = env.viewModel { OnboardingProblemsViewModel(env.container) }
         vm.rows.await { true }
-        refs.take(3).forEach { env.repository.setFavorite(it, true) }
-        vm.selectedCount.await { it == 3 }
+        refs.take(5).forEach { env.repository.setFavorite(it, true) }
+        vm.selectedCount.await { it == 5 }
         vm.toggleSection(ProblemCatalog.categories.first().title) // ouvre le thème pour voir ses cases
 
-        val full = vm.rows.await { rows -> rows.any { it is OnboardingRow.Choice } }
-        val choices = full.filterIsInstance<OnboardingRow.Choice>()
-        assertTrue("cases cochées toujours décochables", choices.filter { it.checked }.all { it.selectable })
-        assertTrue("limite atteinte : les autres sont grisées", choices.filter { !it.checked }.none { it.selectable })
+        val rows = vm.rows.await { rows -> rows.any { it is OnboardingRow.Choice } }
+        assertTrue("des cases sont cochées", rows.filterIsInstance<OnboardingRow.Choice>().any { it.checked })
 
         vm.toggle(refs[0], checked = true)
-        vm.selectedCount.await { it == 2 }
-        vm.toggle(refs[3], checked = false)
-        assertEquals(3, vm.selectedCount.await { it == 3 })
+
+        assertEquals(4, vm.selectedCount.await { it == 4 })
+        assertFalse(refs[0] in env.repository.favorites.first())
     }
 
     @Test

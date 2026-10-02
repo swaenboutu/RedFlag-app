@@ -43,9 +43,9 @@
     <string name="onboarding_permission_action">Open accessibility settings</string>
     <string name="onboarding_permission_enabled">All set: the service is on.</string>
     <string name="onboarding_finish">Finish</string>
-    <string name="onboarding_later">Later</string>
-    <string name="onboarding_counter">%1$d / %2$d selected</string>
-    <string name="onboarding_counter_full">%1$d / %2$d selected · uncheck one to pick another</string>
+    <string name="onboarding_skip_remaining">Skip the remaining issues</string>
+    <string name="onboarding_app_list_title">Which apps concern you?</string>
+    <string name="onboarding_app_list_body">Tap an app to choose the issues it raises. You can change this at any time.</string>
     <string name="nav_apps">Apps</string>
     <string name="nav_problems">Issues</string>
     <string name="nav_stats">Stats</string>

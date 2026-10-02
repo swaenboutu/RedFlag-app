@@ -25,15 +25,13 @@ sealed interface OnboardingRow {
         val ref: ProblemRef,
         val override: String?,
         val checked: Boolean,
-        /** Faux quand la limite est atteinte et que cette case n'est pas cochée. */
-        val selectable: Boolean,
         val first: Boolean,
         val last: Boolean,
     ) : OnboardingRow
 }
 
 /**
- * Accueil, étape 2 : l'utilisateur coche les problématiques qui comptent pour lui. Elles deviennent ses favoris,
+ * Accueil, étape 2 : l'utilisateur coche les problématiques qui comptent pour lui, sans limite (il peut passer l'association aux apps). Elles deviennent ses favoris,
  * enregistrés aussitôt (l'état affiché vient toujours de la base). Les thèmes sont fermés au départ.
  */
 class OnboardingProblemsViewModel(container: AppContainer) : ViewModel() {
@@ -50,7 +48,6 @@ class OnboardingProblemsViewModel(container: AppContainer) : ViewModel() {
         repository.labelOverrides,
         expanded,
     ) { favorites, overrides, expanded ->
-        val full = ProblemCatalog.allRefs.count { it in favorites } >= MAX_SELECTION
         buildList {
             add(OnboardingRow.Header)
             ProblemCatalog.categories.forEach { category ->
@@ -59,7 +56,7 @@ class OnboardingProblemsViewModel(container: AppContainer) : ViewModel() {
                 add(OnboardingRow.Theme(category.title, refs.size, refs.count { it in favorites }, open))
                 if (!open) return@forEach
                 refs.forEachIndexed { i, ref ->
-                    add(OnboardingRow.Choice(category.title, ref, overrides[ref.id], ref in favorites, !full || ref in favorites, i == 0, i == refs.lastIndex))
+                    add(OnboardingRow.Choice(category.title, ref, overrides[ref.id], ref in favorites, i == 0, i == refs.lastIndex))
                 }
             }
         }
@@ -70,13 +67,7 @@ class OnboardingProblemsViewModel(container: AppContainer) : ViewModel() {
     /** [checked] est l'état actuel de la case : on la bascule. */
     fun toggle(ref: ProblemRef, checked: Boolean) {
         viewModelScope.launch {
-            if (!checked && selectedCount.value >= MAX_SELECTION) return@launch
             repository.setFavorite(ref, !checked)
         }
-    }
-
-    companion object {
-        /** Nombre maximal de problématiques à choisir à l'accueil. */
-        const val MAX_SELECTION = 3
     }
 }

@@ -54,6 +54,14 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ui.OnboardingAppListActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.OnboardingAppDetailActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.OnboardingPermissionActivity"
             android:exported="false" />
 

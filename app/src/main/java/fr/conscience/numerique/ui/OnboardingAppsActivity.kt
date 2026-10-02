@@ -2,6 +2,7 @@ package fr.conscience.numerique.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -23,8 +24,10 @@ class OnboardingAppsActivity : AppCompatActivity() {
         binding.list.adapter = adapter
 
         val finished = { startActivity(Intent(this, OnboardingPermissionActivity::class.java)) }
-        binding.btnNext.setOnClickListener { viewModel.next(finished) }
         binding.btnSkip.setOnClickListener { viewModel.skip(finished) }
+        binding.btnNext.setOnClickListener { viewModel.next(finished) }
+        // Plusieurs problématiques à traiter : on peut aussi passer toutes celles qui restent d'un coup.
+        binding.btnSkipRemaining.setOnClickListener { finished() }
 
         // Retour : étape précédente ; sur la première, retour à la sélection des problématiques.
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -35,7 +38,11 @@ class OnboardingAppsActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch { viewModel.rows.collect { adapter.submitList(it) } }
+                launch { viewModel.rows.collect { rows ->
+                    adapter.submitList(rows)
+                    val step = (rows.firstOrNull() as? AppsRow.Header)?.step
+                    binding.btnSkipRemaining.visibility = if (step != null && step.position < step.total) View.VISIBLE else View.GONE
+                } }
                 launch { viewModel.canSave.collect { binding.btnNext.isEnabled = it } }
                 // Rien à traiter (aucune problématique choisie) : directement à la suite.
                 launch {

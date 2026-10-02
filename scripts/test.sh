@@ -100,6 +100,8 @@ device_classes_for_changes() {
                 add ui.InterstitialActivityTest ;;
             */ui/BottomNav.kt|*/layout/view_bottom_nav.xml|*/ui/AppStats*.kt|*/ui/AppDetail*.kt|*/ui/ProblemDetail*.kt|*/layout/activity_app_stats.xml|*/layout/activity_app_detail.xml|*/layout/activity_problem_detail.xml)
                 add ui.DetailScreensTest ;;
+            # Parcours d'accueil : étapes, boutons « Passer », et ce que leurs ViewModels calculent.
+            */ui/Onboarding*.kt|*/layout/activity_onboarding*.xml|*/layout/item_onboarding*.xml) add ui.OnboardingSkipTest ;;&
             # FAQ (et les Réglages qui y mènent, la carte de thème qu'elle partage avec d'autres écrans).
             */ui/Faq*.kt|*/data/Faq.kt|*/layout/activity_faq.xml|*/layout/item_faq_*.xml|*/ui/SettingsActivity.kt|*/layout/activity_settings.xml|*/ui/ThemeCard.kt|*/ui/CardStyle.kt|*/layout/item_manager_theme.xml)
                 add ui.FaqScreenTest ;;

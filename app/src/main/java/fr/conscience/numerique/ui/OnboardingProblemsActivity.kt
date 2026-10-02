@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import fr.conscience.numerique.R
 import fr.conscience.numerique.databinding.ActivityOnboardingProblemsBinding
 import kotlinx.coroutines.launch
 
@@ -30,19 +29,13 @@ class OnboardingProblemsActivity : AppCompatActivity() {
             startActivity(Intent(this, OnboardingAppsActivity::class.java))
         }
 
+        // Passer cette étape : sans problématique choisie, on associe directement des problématiques à des applications.
+        binding.btnSkip.setOnClickListener { startActivity(Intent(this, OnboardingAppListActivity::class.java)) }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.rows.collect { adapter.submitList(it) } }
-                launch {
-                    viewModel.selectedCount.collect { count ->
-                        binding.btnContinue.isEnabled = count >= 1
-                        val max = OnboardingProblemsViewModel.MAX_SELECTION
-                        binding.counter.text = getString(
-                            if (count >= max) R.string.onboarding_counter_full else R.string.onboarding_counter,
-                            count, max,
-                        )
-                    }
-                }
+                launch { viewModel.selectedCount.collect { binding.btnContinue.isEnabled = it >= 1 } }
             }
         }
     }

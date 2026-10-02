@@ -75,7 +75,7 @@
         android:fontFamily="@font/inter_medium"
         android:gravity="center"
         android:minHeight="48dp"
-        android:text="@string/onboarding_later"
+        android:text="@string/onboarding_skip"
         android:textColor="?attr/colorOnSurfaceVariant"
         android:textSize="13.5sp" />
 </LinearLayout>

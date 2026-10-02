@@ -58,7 +58,6 @@ class OnboardingProblemsAdapter(
     private fun bindChoice(binding: ItemDetailChoiceBinding, row: OnboardingRow.Choice) = with(binding) {
         choice.text = row.ref.displayLabel(root.context, row.override)
         choice.isChecked = row.checked
-        choice.alpha = if (row.selectable) 1f else 0.4f
         choice.setOnClickListener {
             // La case se bascule seule au toucher : on la remet dans l'état réel (un choix refusé ne change rien en base).
             choice.isChecked = row.checked
