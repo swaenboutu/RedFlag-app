@@ -109,6 +109,8 @@ class InterstitialActivity : AppCompatActivity() {
     }
 
     private fun decline() {
+        // Renvoyée à l'accueil, l'app peut émettre des événements parasites : le portier les ignore un court instant.
+        container.frictionGate.declined(targetPackage)
         lifecycleScope.launch {
             container.repository.recordChoice(targetPackage, proceeded = false)
             startActivity(
