@@ -37,7 +37,11 @@ class ViewModelEnv {
     }
 
     fun close() {
-        store.clear()
+        // Les ViewModels travaillent sur le fil principal : on les arrête là, puis on laisse finir ce qui était déjà en file avant
+        // de fermer la base. Sans cela, un traitement en cours touchait la base fermée et faisait tomber le test suivant.
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        instrumentation.runOnMainSync { store.clear() }
+        instrumentation.waitForIdleSync()
         db.close()
     }
 }
