@@ -6,14 +6,12 @@ import androidx.lifecycle.viewModelScope
 import fr.conscience.numerique.container
 import fr.conscience.numerique.data.InstalledApp
 import fr.conscience.numerique.data.Problem
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * Les problématiques restent des références : leur libellé est résolu à l'affichage, dans la langue courante.
@@ -72,12 +70,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppsState())
 
     init {
-        // Recharge la liste quand le réglage « Liste affichée » change.
-        viewModelScope.launch {
-            container.settings.hideSystemApps.collect { hide ->
-                installed.value = withContext(Dispatchers.IO) { container.installedApps.list(hide) }
-            }
-        }
+        // Recharge la liste quand le réglage « Liste affichée » ou les apps signalées changent.
+        viewModelScope.launch { container.installedAppsFlow().collect { installed.value = it } }
     }
 
     fun setQuery(text: String) {

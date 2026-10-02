@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import fr.conscience.numerique.data.AppDatabase
 import fr.conscience.numerique.data.AppRepository
+import fr.conscience.numerique.data.InstalledApp
 import fr.conscience.numerique.data.InstalledAppsProvider
 import fr.conscience.numerique.data.MIGRATION_1_2
 import fr.conscience.numerique.data.MIGRATION_2_3
@@ -12,6 +13,12 @@ import fr.conscience.numerique.data.MIGRATION_4_5
 import fr.conscience.numerique.data.MIGRATION_5_6
 import fr.conscience.numerique.data.SettingsStore
 import fr.conscience.numerique.service.FrictionGate
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 /** Racine de dépendances minimale, sans framework d'injection. */
 class AppContainer(context: Context) {
@@ -24,4 +31,14 @@ class AppContainer(context: Context) {
     val repository = AppRepository(database)
     val installedApps = InstalledAppsProvider(context)
     val frictionGate = FrictionGate()
+
+    /**
+     * Les apps à lister : le réglage « Liste affichée » est appliqué, mais une app signalée y figure toujours (sinon elle
+     * resterait surveillée sans qu'on puisse la retrouver). Se met à jour quand le réglage ou les apps signalées changent.
+     */
+    fun installedAppsFlow(): Flow<List<InstalledApp>> = combine(
+        settings.hideSystemApps,
+        repository.monitoredApps.map { list -> list.map { it.app.packageName }.toSet() }.distinctUntilChanged(),
+    ) { hide, flagged -> hide to flagged }
+        .map { (hide, flagged) -> withContext(Dispatchers.IO) { installedApps.list(hide, alwaysInclude = flagged) } }
 }

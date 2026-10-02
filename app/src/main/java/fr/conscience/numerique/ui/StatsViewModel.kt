@@ -4,14 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import fr.conscience.numerique.container
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /** Une app avec une interruption en place, et le nombre de fois où l'interruption s'est affichée pour elle. */
 data class StatsApp(val packageName: String, val appName: String, val attempts: Int)
@@ -45,10 +43,7 @@ class StatsViewModel(application: Application) : AndroidViewModel(application) {
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), StatsState(null, 0, emptyList()))
 
     init {
-        viewModelScope.launch {
-            installedCount.value = withContext(Dispatchers.IO) {
-                container.installedApps.list(container.settings.hideSystemApps.value).size
-            }
-        }
+        // Le total compte les mêmes apps que la liste : une app signalée y est toujours.
+        viewModelScope.launch { container.installedAppsFlow().collect { installedCount.value = it.size } }
     }
 }

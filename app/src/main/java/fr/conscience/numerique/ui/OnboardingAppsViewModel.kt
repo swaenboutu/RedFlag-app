@@ -9,7 +9,6 @@ import fr.conscience.numerique.data.ProblemCatalog
 import fr.conscience.numerique.data.ProblemRef
 import fr.conscience.numerique.data.displayLabel
 import fr.conscience.numerique.data.matches
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +17,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /** Une étape : la problématique [ref] (libellé [label]) est la [position]e sur [total]. */
 data class AppsStep(val position: Int, val total: Int, val ref: ProblemRef, val label: String)
@@ -84,9 +82,7 @@ class OnboardingAppsViewModel(application: Application) : AndroidViewModel(appli
             steps.value = chosen.mapIndexed { i, ref ->
                 AppsStep(i + 1, chosen.size, ref, ref.displayLabel(context, ref.catalogKey?.let(overrides::get)))
             }
-            apps.value = withContext(Dispatchers.IO) {
-                container.installedApps.list(container.settings.hideSystemApps.value).sortedBy { it.label.lowercase() }
-            }
+            apps.value = container.installedAppsFlow().first().sortedBy { it.label.lowercase() }
             steps.value?.firstOrNull()?.let { loadSelection(it.ref) }
         }
     }
