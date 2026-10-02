@@ -34,6 +34,15 @@ gradlew.bat :app:testDebugUnitTest         # tests unitaires (sans appareil)
 gradlew.bat :app:connectedDebugAndroidTest # tests sur appareil (émulateur lancé) : migrations, base de données, écrans
 ```
 
+Pour ne pas rejouer toute la suite à chaque modification, `scripts/test.sh` (Git Bash) choisit les tests :
+
+```
+scripts/test.sh focus FrictionGateTest InterstitialActivityTest   # seulement ces classes (unitaire ou appareil, détecté)
+scripts/test.sh commit                                            # tous les tests unitaires, avant un commit
+scripts/test.sh auto                                              # unitaires + tests sur appareil concernés par les fichiers modifiés
+scripts/test.sh full                                              # avant un push ou une version : tout + lint
+```
+
 Les tests sur appareil réinstallent l'app : désinstaller d'abord la version déjà présente si l'installation échoue
 (`adb uninstall fr.conscience.numerique`), ce qui efface ses données.
 
