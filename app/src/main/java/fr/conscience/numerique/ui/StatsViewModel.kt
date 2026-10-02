@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import fr.conscience.numerique.container
+import fr.conscience.numerique.util.alphabetical
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -34,7 +35,7 @@ class StatsViewModel(application: Application) : AndroidViewModel(application) {
         val attempts = events.groupingBy { it.packageName }.eachCount()
         val apps = monitored
             .map { StatsApp(it.app.packageName, it.app.appName, attempts[it.app.packageName] ?: 0) }
-            .sortedWith(compareByDescending<StatsApp> { it.attempts }.thenBy { it.appName.lowercase() })
+            .sortedWith(compareByDescending<StatsApp> { it.attempts }.thenBy(alphabetical()) { it.appName })
         StatsState(
             installedCount = installed,
             interceptedCount = apps.size,

@@ -5,6 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import fr.conscience.numerique.container
+import fr.conscience.numerique.util.matchesSearch
+import fr.conscience.numerique.util.alphabetical
 import fr.conscience.numerique.data.InstalledApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +32,7 @@ class AppPickerViewModel(application: Application, handle: SavedStateHandle) : A
     private val selected = MutableStateFlow<Set<String>>(emptySet())
 
     val rows: StateFlow<List<AppPickRow>> = combine(apps, query, selected) { apps, query, selected ->
-        apps.filter { query.isBlank() || it.label.contains(query.trim(), ignoreCase = true) }
+        apps.filter { it.label.matchesSearch(query) }
             .map { AppPickRow(it, it.packageName in selected) }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
@@ -41,7 +43,7 @@ class AppPickerViewModel(application: Application, handle: SavedStateHandle) : A
         viewModelScope.launch(Dispatchers.IO) {
             apps.value = container.installedApps.list(container.settings.hideSystemApps.value)
                 .filter { it.packageName !in excluded }
-                .sortedBy { it.label.lowercase() }
+                .sortedWith(compareBy(alphabetical()) { it.label })
         }
     }
 

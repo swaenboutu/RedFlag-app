@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
+    private var resumedBefore = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,5 +64,9 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         BottomNav.select(binding.bottomBar.bottomNav, R.id.nav_apps)
         binding.serviceBanner.visibility = if (isFrictionServiceEnabled(this)) View.GONE else View.VISIBLE
+        // Une app a pu être installée ou désinstallée pendant que l'écran était en arrière-plan. Le premier affichage charge
+        // déjà la liste : on ne la recharge qu'aux retours suivants.
+        if (resumedBefore) viewModel.reload()
+        resumedBefore = true
     }
 }

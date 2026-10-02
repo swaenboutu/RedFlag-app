@@ -1,5 +1,6 @@
 package fr.conscience.numerique.data
 
+import fr.conscience.numerique.util.alphabetical
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -8,8 +9,8 @@ class AppRepository(private val db: AppDatabase) {
     private val events get() = db.choiceEventDao()
 
     val monitoredApps: Flow<List<MonitoredAppWithProblems>> get() = apps.observeAll()
-    val customLabels: Flow<List<String>> get() = apps.observeCustomLabels()
-    val customProblems: Flow<List<CustomProblem>> get() = apps.observeCustomProblems()
+    val customLabels: Flow<List<String>> get() = apps.observeCustomLabels().map { it.sortedWith(alphabetical()) }
+    val customProblems: Flow<List<CustomProblem>> get() = apps.observeCustomProblems().map { list -> list.sortedWith(compareBy(alphabetical()) { it.label }) }
     val problems: Flow<List<Problem>> get() = apps.observeProblems()
     val favorites: Flow<Set<ProblemRef>>
         get() = apps.observeFavorites().map { list -> list.mapNotNull { favoriteRef(it.id) }.toSet() }

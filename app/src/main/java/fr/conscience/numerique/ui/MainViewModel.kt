@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import fr.conscience.numerique.container
+import fr.conscience.numerique.util.matchesSearch
+import fr.conscience.numerique.util.alphabetical
 import fr.conscience.numerique.data.InstalledApp
 import fr.conscience.numerique.data.Problem
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,6 +13,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
@@ -38,6 +41,7 @@ data class AppsState(
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val container = application.container
     private val installed = MutableStateFlow<List<InstalledApp>?>(null)
+    private val refresh = MutableStateFlow(0)
     private val query = MutableStateFlow("")
     private val filter = MutableStateFlow(AppFilter.ALL)
 
@@ -53,7 +57,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val problemsByPackage = monitored.associate { it.app.packageName to it.problems }
         val all = apps.map { AppItem(it, problemsByPackage[it.packageName].orEmpty(), overrides) }
         val visible = all
-            .filter { query.isBlank() || it.app.label.contains(query.trim(), ignoreCase = true) }
+            .filter { it.app.label.matchesSearch(query) }
             .filter {
                 when (filter) {
                     AppFilter.ALL -> true
@@ -62,7 +66,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
             // Apps signalées d'abord, puis ordre alphabétique.
-            .sortedWith(compareByDescending<AppItem> { it.problems.isNotEmpty() }.thenBy { it.app.label.lowercase() })
+            .sortedWith(compareByDescending<AppItem> { it.problems.isNotEmpty() }.thenBy(alphabetical()) { it.app.label })
             .mapIndexed { index, item -> item.copy(first = index == 0, last = false) }
             .let { list -> list.mapIndexed { index, item -> item.copy(last = index == list.lastIndex) } }
 
@@ -70,9 +74,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppsState())
 
     init {
-        // Recharge la liste quand le réglage « Liste affichée » ou les apps signalées changent.
-        viewModelScope.launch { container.installedAppsFlow().collect { installed.value = it } }
+        // Recharge la liste quand le réglage « Liste affichée » ou les apps signalées changent, ou sur demande (reload).
+        viewModelScope.launch { container.installedAppsFlow(refresh).collect { installed.value = it } }
     }
+
+    /** À appeler au retour sur l'écran : une app a pu être installée ou désinstallée pendant que l'écran était en arrière-plan. */
+    fun reload() = refresh.update { it + 1 }
 
     fun setQuery(text: String) {
         query.value = text

@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
@@ -34,11 +35,13 @@ class AppContainer(context: Context) {
 
     /**
      * Les apps à lister : le réglage « Liste affichée » est appliqué, mais une app signalée y figure toujours (sinon elle
-     * resterait surveillée sans qu'on puisse la retrouver). Se met à jour quand le réglage ou les apps signalées changent.
+     * resterait surveillée sans qu'on puisse la retrouver). Se met à jour quand le réglage ou les apps signalées changent,
+     * et à chaque émission de [refresh] (au retour sur l'écran : une app a pu être installée entre-temps).
      */
-    fun installedAppsFlow(): Flow<List<InstalledApp>> = combine(
+    fun installedAppsFlow(refresh: Flow<Int> = flowOf(0)): Flow<List<InstalledApp>> = combine(
         settings.hideSystemApps,
         repository.monitoredApps.map { list -> list.map { it.app.packageName }.toSet() }.distinctUntilChanged(),
-    ) { hide, flagged -> hide to flagged }
+        refresh,
+    ) { hide, flagged, _ -> hide to flagged }
         .map { (hide, flagged) -> withContext(Dispatchers.IO) { installedApps.list(hide, alwaysInclude = flagged) } }
 }

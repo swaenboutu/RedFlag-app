@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import fr.conscience.numerique.container
+import fr.conscience.numerique.util.matchesSearch
+import fr.conscience.numerique.util.alphabetical
 import fr.conscience.numerique.data.InstalledApp
 import fr.conscience.numerique.data.ProblemCatalog
 import fr.conscience.numerique.data.ProblemRef
@@ -55,7 +57,7 @@ class OnboardingAppsViewModel(application: Application) : AndroidViewModel(appli
 
     val rows: StateFlow<List<AppsRow>> = combine(steps, index, apps, selected, _query) { steps, index, apps, selected, query ->
         val step = steps?.getOrNull(index) ?: return@combine emptyList()
-        val shown = apps.filter { query.isBlank() || it.label.contains(query.trim(), ignoreCase = true) }
+        val shown = apps.filter { it.label.matchesSearch(query) }
         buildList {
             add(AppsRow.Header(step))
             if (shown.isEmpty() && apps.isNotEmpty()) add(AppsRow.Empty)
@@ -82,7 +84,7 @@ class OnboardingAppsViewModel(application: Application) : AndroidViewModel(appli
             steps.value = chosen.mapIndexed { i, ref ->
                 AppsStep(i + 1, chosen.size, ref, ref.displayLabel(context, ref.catalogKey?.let(overrides::get)))
             }
-            apps.value = container.installedAppsFlow().first().sortedBy { it.label.lowercase() }
+            apps.value = container.installedAppsFlow().first().sortedWith(compareBy(alphabetical()) { it.label })
             steps.value?.firstOrNull()?.let { loadSelection(it.ref) }
         }
     }

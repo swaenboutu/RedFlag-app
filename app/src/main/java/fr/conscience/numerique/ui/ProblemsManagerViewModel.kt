@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import fr.conscience.numerique.container
+import fr.conscience.numerique.util.alphabetical
 import fr.conscience.numerique.R
 import fr.conscience.numerique.data.PredefinedProblem
 import fr.conscience.numerique.data.ProblemCatalog
@@ -81,7 +82,7 @@ class ProblemsManagerViewModel(application: Application) : AndroidViewModel(appl
                 appsByProblem.getOrPut(p.toRef()) { mutableListOf() }.add(app)
             }
         }
-        fun appsOf(ref: ProblemRef): List<LinkedApp> = appsByProblem[ref].orEmpty().sortedBy { it.appName.lowercase() }
+        fun appsOf(ref: ProblemRef): List<LinkedApp> = appsByProblem[ref].orEmpty().sortedWith(compareBy(alphabetical()) { it.appName })
 
         fun MutableList<ManagerRow>.addSection(sectionId: Int, entries: List<Entry>) {
             val open = sectionId in expanded

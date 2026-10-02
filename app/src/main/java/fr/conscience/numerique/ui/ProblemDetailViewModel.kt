@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import fr.conscience.numerique.container
+import fr.conscience.numerique.util.alphabetical
 import fr.conscience.numerique.data.ProblemRef
 import fr.conscience.numerique.data.matches
 import kotlinx.coroutines.flow.SharingStarted
@@ -44,7 +45,7 @@ class ProblemDetailViewModel(application: Application, private val handle: Saved
             val linked = apps
                 .filter { app -> app.problems.any { it.matches(ref) } }
                 .map { LinkedApp(it.app.packageName, it.app.appName) }
-                .sortedBy { it.appName.lowercase() }
+                .sortedWith(compareBy(alphabetical()) { it.appName })
             DetailState(ref, ref.catalogKey?.let(overrides::get), linked, ref in favorites)
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
