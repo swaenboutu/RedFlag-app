@@ -45,31 +45,39 @@ run_device() { # $@ = noms complets de classes (vide = tout)
     "${GRADLE[@]}" :app:connectedDebugAndroidTest "${args[@]}"
 }
 
-# Tests sur appareil à rejouer d'après les fichiers modifiés (non commités + dernier commit non poussé).
+# Tests sur appareil à rejouer d'après les fichiers modifiés (non commités + commits non poussés).
+# Affiche un nom de classe par ligne, ou ALL. Les fichiers sans test sur appareil sont signalés sur la sortie d'erreur.
 device_classes_for_changes() {
     local files
     files=$( { git diff --name-only HEAD; git diff --name-only '@{upstream}..HEAD' 2>/dev/null; git ls-files --others --exclude-standard; } | sort -u)
-    local out=()
+    local out=() uncovered=()
     add() { out+=("fr.conscience.numerique.$1"); }
     while IFS= read -r f; do
         case "$f" in
-            *build.gradle.kts|*AndroidManifest.xml|gradle/*|*/androidTest/*Test.kt)
-                # Build ou manifeste : tout. Un test modifié : lui seul.
-                if [[ "$f" == */androidTest/*Test.kt ]]; then
-                    local n; n=$(basename "$f" .kt)
-                    out+=("$(locate "$n" | cut -d' ' -f2)")
-                else
-                    echo ALL; return
-                fi ;;
-            app/schemas/*|*/data/Migrations.kt|*/data/Entities.kt|*/data/AppDatabase.kt) add data.MigrationTest; add data.AppRepositoryTest ;;
-            */data/AppRepository.kt|*/data/*Dao.kt) add data.AppRepositoryTest ;;
+            "") ;;
+            # Build, manifeste, dépendances : tout.
+            *build.gradle.kts|*AndroidManifest.xml|gradle/*|*/libs.versions.toml) echo ALL; return ;;
+            # Un test modifié : lui seul. Les tests unitaires sont de toute façon rejoués.
+            */androidTest/*Test.kt) out+=("$(locate "$(basename "$f" .kt)" | cut -d' ' -f2)") ;;
+            */src/test/*|*.md|scripts/*|.gitignore|TODO.md|LICENSE|licenses/*) ;;
+            app/schemas/*|*/data/AppDatabase.kt|*/data/Entities.kt) add data.MigrationTest; add data.AppRepositoryTest ;;
+            */data/AppRepository.kt|*/data/Daos.kt) add data.AppRepositoryTest ;;
             */data/SettingsStore.kt) add data.SettingsStoreTest ;;
             */data/InstalledAppsProvider.kt) add data.InstalledAppsProviderTest ;;
-            */AppContainer.kt|*/ui/InterstitialActivity.kt|*/service/Friction*.kt|*/res/layout/activity_interstitial.xml) add ui.InterstitialActivityTest ;;
-            */ui/BottomNav.kt|*/ui/AppStatsActivity.kt|*/ui/AppDetailActivity.kt|*/ui/ProblemDetailActivity.kt) add ui.DetailScreensTest ;;
+            */AppContainer.kt|*/ui/InterstitialActivity.kt|*/service/Friction*.kt|*/layout/activity_interstitial.xml|*/layout/item_problem_pill.xml|*/ui/ProblemPillAdapter.kt)
+                add ui.InterstitialActivityTest ;;
+            */ui/BottomNav.kt|*/layout/view_bottom_nav.xml|*/ui/AppStats*.kt|*/ui/AppDetail*.kt|*/ui/ProblemDetail*.kt|*/layout/activity_app_stats.xml|*/layout/activity_app_detail.xml|*/layout/activity_problem_detail.xml)
+                add ui.DetailScreensTest ;;
+            # Couverts par les tests unitaires, déjà joués.
+            */data/Stats.kt|*/data/ProblemCatalog.kt|*/util/*|*/ui/ProblemLabels.kt|*/res/values*/strings.xml) ;;
+            *) uncovered+=("$f") ;;
         esac
     done <<< "$files"
-    printf '%s\n' "${out[@]}" | sort -u
+    if [ ${#uncovered[@]} -gt 0 ]; then
+        echo "!! sans test automatique (à vérifier à la main) :" >&2
+        printf '   %s\n' "${uncovered[@]}" >&2
+    fi
+    [ ${#out[@]} -eq 0 ] || printf '%s\n' "${out[@]}" | sort -u
 }
 
 mode=${1:-}

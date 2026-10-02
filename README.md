@@ -39,7 +39,7 @@ Pour ne pas rejouer toute la suite à chaque modification, `scripts/test.sh` (Gi
 ```
 scripts/test.sh focus FrictionGateTest InterstitialActivityTest   # seulement ces classes (unitaire ou appareil, détecté)
 scripts/test.sh commit                                            # tous les tests unitaires, avant un commit
-scripts/test.sh auto                                              # unitaires + tests sur appareil concernés par les fichiers modifiés
+scripts/test.sh auto                                              # unitaires + tests sur appareil concernés par les fichiers modifiés (signale ceux qui n'ont aucun test)
 scripts/test.sh full                                              # avant un push ou une version : tout + lint
 ```
 
