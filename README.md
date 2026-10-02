@@ -43,6 +43,9 @@ scripts/test.sh auto                                              # unitaires + 
 scripts/test.sh full                                              # avant un push ou une version : tout + lint
 ```
 
+Un hook `pre-push` (`scripts/hooks/`) lance `full` avant chaque `git push` et l'annule en cas d'échec (émulateur requis ;
+`git push --no-verify` pour passer outre). Après un clone : `git config core.hooksPath scripts/hooks`.
+
 Les tests sur appareil réinstallent l'app : désinstaller d'abord la version déjà présente si l'installation échoue
 (`adb uninstall fr.conscience.numerique`), ce qui efface ses données.
 

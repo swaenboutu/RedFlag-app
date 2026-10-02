@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Avant chaque push : toute la suite (unitaires, appareil, lint). Un échec bloque le push.
+# Demande un émulateur lancé. Pour passer outre exceptionnellement : git push --no-verify
+cd "$(dirname "$0")/../.."
+export PATH="$PATH:${LOCALAPPDATA:-}/Android/Sdk/platform-tools"
+echo "pre-push : scripts/test.sh full"
+if ! scripts/test.sh full; then
+    echo "pre-push : tests en échec (ou aucun émulateur lancé), push annulé." >&2
+    exit 1
+fi
