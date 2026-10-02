@@ -12,7 +12,7 @@ class SettingsStore(context: Context) {
 
     private val _interceptionEnabled = MutableStateFlow(prefs.getBoolean(KEY_ENABLED, true))
     private val _pauseMinutes = MutableStateFlow(prefs.getInt(KEY_PAUSE_MINUTES, DEFAULT_PAUSE_MINUTES))
-    private val _hideSystemApps = MutableStateFlow(prefs.getBoolean(KEY_HIDE_SYSTEM_APPS, false))
+    private val _hideSystemApps = MutableStateFlow(prefs.getBoolean(KEY_HIDE_SYSTEM_APPS, DEFAULT_HIDE_SYSTEM_APPS))
 
     /** Interrupteur général : faux = plus aucune interruption, quelles que soient les apps signalées. */
     val interceptionEnabled: StateFlow<Boolean> = _interceptionEnabled
@@ -68,6 +68,12 @@ class SettingsStore(context: Context) {
         private var onboardingSeenThisRun = false
 
         const val DEFAULT_PAUSE_MINUTES = 60
+
+        /**
+         * Par défaut, les apps système (horloge, calculatrice…) ne sont pas proposées : elles sont rarement à signaler et
+         * une longue liste fait peur. Valable partout (accueil, liste des apps, sélecteur), l'utilisateur peut les réafficher.
+         */
+        const val DEFAULT_HIDE_SYSTEM_APPS = true
 
         /** Durées proposées, en minutes. */
         val PAUSE_CHOICES = listOf(15, 60, 180, 24 * 60)

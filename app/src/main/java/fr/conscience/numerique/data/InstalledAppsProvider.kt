@@ -14,7 +14,7 @@ class InstalledAppsProvider(private val context: Context) {
      * (Chrome, par exemple, est une app système mise à jour depuis le Play Store).
      */
     @Suppress("DEPRECATION")
-    fun list(hideSystemApps: Boolean = false): List<InstalledApp> {
+    fun list(hideSystemApps: Boolean = SettingsStore.DEFAULT_HIDE_SYSTEM_APPS): List<InstalledApp> {
         val pm = context.packageManager
         val launcher = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
         return pm.queryIntentActivities(launcher, 0)
