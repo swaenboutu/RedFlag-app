@@ -47,7 +47,9 @@ class OnboardingAppsViewModel(application: Application) : AndroidViewModel(appli
 
     /** Texte de recherche ; remis à zéro à chaque changement d'étape. */
     val query: StateFlow<String> = _query
-    private var initiallyLinked = emptySet<String>()
+
+    /** Apps déjà associées à la problématique affichée, telles qu'enregistrées : ce que « Suivant » modifie. */
+    private val initiallyLinked = MutableStateFlow<Set<String>>(emptySet())
 
     /** Null tant que le chargement n'est pas terminé ; 0 s'il n'y a aucune problématique à traiter. */
     val stepCount: StateFlow<Int?> = steps.combine(index) { steps, _ -> steps?.size }
@@ -65,8 +67,13 @@ class OnboardingAppsViewModel(application: Application) : AndroidViewModel(appli
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
-    val hasSelection: StateFlow<Boolean> = selected.combine(steps) { selected, _ -> selected.isNotEmpty() }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
+    /**
+     * « Suivant » a quelque chose à enregistrer : des apps cochées, ou des apps déjà associées qu'on vient de toutes décocher
+     * (sans cela, il serait impossible de retirer la dernière).
+     */
+    val canSave: StateFlow<Boolean> = combine(selected, initiallyLinked) { selected, initial ->
+        selected.isNotEmpty() || initial.isNotEmpty()
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
     init {
         viewModelScope.launch {
@@ -86,11 +93,12 @@ class OnboardingAppsViewModel(application: Application) : AndroidViewModel(appli
 
     /** Reprend ce qui est déjà associé à la problématique, pour ne rien défaire en revenant sur une étape. */
     private suspend fun loadSelection(ref: ProblemRef) {
-        initiallyLinked = repository.monitoredApps.first()
+        val linked = repository.monitoredApps.first()
             .filter { app -> app.problems.any { it.matches(ref) } }
             .map { it.app.packageName }
             .toSet()
-        selected.value = initiallyLinked
+        initiallyLinked.value = linked
+        selected.value = linked
     }
 
     fun setQuery(text: String) {
@@ -105,10 +113,14 @@ class OnboardingAppsViewModel(application: Application) : AndroidViewModel(appli
             val step = steps.value?.getOrNull(index.value)
             if (step != null) {
                 val labels = apps.value.associate { it.packageName to it.label }
-                (selected.value - initiallyLinked).forEach { pkg ->
+                val before = initiallyLinked.value
+                (selected.value - before).forEach { pkg ->
                     repository.linkProblem(pkg, labels[pkg] ?: pkg, step.ref)
                 }
-                (initiallyLinked - selected.value).forEach { repository.unlinkProblem(it, step.ref) }
+                (before - selected.value).forEach { repository.unlinkProblem(it, step.ref) }
+                // Ce qui vient d'être enregistré devient la référence : sur la dernière étape, l'utilisateur peut revenir
+                // en arrière et décocher, il faut alors comparer à ce choix et non à l'état d'avant.
+                initiallyLinked.value = selected.value
             }
             advance(onFinished)
         }

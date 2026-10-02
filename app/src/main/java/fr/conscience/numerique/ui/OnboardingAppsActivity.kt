@@ -37,7 +37,7 @@ class OnboardingAppsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.rows.collect { adapter.submitList(it) } }
-                launch { viewModel.hasSelection.collect { binding.btnNext.isEnabled = it } }
+                launch { viewModel.canSave.collect { binding.btnNext.isEnabled = it } }
                 // Rien à traiter (aucune problématique choisie) : directement à la suite.
                 launch {
                     viewModel.stepCount.collect { count ->
