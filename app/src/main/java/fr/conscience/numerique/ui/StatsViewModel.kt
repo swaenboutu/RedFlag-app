@@ -1,9 +1,8 @@
 package fr.conscience.numerique.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fr.conscience.numerique.container
+import fr.conscience.numerique.AppContainer
 import fr.conscience.numerique.util.alphabetical
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,8 +20,7 @@ data class StatsRow(val app: StatsApp, val first: Boolean, val last: Boolean)
 data class StatsState(val installedCount: Int?, val interceptedCount: Int, val rows: List<StatsRow>)
 
 /** Écran « Statistiques » : combien d'apps ont une interruption, et la liste de celles-ci. */
-class StatsViewModel(application: Application) : AndroidViewModel(application) {
-    private val container = application.container
+class StatsViewModel(private val container: AppContainer) : ViewModel() {
     private val repository = container.repository
 
     private val installedCount = MutableStateFlow<Int?>(null)

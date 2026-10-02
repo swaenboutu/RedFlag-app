@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
@@ -18,7 +17,7 @@ import kotlinx.coroutines.launch
 
 /** « Vos applications » : recherche, filtres, et une carte avec les problématiques associées à chaque app. */
 class MainActivity : AppCompatActivity() {
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by screenViewModel { c, _, _ -> MainViewModel(c) }
     private lateinit var binding: ActivityMainBinding
     private var resumedBefore = false
 

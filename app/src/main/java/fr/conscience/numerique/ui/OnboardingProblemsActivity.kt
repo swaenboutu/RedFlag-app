@@ -2,7 +2,6 @@ package fr.conscience.numerique.ui
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -13,7 +12,7 @@ import kotlinx.coroutines.launch
 
 /** Accueil, étape 2 : choisir les problématiques importantes pour soi (elles deviennent des favoris). */
 class OnboardingProblemsActivity : AppCompatActivity() {
-    private val viewModel: OnboardingProblemsViewModel by viewModels()
+    private val viewModel: OnboardingProblemsViewModel by screenViewModel { c, _, _ -> OnboardingProblemsViewModel(c) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

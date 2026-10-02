@@ -3,7 +3,6 @@ package fr.conscience.numerique.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
@@ -14,7 +13,7 @@ import kotlinx.coroutines.launch
 
 /** Choix de plusieurs apps (avec recherche) ; renvoie les paquets et noms choisis. */
 class AppPickerActivity : AppCompatActivity() {
-    private val viewModel: AppPickerViewModel by viewModels()
+    private val viewModel: AppPickerViewModel by screenViewModel { c, _, h -> AppPickerViewModel(c, h) }
     private lateinit var binding: ActivityAppPickerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,10 +1,10 @@
 package fr.conscience.numerique.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import android.content.Context
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import fr.conscience.numerique.container
+import fr.conscience.numerique.AppContainer
 import fr.conscience.numerique.util.alphabetical
 import fr.conscience.numerique.data.ProblemRef
 import fr.conscience.numerique.data.matches
@@ -31,9 +31,9 @@ data class DetailState(
     val favorite: Boolean,
 )
 
-class ProblemDetailViewModel(application: Application, private val handle: SavedStateHandle) :
-    AndroidViewModel(application) {
-    private val repository = application.container.repository
+class ProblemDetailViewModel(container: AppContainer, private val context: Context, private val handle: SavedStateHandle) :
+    ViewModel() {
+    private val repository = container.repository
     private val catalogKey: String? = handle[DetailArgs.CATALOG_KEY]
 
     /** Le texte libre est dans le SavedStateHandle : il change quand on renomme. */
@@ -58,7 +58,7 @@ class ProblemDetailViewModel(application: Application, private val handle: Saved
         viewModelScope.launch {
             val current = handle.get<String?>(DetailArgs.CUSTOM_LABEL)
             val self = ProblemRef(catalogKey, current)
-            if (repository.displayedLabels(getApplication()).isLabelTaken(newLabel, except = self)) {
+            if (repository.displayedLabels(context).isLabelTaken(newLabel, except = self)) {
                 onResult(false)
                 return@launch
             }

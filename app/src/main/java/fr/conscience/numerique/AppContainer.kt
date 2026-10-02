@@ -23,13 +23,10 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
-/** Racine de dépendances minimale, sans framework d'injection. */
-class AppContainer(context: Context) {
-    private val database: AppDatabase =
-        Room.databaseBuilder(context, AppDatabase::class.java, "conscience.db")
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
-            .build()
-
+/**
+ * Racine de dépendances minimale, sans framework d'injection. [database] : la base de données ; un test en fournit une en mémoire pour ne pas toucher à celle de l'utilisateur.
+ */
+class AppContainer(context: Context, database: AppDatabase = openDatabase(context)) {
     val settings = SettingsStore(context)
     val repository = AppRepository(database)
     val installedApps = InstalledAppsProvider(context)
@@ -50,3 +47,8 @@ class AppContainer(context: Context) {
     ) { hide, flagged, _ -> hide to flagged }
         .map { (hide, flagged) -> withContext(Dispatchers.IO) { installedApps.list(hide, alwaysInclude = flagged) } }
 }
+
+private fun openDatabase(context: Context): AppDatabase =
+    Room.databaseBuilder(context, AppDatabase::class.java, "conscience.db")
+        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+        .build()

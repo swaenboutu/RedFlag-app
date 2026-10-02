@@ -1,9 +1,9 @@
 package fr.conscience.numerique.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import android.content.Context
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fr.conscience.numerique.container
+import fr.conscience.numerique.AppContainer
 import fr.conscience.numerique.util.matchesSearch
 import fr.conscience.numerique.util.alphabetical
 import fr.conscience.numerique.data.InstalledApp
@@ -35,8 +35,7 @@ sealed interface AppsRow {
  * Accueil, étape 3 : pour chaque problématique choisie à l'étape 2, cocher les applications concernées.
  * Le choix n'est enregistré qu'avec « Suivant » ; « Skip » passe à la suite sans rien changer.
  */
-class OnboardingAppsViewModel(application: Application) : AndroidViewModel(application) {
-    private val container = application.container
+class OnboardingAppsViewModel(private val container: AppContainer, private val context: Context) : ViewModel() {
     private val repository = container.repository
 
     private val steps = MutableStateFlow<List<AppsStep>?>(null)
@@ -79,13 +78,13 @@ class OnboardingAppsViewModel(application: Application) : AndroidViewModel(appli
         viewModelScope.launch {
             val favorites = repository.favorites.first()
             val overrides = repository.labelOverrides.first()
-            val context = getApplication<Application>()
             val chosen = ProblemCatalog.allRefs.filter { it in favorites }
             steps.value = chosen.mapIndexed { i, ref ->
                 AppsStep(i + 1, chosen.size, ref, ref.displayLabel(context, ref.catalogKey?.let(overrides::get)))
             }
-            apps.value = container.installedAppsFlow().first().sortedWith(compareBy(alphabetical()) { it.label })
+            // La sélection de départ est chargée avant d'afficher les apps : un clic ne peut pas être écrasé par ce chargement.
             steps.value?.firstOrNull()?.let { loadSelection(it.ref) }
+            apps.value = container.installedAppsFlow().first().sortedWith(compareBy(alphabetical()) { it.label })
         }
     }
 

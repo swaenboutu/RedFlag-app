@@ -1,10 +1,9 @@
 package fr.conscience.numerique.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import fr.conscience.numerique.container
+import fr.conscience.numerique.AppContainer
 import fr.conscience.numerique.R
 import fr.conscience.numerique.data.ProblemCatalog
 import fr.conscience.numerique.data.ProblemRef
@@ -47,8 +46,8 @@ sealed interface DetailRow {
  * Détail d'une application. Chaque case cochée ou décochée est enregistrée aussitôt, comme sur l'écran
  * des problématiques : l'état affiché vient toujours de la base.
  */
-class AppDetailViewModel(application: Application, handle: SavedStateHandle) : AndroidViewModel(application) {
-    private val repository = application.container.repository
+class AppDetailViewModel(container: AppContainer, handle: SavedStateHandle) : ViewModel() {
+    private val repository = container.repository
     private val packageName: String = checkNotNull(handle[AppDetailArgs.PACKAGE])
     private val appName: String = handle[AppDetailArgs.LABEL] ?: packageName
 

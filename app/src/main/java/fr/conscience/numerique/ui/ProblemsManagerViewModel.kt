@@ -1,10 +1,10 @@
 package fr.conscience.numerique.ui
 
-import android.app.Application
+import android.content.Context
 import androidx.annotation.StringRes
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fr.conscience.numerique.container
+import fr.conscience.numerique.AppContainer
 import fr.conscience.numerique.util.alphabetical
 import fr.conscience.numerique.R
 import fr.conscience.numerique.data.PredefinedProblem
@@ -62,8 +62,8 @@ private sealed interface Entry {
     data class Cus(val label: String, override val apps: List<LinkedApp>) : Entry
 }
 
-class ProblemsManagerViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = application.container.repository
+class ProblemsManagerViewModel(container: AppContainer, private val context: Context) : ViewModel() {
+    private val repository = container.repository
 
     /** Les favoris s'affichent ouverts la première fois ; l'utilisateur peut les refermer. */
     private val expanded = MutableStateFlow(setOf(R.string.category_favorites))
@@ -130,7 +130,7 @@ class ProblemsManagerViewModel(application: Application) : AndroidViewModel(appl
     fun add(label: String, category: String?, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
             // Refusé si une autre problématique, du catalogue ou personnalisée, porte déjà ce nom.
-            if (repository.displayedLabels(getApplication()).isLabelTaken(label)) {
+            if (repository.displayedLabels(context).isLabelTaken(label)) {
                 onResult(false)
                 return@launch
             }

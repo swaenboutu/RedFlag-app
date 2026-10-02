@@ -1,9 +1,8 @@
 package fr.conscience.numerique.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fr.conscience.numerique.container
+import fr.conscience.numerique.AppContainer
 import fr.conscience.numerique.util.matchesSearch
 import fr.conscience.numerique.util.alphabetical
 import fr.conscience.numerique.data.InstalledApp
@@ -38,8 +37,7 @@ data class AppsState(
     val loaded: Boolean = false,
 )
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
-    private val container = application.container
+class MainViewModel(private val container: AppContainer) : ViewModel() {
     private val installed = MutableStateFlow<List<InstalledApp>?>(null)
     private val refresh = MutableStateFlow(0)
     private val query = MutableStateFlow("")

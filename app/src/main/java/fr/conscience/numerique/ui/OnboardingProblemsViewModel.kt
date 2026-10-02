@@ -1,9 +1,8 @@
 package fr.conscience.numerique.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fr.conscience.numerique.container
+import fr.conscience.numerique.AppContainer
 import fr.conscience.numerique.data.ProblemCatalog
 import fr.conscience.numerique.data.ProblemRef
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,8 +36,8 @@ sealed interface OnboardingRow {
  * Accueil, étape 2 : l'utilisateur coche les problématiques qui comptent pour lui. Elles deviennent ses favoris,
  * enregistrés aussitôt (l'état affiché vient toujours de la base). Les thèmes sont fermés au départ.
  */
-class OnboardingProblemsViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = application.container.repository
+class OnboardingProblemsViewModel(container: AppContainer) : ViewModel() {
+    private val repository = container.repository
     private val expanded = MutableStateFlow(emptySet<Int>())
 
     /** Nombre de problématiques du catalogue déjà cochées (les seules visibles sur cet écran). */

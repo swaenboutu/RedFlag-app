@@ -3,7 +3,6 @@ package fr.conscience.numerique.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -13,7 +12,7 @@ import kotlinx.coroutines.launch
 
 /** Accueil, étape 3 : une page par problématique choisie, pour cocher les applications concernées. */
 class OnboardingAppsActivity : AppCompatActivity() {
-    private val viewModel: OnboardingAppsViewModel by viewModels()
+    private val viewModel: OnboardingAppsViewModel by screenViewModel { c, ctx, _ -> OnboardingAppsViewModel(c, ctx) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

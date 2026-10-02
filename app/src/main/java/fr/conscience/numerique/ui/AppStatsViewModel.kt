@@ -1,10 +1,9 @@
 package fr.conscience.numerique.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import fr.conscience.numerique.container
+import fr.conscience.numerique.AppContainer
 import fr.conscience.numerique.data.Stats
 import fr.conscience.numerique.data.StatsBucket
 import fr.conscience.numerique.data.StatsRange
@@ -27,12 +26,12 @@ data class AppStatsState(val range: StatsRange, val buckets: List<StatsBucket>, 
     val snoozed: Int get() = buckets.sumOf { it.snoozed }
 }
 
-class AppStatsViewModel(application: Application, handle: SavedStateHandle) : AndroidViewModel(application) {
+class AppStatsViewModel(container: AppContainer, handle: SavedStateHandle) : ViewModel() {
     private val packageName: String = checkNotNull(handle[AppStatsArgs.PACKAGE])
 
     private val range = MutableStateFlow(StatsRange.DAY)
 
-    val state: StateFlow<AppStatsState> = combine(application.container.repository.choiceEvents, range) { events, range ->
+    val state: StateFlow<AppStatsState> = combine(container.repository.choiceEvents, range) { events, range ->
         val mine = events.filter { it.packageName == packageName }
         AppStatsState(range, Stats.buckets(mine, range), allTimeAttempts = mine.size)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppStatsState(StatsRange.DAY, emptyList(), 0))

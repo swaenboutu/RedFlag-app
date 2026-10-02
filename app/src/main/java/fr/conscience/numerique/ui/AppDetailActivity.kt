@@ -3,7 +3,6 @@ package fr.conscience.numerique.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,7 +13,7 @@ import kotlinx.coroutines.launch
 
 /** Détail d'une application : chaque case cochée est enregistrée aussitôt. */
 class AppDetailActivity : AppCompatActivity() {
-    private val viewModel: AppDetailViewModel by viewModels()
+    private val viewModel: AppDetailViewModel by screenViewModel { c, _, h -> AppDetailViewModel(c, h) }
     private lateinit var binding: ActivityAppDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -51,15 +51,29 @@ device_classes_for_changes() {
     local files
     files=$( { git diff --name-only HEAD; git diff --name-only '@{upstream}..HEAD' 2>/dev/null; git ls-files --others --exclude-standard; } | sort -u)
     local out=() uncovered=()
-    add() { out+=("fr.conscience.numerique.$1"); }
+    local matched=0
+    add() { out+=("fr.conscience.numerique.$1"); matched=1; }
     while IFS= read -r f; do
+        matched=0
         case "$f" in
             "") ;;
             # Build, manifeste, dépendances : tout.
             *build.gradle.kts|*AndroidManifest.xml|gradle/*|*/libs.versions.toml) echo ALL; return ;;
             # Un test modifié : lui seul. Les tests unitaires sont de toute façon rejoués.
             */androidTest/*Test.kt) out+=("$(locate "$(basename "$f" .kt)" | cut -d' ' -f2)") ;;
+            */androidTest/*ViewModelEnv.kt) add ui.StatsViewModelsTest; add ui.AppListViewModelsTest; add ui.OnboardingViewModelsTest; add ui.ProblemViewModelsTest ;;
             */src/test/*|*.md|scripts/*|.gitignore|TODO.md|LICENSE|licenses/*) ;;
+            # ViewModels : leur test (sans écran). `;;&` : on continue, un ViewModel peut aussi concerner un écran plus bas.
+            */ui/StatsViewModel.kt|*/ui/AppStatsViewModel.kt) add ui.StatsViewModelsTest ;;&
+            */ui/MainViewModel.kt|*/ui/AppPickerViewModel.kt) add ui.AppListViewModelsTest ;;&
+            */ui/Onboarding*ViewModel.kt) add ui.OnboardingViewModelsTest ;;&
+            */ui/ProblemsManagerViewModel.kt|*/ui/ProblemDetailViewModel.kt|*/ui/AppDetailViewModel.kt) add ui.ProblemViewModelsTest ;;&
+            # Ce qui sert à construire tous les ViewModels, ou la base qu'ils lisent.
+            */ui/ViewModelFactory.kt|*/AppContainer.kt|*/data/AppRepository.kt|*/data/Daos.kt|*/data/Entities.kt)
+                add ui.StatsViewModelsTest; add ui.AppListViewModelsTest; add ui.OnboardingViewModelsTest; add ui.ProblemViewModelsTest; add ui.HomeAndStatsScreensTest ;;&
+            # Accueil et statistiques, à l'écran.
+            */ui/MainActivity.kt|*/ui/StatsActivity.kt|*/ui/AppListAdapter.kt|*/ui/StatsAdapter.kt|*/ui/MainViewModel.kt|*/ui/StatsViewModel.kt|*/layout/activity_main.xml|*/layout/activity_stats.xml|*/layout/item_app.xml|*/layout/item_stats_app.xml)
+                add ui.HomeAndStatsScreensTest ;;&
             app/schemas/*|*/data/AppDatabase.kt|*/data/Entities.kt) add data.MigrationTest; add data.AppRepositoryTest ;;
             */data/AppRepository.kt|*/data/Daos.kt) add data.AppRepositoryTest ;;
             */data/SettingsStore.kt) add data.SettingsStoreTest ;;
@@ -70,7 +84,7 @@ device_classes_for_changes() {
                 add ui.DetailScreensTest ;;
             # Couverts par les tests unitaires, déjà joués.
             */data/Stats.kt|*/data/ProblemCatalog.kt|*/util/*|*/ui/ProblemLabels.kt|*/res/values*/strings.xml) ;;
-            *) uncovered+=("$f") ;;
+            *) [ "$matched" -eq 1 ] || uncovered+=("$f") ;;
         esac
     done <<< "$files"
     if [ ${#uncovered[@]} -gt 0 ]; then

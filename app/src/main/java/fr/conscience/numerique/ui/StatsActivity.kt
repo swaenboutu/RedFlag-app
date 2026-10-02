@@ -2,7 +2,6 @@ package fr.conscience.numerique.ui
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -13,7 +12,7 @@ import kotlinx.coroutines.launch
 
 /** « Statistiques » : combien d'apps ont une interruption, et l'accès aux statistiques de chacune. */
 class StatsActivity : AppCompatActivity() {
-    private val viewModel: StatsViewModel by viewModels()
+    private val viewModel: StatsViewModel by screenViewModel { c, _, _ -> StatsViewModel(c) }
     private lateinit var binding: ActivityStatsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

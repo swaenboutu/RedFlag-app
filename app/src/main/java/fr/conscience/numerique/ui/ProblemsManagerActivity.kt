@@ -2,7 +2,6 @@ package fr.conscience.numerique.ui
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -13,7 +12,7 @@ import kotlinx.coroutines.launch
 
 /** « Vos problématiques » : thèmes repliables, chaque problématique ouvre son détail. */
 class ProblemsManagerActivity : AppCompatActivity() {
-    private val viewModel: ProblemsManagerViewModel by viewModels()
+    private val viewModel: ProblemsManagerViewModel by screenViewModel { c, ctx, _ -> ProblemsManagerViewModel(c, ctx) }
     private lateinit var binding: ActivityProblemsManagerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

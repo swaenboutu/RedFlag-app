@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -24,7 +23,7 @@ import kotlinx.coroutines.launch
 
 /** Détail d'une problématique : intitulé modifiable, apps liées (dissociables), ajout de liens. */
 class ProblemDetailActivity : AppCompatActivity() {
-    private val viewModel: ProblemDetailViewModel by viewModels()
+    private val viewModel: ProblemDetailViewModel by screenViewModel { c, ctx, h -> ProblemDetailViewModel(c, ctx, h) }
     private lateinit var binding: ActivityProblemDetailBinding
     private var state: DetailState? = null
 

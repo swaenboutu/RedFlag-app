@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -17,7 +16,7 @@ import kotlinx.coroutines.launch
 
 /** Statistiques d'une app : tentatives, passages outre et mises en pause, par jour, par mois ou par an. */
 class AppStatsActivity : AppCompatActivity() {
-    private val viewModel: AppStatsViewModel by viewModels()
+    private val viewModel: AppStatsViewModel by screenViewModel { c, _, h -> AppStatsViewModel(c, h) }
     private lateinit var binding: ActivityAppStatsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

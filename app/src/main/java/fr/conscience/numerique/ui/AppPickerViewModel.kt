@@ -1,10 +1,9 @@
 package fr.conscience.numerique.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import fr.conscience.numerique.container
+import fr.conscience.numerique.AppContainer
 import fr.conscience.numerique.util.matchesSearch
 import fr.conscience.numerique.util.alphabetical
 import fr.conscience.numerique.data.InstalledApp
@@ -23,8 +22,7 @@ object AppPickerArgs {
 
 data class AppPickRow(val app: InstalledApp, val checked: Boolean)
 
-class AppPickerViewModel(application: Application, handle: SavedStateHandle) : AndroidViewModel(application) {
-    private val container = application.container
+class AppPickerViewModel(private val container: AppContainer, handle: SavedStateHandle) : ViewModel() {
     private val excluded: Set<String> = handle.get<ArrayList<String>>(AppPickerArgs.EXCLUDED).orEmpty().toSet()
 
     private val apps = MutableStateFlow<List<InstalledApp>>(emptyList())
