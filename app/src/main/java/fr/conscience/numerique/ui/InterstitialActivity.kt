@@ -29,6 +29,12 @@ class InterstitialActivity : AppCompatActivity() {
     /** App actuellement concernée. Change si l'écran est relancé pour une autre app (voir [onNewIntent]). */
     private var targetPackage: String = ""
 
+    /**
+     * Vrai dès que l'utilisateur a répondu (Oui, Non, retour ou pause) pour l'affichage en cours. Si l'écran est quitté sans
+     * réponse (bouton Accueil, écran qui s'éteint, autre app…), ce départ compte comme un refus : voir [onStop].
+     */
+    private var answered = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityInterstitialBinding.inflate(layoutInflater)
@@ -69,6 +75,25 @@ class InterstitialActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        answered = false
+    }
+
+    /**
+     * Quitter l'écran sans répondre (Accueil, extinction de l'écran…) est un refus : l'utilisateur n'a pas ouvert l'app. Il est
+     * compté une seule fois par affichage. Une rotation ne compte pas (l'écran est simplement recréé), ni une fermeture
+     * après une réponse.
+     */
+    override fun onStop() {
+        super.onStop()
+        if (answered || isFinishing || isChangingConfigurations || targetPackage.isEmpty()) return
+        answered = true
+        val pkg = targetPackage
+        // Portée de l'app et non de l'écran : l'écran peut être détruit juste après.
+        container.applicationScope.launch { container.repository.recordChoice(pkg, proceeded = false) }
+    }
+
     /** Affiche l'app [pkg] ; une demande plus récente annule la précédente. */
     private fun load(pkg: String) {
         loadJob?.cancel()
@@ -101,6 +126,7 @@ class InterstitialActivity : AppCompatActivity() {
 
     /** [snoozed] : le passage vient du lien « Ne plus demander pendant… » (compté à part dans les statistiques). */
     private fun proceed(snoozed: Boolean = false) {
+        answered = true
         container.frictionGate.allow(targetPackage)
         lifecycleScope.launch {
             container.repository.recordChoice(targetPackage, proceeded = true, snoozed = snoozed)
@@ -109,6 +135,7 @@ class InterstitialActivity : AppCompatActivity() {
     }
 
     private fun decline() {
+        answered = true
         // Renvoyée à l'accueil, l'app peut émettre des événements parasites : le portier les ignore un court instant.
         container.frictionGate.declined(targetPackage)
         lifecycleScope.launch {
@@ -123,6 +150,7 @@ class InterstitialActivity : AppCompatActivity() {
     }
 
     private fun pause() {
+        answered = true
         lifecycleScope.launch {
             val pauseMillis = container.settings.pauseMinutes.value * 60_000L
             container.repository.snooze(targetPackage, System.currentTimeMillis() + pauseMillis)

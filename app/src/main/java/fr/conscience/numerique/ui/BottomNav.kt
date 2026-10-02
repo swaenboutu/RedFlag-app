@@ -18,7 +18,7 @@ object BottomNav {
      * toucher l'onglet ramène alors à la liste de l'onglet, au lieu de ne rien faire.
      */
     fun setup(activity: Activity, nav: NavigationBarView, current: Int, isTabRoot: Boolean = true) {
-        nav.selectedItemId = current
+        select(nav, current)
         nav.setOnItemSelectedListener { item ->
             when {
                 item.itemId == current && isTabRoot -> true
@@ -53,8 +53,11 @@ object BottomNav {
         }
     }
 
-    /** À rappeler au retour sur l'écran : l'onglet sélectionné doit rester le sien. */
+    /**
+     * À rappeler au retour sur l'écran : l'onglet sélectionné doit rester le sien. On coche l'entrée du menu plutôt que d'utiliser
+     * `selectedItemId`, qui déclencherait l'écouteur de navigation (et, sur un écran de détail, refermerait l'écran).
+     */
     fun select(nav: NavigationBarView, current: Int) {
-        nav.selectedItemId = current
+        nav.menu.findItem(current)?.isChecked = true
     }
 }

@@ -13,7 +13,9 @@ import fr.conscience.numerique.data.MIGRATION_4_5
 import fr.conscience.numerique.data.MIGRATION_5_6
 import fr.conscience.numerique.data.SettingsStore
 import fr.conscience.numerique.service.FrictionGate
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -32,6 +34,9 @@ class AppContainer(context: Context) {
     val repository = AppRepository(database)
     val installedApps = InstalledAppsProvider(context)
     val frictionGate = FrictionGate()
+
+    /** Pour ce qui doit se terminer même si l'écran qui l'a lancé disparaît (une écriture en base, par exemple). */
+    val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     /**
      * Les apps à lister : le réglage « Liste affichée » est appliqué, mais une app signalée y figure toujours (sinon elle

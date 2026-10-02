@@ -68,7 +68,115 @@ class InterstitialActivityTest {
         return text
     }
 
+    private fun answers(pkg: String) = runBlocking { repository.choiceEvents.first() }.count { it.packageName == pkg }
+
+    /** Attend (au plus 3 s) que [pkg] ait au moins [expected] réponses enregistrées : l'écriture est asynchrone. */
+    private fun awaitAnswers(pkg: String, expected: Int) {
+        val deadline = System.currentTimeMillis() + 3_000
+        while (answers(pkg) < expected && System.currentTimeMillis() < deadline) Thread.sleep(50)
+    }
+
+    /**
+     * Quitter l'écran avec le bouton Accueil : il passe à l'arrière-plan (onStop) sans qu'aucune réponse n'ait été donnée.
+     * On appelle onStop directement : déplacer l'écran vers l'état « créé » avec ActivityScenario prend près d'une minute.
+     */
+    private fun ActivityScenario<InterstitialActivity>.leaveWithHome() =
+        onActivity { InstrumentationRegistry.getInstrumentation().callActivityOnStop(it) }
+
+    /** Revenir sur l'écran (onStart), par exemple depuis les applications récentes. */
+    private fun ActivityScenario<InterstitialActivity>.comeBack() =
+        onActivity { InstrumentationRegistry.getInstrumentation().callActivityOnStart(it) }
+
     @Test
+    fun leavingWithoutAnsweringCountsAsARefusal() {
+        val before = answers(appA)
+        ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
+            scenario.waitForAppName("Application A")
+
+            scenario.leaveWithHome()
+
+            awaitAnswers(appA, before + 1)
+            assertEquals("la sortie est comptée comme un refus", before + 1, answers(appA))
+        }
+    }
+
+    @Test
+    fun leavingIsCountedOnlyOncePerDisplay() {
+        ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
+            scenario.waitForAppName("Application A")
+            val before = answers(appA)
+
+            scenario.leaveWithHome()
+            awaitAnswers(appA, before + 1)
+            scenario.leaveWithHome()
+            Thread.sleep(300)
+
+            assertEquals(before + 1, answers(appA))
+        }
+    }
+
+    @Test
+    fun comingBackAndLeavingAgainCountsASecondRefusal() {
+        ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
+            scenario.waitForAppName("Application A")
+            val before = answers(appA)
+
+            scenario.leaveWithHome()
+            Thread.sleep(400)
+            scenario.comeBack()
+            scenario.leaveWithHome()
+            Thread.sleep(400)
+
+            assertEquals("deux affichages, deux refus", before + 2, answers(appA))
+        }
+    }
+
+    @Test
+    fun leavingAfterAnsweringYesDoesNotAddARefusal() {
+        ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
+            scenario.waitForAppName("Application A")
+            val before = answers(appA)
+
+            scenario.onActivity { it.findViewById<android.view.View>(R.id.btnContinue).performClick() }
+            Thread.sleep(500)
+
+            val events = runBlocking { repository.choiceEvents.first() }.filter { it.packageName == appA }
+            assertEquals("une seule réponse enregistrée", before + 1, events.size)
+            assertTrue("c'est un Oui", events.last().proceeded)
+        }
+    }
+
+    @Test
+    fun rotatingTheScreenIsNotARefusal() {
+        ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
+            scenario.waitForAppName("Application A")
+            val before = answers(appA)
+
+            scenario.recreate()
+            Thread.sleep(500)
+
+            assertEquals("recréer l'écran ne compte pas", before, answers(appA))
+        }
+    }
+
+    @Test
+    fun leavingCountsForTheAppShownAtThatMoment() {
+        ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
+            scenario.waitForAppName("Application A")
+            scenario.deliverNewIntent(InterstitialActivity.intent(context, appB))
+            scenario.waitForAppName("Application B")
+            val beforeA = answers(appA)
+            val beforeB = answers(appB)
+
+            scenario.leaveWithHome()
+            awaitAnswers(appB, beforeB + 1)
+
+            assertEquals("A n'est pas concernée", beforeA, answers(appA))
+            assertEquals("B reçoit le refus", beforeB + 1, answers(appB))
+        }
+    }
+
+        @Test
     fun showsTheAppAndItsProblems() {
         ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
             assertEquals("Application A", scenario.waitForAppName("Application A"))
@@ -107,13 +215,16 @@ class InterstitialActivityTest {
             scenario.deliverNewIntent(InterstitialActivity.intent(context, appB))
             scenario.waitForAppName("Application B")
 
-            val before = runBlocking { repository.choiceEvents.first() }.count { it.packageName == appB && !it.proceeded }
+            val beforeA = answers(appA)
+            val beforeB = answers(appB)
             scenario.onActivity { it.findViewById<android.view.View>(R.id.btnBack).performClick() }
-            Thread.sleep(500)
+            awaitAnswers(appB, beforeB + 1)
+            Thread.sleep(300)
 
-            val after = runBlocking { repository.choiceEvents.first() }.filter { it.packageName == appB && !it.proceeded }
-            assertEquals("le refus est enregistré pour l'app affichée (B), pas pour la première (A)", before + 1, after.size)
-            assertEquals(0, runBlocking { repository.choiceEvents.first() }.count { it.packageName == appA && !it.proceeded })
+            val refusalsB = runBlocking { repository.choiceEvents.first() }.filter { it.packageName == appB }.takeLast(1)
+            assertEquals("le refus est enregistré pour l'app affichée (B)", beforeB + 1, answers(appB))
+            assertTrue("c'est bien un refus", refusalsB.single().let { !it.proceeded })
+            assertEquals("rien pour la première app (A)", beforeA, answers(appA))
         }
     }
 }
