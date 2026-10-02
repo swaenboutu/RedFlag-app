@@ -84,6 +84,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.FaqActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.AppDetailActivity"
             android:exported="false" />
 

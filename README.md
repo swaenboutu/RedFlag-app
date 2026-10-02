@@ -46,8 +46,8 @@ scripts/test.sh full                                              # avant un pus
 Un hook `pre-push` (`scripts/hooks/`) lance `full` avant chaque `git push` et l'annule en cas d'échec (émulateur requis ;
 `git push --no-verify` pour passer outre). Après un clone : `git config core.hooksPath scripts/hooks`.
 
-Les tests sur appareil réinstallent l'app : désinstaller d'abord la version déjà présente si l'installation échoue
-(`adb uninstall fr.conscience.numerique`), ce qui efface ses données.
+Les tests sur appareil vident les données de l'app au départ, puis la réinstallent (en debug) à leur fin, en réactivant son
+service d'accessibilité s'il l'était : l'app reste donc sur l'émulateur (seules ses données sont remises à zéro).
 
 Ouvrir le dossier dans Android Studio, puis lancer sur l'AVD. Activer ensuite le service dans
 *Paramètres > Accessibilité > Conscience Numérique* (la bannière de l'écran principal y renvoie).

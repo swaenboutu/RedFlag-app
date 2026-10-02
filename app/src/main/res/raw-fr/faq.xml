@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  FAQ de l'écran « Comment ça marche » (français). Même structure et mêmes identifiants que res/raw/faq.xml (anglais, langue par
+  défaut) : un test vérifie qu'il ne manque rien d'un côté ni de l'autre. Voir le commentaire de l'autre fichier pour le format.
+-->
+<faq>
+    <theme id="app" title="L’application">
+        <entry id="purpose">
+            <question>À quoi sert cette application ?</question>
+            <answer>
+                Quand vous ouvrez une application que vous avez signalée à cause d’un problème éthique (revente de données,
+                conception addictive, exploitation de travailleurs…), un court écran vous demande si vous voulez vraiment l’ouvrir.
+
+                Il n’interdit rien : il ajoute seulement un instant de réflexion, pour que l’usage de l’application soit un choix
+                plutôt qu’un réflexe.
+            </answer>
+        </entry>
+        <entry id="flag_app">
+            <question>Comment signaler une application ?</question>
+            <answer>
+                Dans l’onglet Applications, touchez une application et cochez les problématiques qui vous concernent. Vous pouvez
+                aussi partir d’une problématique, dans l’onglet Problématiques, et y associer plusieurs applications. S’il en
+                manque une, vous pouvez ajouter la vôtre.
+            </answer>
+        </entry>
+        <entry id="buttons">
+            <question>Que font les boutons de l’écran d’interruption ?</question>
+            <answer>
+                « Non, fermer l’application » vous ramène à l’écran d’accueil.
+
+                « Oui, lancer l’application » l’ouvre, et on ne vous redemande rien tant que vous continuez de l’utiliser. Ce choix
+                est oublié après environ 15 minutes sans utiliser l’application, ou dès que l’écran s’éteint.
+
+                Le lien « Ne plus me demander pendant… » met l’interruption en pause pour cette application, pour la durée choisie
+                dans les Réglages.
+            </answer>
+        </entry>
+    </theme>
+
+    <theme id="privacy" title="Vie privée">
+        <entry id="data">
+            <question>Où sont stockées mes données ?</question>
+            <answer>
+                Tout reste sur votre téléphone : les applications signalées, vos problématiques, vos réglages et vos statistiques.
+                Rien n’est envoyé nulle part, et l’application ne demande même pas l’autorisation d’accéder à Internet.
+            </answer>
+        </entry>
+        <entry id="accessibility">
+            <question>Pourquoi l’application a-t-elle besoin du service d’accessibilité ?</question>
+            <answer>
+                C’est le seul moyen qu’Android donne à une application de savoir quelle application vient de passer au premier plan,
+                pour afficher l’interruption au bon moment.
+
+                Le service ne lit ni ce qui s’affiche à l’écran ni ce que vous tapez : il ne voit que le nom de l’application qui
+                s’ouvre. Vous pouvez le désactiver à tout moment dans les réglages d’Android.
+            </answer>
+        </entry>
+        <entry id="delete">
+            <question>Comment supprimer mes données ?</question>
+            <answer>
+                Désinstaller l’application efface tout. Vous pouvez aussi vider son stockage depuis les réglages d’Android, dans la
+                page d’informations de l’application.
+            </answer>
+        </entry>
+    </theme>
+
+    <theme id="ethics" title="Éthique">
+        <entry id="who_decides">
+            <question>Qui décide quelles applications posent problème ?</question>
+            <answer>
+                C’est vous. L’application ne rend aucun verdict et ne tient aucune liste d’applications « mauvaises » : vous
+                choisissez, parmi une liste de problématiques ou les vôtres, celles qui comptent pour vous.
+            </answer>
+        </entry>
+        <entry id="free_software">
+            <question>S’agit-il d’un logiciel libre ?</question>
+            <answer>
+                Oui. L’application est publiée sous licence GPL v3, sans publicité et sans suivi.
+            </answer>
+        </entry>
+    </theme>
+</faq>

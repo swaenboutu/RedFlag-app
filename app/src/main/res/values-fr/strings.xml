@@ -94,8 +94,6 @@
     <string name="permissions_granted">Accordées</string>
     <string name="permissions_missing">Non accordées</string>
     <string name="settings_help_title">Comment ça marche</string>
-    <!-- À RÉDIGER : texte provisoire (Lorem Ipsum). -->
-    <string name="settings_help_body">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</string>
     <string name="settings_version">Version</string>
     <string name="settings_section_debug">Debug</string>
     <string name="settings_debug_onboarding_title">Toujours afficher l\'accueil</string>
@@ -105,7 +103,6 @@
     <string name="settings_debug_reset_confirm_title">Réinitialiser l\'app ?</string>
     <string name="settings_debug_reset_confirm_message">Tous les réglages, les apps associées, les favoris, les problématiques personnalisées et l\'historique seront effacés, et l\'app se fermera.</string>
     <string name="settings_debug_reset_confirm_action">Tout effacer</string>
-    <string name="action_close">Fermer</string>
     <plurals name="duration_minutes">
         <item quantity="one">%d minute</item>
         <item quantity="other">%d minutes</item>
@@ -124,6 +121,11 @@
     <string name="dialog_new_problem_theme">Thème</string>
     <string name="custom_empty">Aucune problématique pour l’instant</string>
     <string name="apps_none">Aucune application</string>
+    <plurals name="faq_questions">
+        <item quantity="one">%d question</item>
+        <item quantity="other">%d questions</item>
+        <item quantity="many">%d questions</item>
+    </plurals>
     <plurals name="theme_problems">
         <item quantity="one">%d problématique</item>
         <item quantity="other">%d problématiques</item>

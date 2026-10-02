@@ -5,9 +5,7 @@
 #   scripts/test.sh commit                     tous les tests unitaires (quelques secondes, sans appareil)
 #   scripts/test.sh auto                       commit + les tests sur appareil concernés par les fichiers modifiés (git)
 #   scripts/test.sh full                       avant un push ou une version : unitaires, tout l'appareil, lint
-#
-# Les tests sur appareil demandent un émulateur lancé. Si l'installation échoue (signature différente) :
-#   adb uninstall fr.conscience.numerique   (efface les données de l'app)
+# Les tests sur appareil demandent un émulateur lancé ; l'app est remise (debug) à leur fin, ses données sont vidées au départ.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -34,6 +32,19 @@ run_unit() { # $@ = noms de classes (vide = tout)
     "${GRADLE[@]}" :app:testDebugUnitTest "${args[@]}"
 }
 
+APP_ID=fr.conscience.numerique
+
+# Gradle désinstalle l'app à la fin des tests sur appareil : on la remet (en debug), et on réactive son service d'accessibilité
+# s'il l'était (les réglages « secure » ne sont modifiables que sur un émulateur ou un appareil de développement ; sinon, sans effet).
+restore_app() { # $1 = services d'accessibilité actifs avant les tests
+    echo ">> réinstallation de l'app"
+    "${GRADLE[@]}" :app:installDebug
+    if [[ "$1" == *"$APP_ID"* ]]; then
+        adb shell settings put secure enabled_accessibility_services "$1" >/dev/null 2>&1 || true
+        adb shell settings put secure accessibility_enabled 1 >/dev/null 2>&1 || true
+    fi
+}
+
 run_device() { # $@ = noms complets de classes (vide = tout)
     adb get-state >/dev/null 2>&1 || { echo "Aucun émulateur ou téléphone connecté." >&2; exit 3; }
     local args=()
@@ -42,7 +53,13 @@ run_device() { # $@ = noms complets de classes (vide = tout)
         args+=("-Pandroid.testInstrumentationRunnerArguments.class=$*")
     fi
     echo ">> tests sur appareil ${*:-(tous)}"
-    "${GRADLE[@]}" :app:connectedDebugAndroidTest "${args[@]}"
+    local services status=0
+    services=$(adb shell settings get secure enabled_accessibility_services 2>/dev/null | tr -d '\r' || true)
+    # Données vidées plutôt qu'app désinstallée : le même point de départ (rien ne doit rester de l'utilisation précédente).
+    adb shell pm clear "$APP_ID" >/dev/null 2>&1 || true
+    "${GRADLE[@]}" :app:connectedDebugAndroidTest "${args[@]}" || status=$?
+    restore_app "$services"
+    return $status
 }
 
 # Tests sur appareil à rejouer d'après les fichiers modifiés (non commités + commits non poussés).
@@ -82,8 +99,11 @@ device_classes_for_changes() {
                 add ui.InterstitialActivityTest ;;
             */ui/BottomNav.kt|*/layout/view_bottom_nav.xml|*/ui/AppStats*.kt|*/ui/AppDetail*.kt|*/ui/ProblemDetail*.kt|*/layout/activity_app_stats.xml|*/layout/activity_app_detail.xml|*/layout/activity_problem_detail.xml)
                 add ui.DetailScreensTest ;;
+            # FAQ (et les Réglages qui y mènent, la carte de thème qu'elle partage avec d'autres écrans).
+            */ui/Faq*.kt|*/data/Faq.kt|*/layout/activity_faq.xml|*/layout/item_faq_*.xml|*/ui/SettingsActivity.kt|*/layout/activity_settings.xml|*/ui/ThemeCard.kt|*/ui/CardStyle.kt|*/layout/item_manager_theme.xml)
+                add ui.FaqScreenTest ;;
             # Couverts par les tests unitaires, déjà joués.
-            */data/Stats.kt|*/data/ProblemCatalog.kt|*/util/*|*/ui/ProblemLabels.kt|*/res/values*/strings.xml) ;;
+            */data/Stats.kt|*/data/ProblemCatalog.kt|*/util/*|*/ui/ProblemLabels.kt|*/res/values*/strings.xml|*/res/raw*/faq.xml) ;;
             *) [ "$matched" -eq 1 ] || uncovered+=("$f") ;;
         esac
     done <<< "$files"
@@ -128,7 +148,7 @@ case "$mode" in
         "${GRADLE[@]}" :app:lintDebug
         ;;
     *)
-        sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//'
+        sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//'
         exit 1
         ;;
 esac

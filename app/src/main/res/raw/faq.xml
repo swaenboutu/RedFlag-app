@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  FAQ de l'écran « How it works » (anglais, langue par défaut). La version française est dans res/raw-fr/faq.xml : même structure,
+  mêmes identifiants (un test vérifie qu'il ne manque rien d'un côté ni de l'autre).
+
+  - <theme id="…" title="…"> : une zone pliable. <entry id="…"> : une question pliable, avec <question> et <answer>.
+  - Les `id` sont stables et ne sont jamais affichés : ils relient les deux langues. Uniques dans leur niveau, jamais modifiés.
+  - L'ordre du fichier est l'ordre d'affichage.
+  - Dans <answer>, une ligne vide sépare deux paragraphes ; les retours à la ligne simples et l'indentation sont ignorés.
+  - Pas d'apostrophe ou de guillemet à échapper ici (c'est du XML, pas du strings.xml), mais « & » s'écrit « &amp; » et « < » « &lt; ».
+-->
+<faq>
+    <theme id="app" title="The app">
+        <entry id="purpose">
+            <question>What is this app for?</question>
+            <answer>
+                When you open an app you flagged because of an ethical problem it causes (data resale, addictive design, exploitation
+                of workers…), a short screen asks whether you really want to open it.
+
+                It forbids nothing: it only adds a moment of reflection, so that using the app is a choice rather than a reflex.
+            </answer>
+        </entry>
+        <entry id="flag_app">
+            <question>How do I flag an app?</question>
+            <answer>
+                In the Apps tab, tap an app and tick the issues that concern you. You can also start from an issue, in the Issues
+                tab, and link several apps to it. If an issue is missing, you can add your own.
+            </answer>
+        </entry>
+        <entry id="buttons">
+            <question>What do the buttons on the interruption screen do?</question>
+            <answer>
+                “No, close the app” takes you back to the home screen.
+
+                “Yes, open the app” opens it, and you are not asked again while you keep using it. The choice is forgotten after
+                about 15 minutes without using the app, or as soon as the screen turns off.
+
+                The “Don’t ask again for…” link pauses the interruption for that app, for the duration set in Settings.
+            </answer>
+        </entry>
+    </theme>
+
+    <theme id="privacy" title="Privacy">
+        <entry id="data">
+            <question>Where is my data stored?</question>
+            <answer>
+                Everything stays on your phone: the apps you flagged, your issues, your settings and your statistics. Nothing is
+                sent anywhere, and the app does not even request the Internet permission.
+            </answer>
+        </entry>
+        <entry id="accessibility">
+            <question>Why does the app need the accessibility service?</question>
+            <answer>
+                It is the only way Android lets an app know which app has just come to the front, so that the interruption can be
+                shown at the right moment.
+
+                The service does not read what is on your screen or what you type: it only sees the name of the app that opens.
+                You can turn it off at any time in Android’s settings.
+            </answer>
+        </entry>
+        <entry id="delete">
+            <question>How do I delete my data?</question>
+            <answer>
+                Uninstalling the app removes everything. You can also clear its storage from Android’s settings, in the app’s
+                information page.
+            </answer>
+        </entry>
+    </theme>
+
+    <theme id="ethics" title="Ethics">
+        <entry id="who_decides">
+            <question>Who decides which apps are problematic?</question>
+            <answer>
+                You do. The app gives no verdict and keeps no list of “bad” apps: you choose, among a list of issues or your own,
+                the ones that matter to you.
+            </answer>
+        </entry>
+        <entry id="free_software">
+            <question>Is this free software?</question>
+            <answer>
+                Yes. The app is published under the GPL v3 licence, with no advertising and no tracking.
+            </answer>
+        </entry>
+    </theme>
+</faq>

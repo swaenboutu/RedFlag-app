@@ -50,7 +50,7 @@ class SettingsActivity : AppCompatActivity() {
         setupRow(binding.rowPermissions, R.string.settings_permissions_title) {
             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
         }
-        setupRow(binding.rowHelp, R.string.settings_help_title) { showHelpDialog() }
+        setupRow(binding.rowHelp, R.string.settings_help_title) { startActivity(Intent(this, FaqActivity::class.java)) }
         setupRow(binding.rowVersion, R.string.settings_version, clickable = false)
         binding.rowVersion.value.text = versionName()
         binding.rowVersion.chevron.visibility = View.GONE
@@ -158,14 +158,6 @@ class SettingsActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
             .setNegativeButton(R.string.cancel, null)
-            .show()
-    }
-
-    private fun showHelpDialog() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.settings_help_title)
-            .setMessage(R.string.settings_help_body)
-            .setPositiveButton(R.string.action_close, null)
             .show()
     }
 
