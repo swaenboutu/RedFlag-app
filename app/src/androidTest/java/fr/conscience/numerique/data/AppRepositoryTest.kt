@@ -38,19 +38,15 @@ class AppRepositoryTest {
     private fun <T> run(block: suspend () -> T): T = runBlocking { block() }
 
     @Test
-    fun linkingAProblemSurveillesTheApp() = run {
+    fun linkingAProblemSurveillesTheAppWithoutDuplicates() = run {
         repository.linkProblem("app.a", "App A", fomo)
 
         val app = repository.find("app.a")
         assertEquals("App A", app?.app?.appName)
         assertEquals(listOf(fomo), app?.problems?.map { it.toRef() })
-    }
 
-    @Test
-    fun linkingTheSameProblemTwiceKeepsASingleEntry() = run {
+        // Associer deux fois la même problématique ne crée pas de doublon.
         repository.linkProblem("app.a", "App A", fomo)
-        repository.linkProblem("app.a", "App A", fomo)
-
         assertEquals(1, repository.find("app.a")?.problems?.size)
     }
 
@@ -140,17 +136,13 @@ class AppRepositoryTest {
         assertTrue(repository.customLabels.first().isEmpty())
         assertEquals(listOf(fomo), repository.find("app.a")?.problems?.map { it.toRef() })
         assertFalse(custom in repository.favorites.first())
-    }
 
-    @Test
-    fun deletingTheOnlyProblemOfAnAppStopsSurveillingIt() = run {
-        val custom = ProblemRef(customLabel = "seule")
+        // Une app dont c'était la seule problématique sort de la surveillance.
+        val only = ProblemRef(customLabel = "seule")
         repository.addCustomProblem("seule")
-        repository.linkProblem("app.a", "App A", custom)
-
+        repository.linkProblem("app.b", "App B", only)
         repository.deleteCustomProblem("seule")
-
-        assertNull(repository.find("app.a"))
+        assertNull(repository.find("app.b"))
     }
 
     @Test

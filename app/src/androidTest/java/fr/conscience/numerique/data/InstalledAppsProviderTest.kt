@@ -2,6 +2,7 @@ package fr.conscience.numerique.data
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -25,27 +26,14 @@ class InstalledAppsProviderTest {
     }
 
     @Test
-    fun aFlaggedSystemAppStaysListedWhenSystemAppsAreHidden() {
+    fun aFlaggedSystemAppIsTheOnlyOneToStayListedWhenSystemAppsAreHidden() {
         val system = aHiddenSystemApp()
-
-        val shown = provider.list(hideSystemApps = true, alwaysInclude = setOf(system)).map { it.packageName }
-
-        assertTrue("l'app signalée $system doit rester visible", system in shown)
-    }
-
-    @Test
-    fun onlyTheFlaggedSystemAppIsAdded() {
-        val system = aHiddenSystemApp()
-
-        val withFlag = provider.list(hideSystemApps = true, alwaysInclude = setOf(system)).map { it.packageName }.toSet()
         val without = provider.list(hideSystemApps = true).map { it.packageName }.toSet()
+        val withFlag = provider.list(hideSystemApps = true, alwaysInclude = setOf(system)).map { it.packageName }.toSet()
 
-        assertTrue(withFlag - without == setOf(system))
-    }
-
-    @Test
-    fun withoutFlagTheSystemAppIsHidden() {
-        assertFalse(aHiddenSystemApp() in provider.list(hideSystemApps = true).map { it.packageName })
+        assertFalse("sans signalement, l'app système est masquée", system in without)
+        assertTrue("l'app signalée $system doit rester visible", system in withFlag)
+        assertEquals("seule l'app signalée est ajoutée", setOf(system), withFlag - without)
     }
 
     @Test

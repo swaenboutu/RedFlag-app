@@ -88,45 +88,22 @@ class InterstitialActivityTest {
         onActivity { InstrumentationRegistry.getInstrumentation().callActivityOnStart(it) }
 
     @Test
-    fun leavingWithoutAnsweringCountsAsARefusal() {
-        val before = answers(appA)
+    fun eachDisplayLeftWithoutAnsweringCountsOneRefusal() {
         ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
             scenario.waitForAppName("Application A")
+            val before = answers(appA)
 
             scenario.leaveWithHome()
-
             awaitAnswers(appA, before + 1)
             assertEquals("la sortie est comptée comme un refus", before + 1, answers(appA))
-        }
-    }
 
-    @Test
-    fun leavingIsCountedOnlyOncePerDisplay() {
-        ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
-            scenario.waitForAppName("Application A")
-            val before = answers(appA)
-
-            scenario.leaveWithHome()
-            awaitAnswers(appA, before + 1)
             scenario.leaveWithHome()
             Thread.sleep(300)
+            assertEquals("une seule fois par affichage", before + 1, answers(appA))
 
-            assertEquals(before + 1, answers(appA))
-        }
-    }
-
-    @Test
-    fun comingBackAndLeavingAgainCountsASecondRefusal() {
-        ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
-            scenario.waitForAppName("Application A")
-            val before = answers(appA)
-
-            scenario.leaveWithHome()
-            Thread.sleep(400)
             scenario.comeBack()
             scenario.leaveWithHome()
-            Thread.sleep(400)
-
+            awaitAnswers(appA, before + 2)
             assertEquals("deux affichages, deux refus", before + 2, answers(appA))
         }
     }
@@ -176,35 +153,20 @@ class InterstitialActivityTest {
         }
     }
 
-        @Test
-    fun showsTheAppAndItsProblems() {
+    @Test
+    fun showsTheAppAndFollowsTheAppItIsReusedFor() {
         ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
             assertEquals("Application A", scenario.waitForAppName("Application A"))
             assertTrue(scenario.text(R.id.btnContinue).contains("Application A"))
-        }
-    }
 
-    @Test
-    fun updatesWhenReusedForAnotherApp() {
-        ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
+            // La même app qui revient : rien ne change.
+            scenario.deliverNewIntent(InterstitialActivity.intent(context, appA))
             assertEquals("Application A", scenario.waitForAppName("Application A"))
 
             // Une autre app à interrompre passe au premier plan : Android réutilise l'écran existant.
             scenario.deliverNewIntent(InterstitialActivity.intent(context, appB))
-
             assertEquals("Application B", scenario.waitForAppName("Application B"))
             assertTrue("le bouton « Oui » cite la nouvelle app", scenario.text(R.id.btnContinue).contains("Application B"))
-        }
-    }
-
-    @Test
-    fun keepsTheSameAppWhenReusedForTheSameApp() {
-        ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
-            assertEquals("Application A", scenario.waitForAppName("Application A"))
-
-            scenario.deliverNewIntent(InterstitialActivity.intent(context, appA))
-
-            assertEquals("Application A", scenario.waitForAppName("Application A"))
         }
     }
 

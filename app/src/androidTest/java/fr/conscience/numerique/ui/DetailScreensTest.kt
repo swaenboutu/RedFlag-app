@@ -38,30 +38,20 @@ class DetailScreensTest {
     }
 
     @Test
-    fun appStatisticsStayOpen() {
+    fun appStatisticsStayOpenEvenAfterBeingRecreated() {
         ActivityScenario.launch<AppStatsActivity>(AppStatsActivity.intent(context, pkg, "Application détail")).use { scenario ->
+            assertEquals(Lifecycle.State.RESUMED, scenario.staysResumed())
+            scenario.recreate()
             assertEquals(Lifecycle.State.RESUMED, scenario.staysResumed())
         }
     }
 
     @Test
-    fun appDetailStaysOpen() {
+    fun appDetailAndProblemDetailStayOpen() {
         ActivityScenario.launch<AppDetailActivity>(AppDetailActivity.intent(context, pkg, "Application détail")).use { scenario ->
             assertEquals(Lifecycle.State.RESUMED, scenario.staysResumed())
         }
-    }
-
-    @Test
-    fun problemDetailStaysOpen() {
         ActivityScenario.launch<ProblemDetailActivity>(ProblemDetailActivity.intent(context, ref)).use { scenario ->
-            assertEquals(Lifecycle.State.RESUMED, scenario.staysResumed())
-        }
-    }
-
-    @Test
-    fun statisticsStaysOpenAfterBeingResumedAgain() {
-        ActivityScenario.launch<AppStatsActivity>(AppStatsActivity.intent(context, pkg, "Application détail")).use { scenario ->
-            scenario.recreate()
             assertEquals(Lifecycle.State.RESUMED, scenario.staysResumed())
         }
     }
