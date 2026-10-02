@@ -102,6 +102,8 @@ device_classes_for_changes() {
                 add ui.DetailScreensTest ;;
             # Parcours d'accueil : étapes, boutons « Passer », et ce que leurs ViewModels calculent.
             */ui/Onboarding*.kt|*/layout/activity_onboarding*.xml|*/layout/item_onboarding*.xml) add ui.OnboardingSkipTest ;;&
+            # Fenêtres de saisie des problématiques.
+            */ui/Dialogs.kt|*/layout/dialog_new_problem.xml) add ui.EditProblemDialogTest ;;
             # FAQ (et les Réglages qui y mènent, la carte de thème qu'elle partage avec d'autres écrans).
             */ui/Faq*.kt|*/data/Faq.kt|*/layout/activity_faq.xml|*/layout/item_faq_*.xml|*/ui/SettingsActivity.kt|*/layout/activity_settings.xml|*/ui/ThemeCard.kt|*/ui/CardStyle.kt|*/layout/item_manager_theme.xml)
                 add ui.FaqScreenTest ;;

@@ -3,8 +3,11 @@ package fr.conscience.numerique.ui
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Filter
 import android.widget.EditText
@@ -111,9 +114,15 @@ class EditProblemDialog : DialogFragment() {
         val input = EditText(context).apply {
             // Le texte tapé avant une rotation est restauré par Android (le champ a un id) ; sinon on part de l'intitulé actuel.
             id = R.id.problemLabel
+            // Un intitulé long (jusqu'à 120 caractères) passe à la ligne au lieu de défiler sur une seule : on le voit en entier.
+            // « Entrée » valide (pas de saut de ligne), comme avec un champ sur une ligne.
+            setRawInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
+            setHorizontallyScrolling(false)
+            maxLines = MAX_VISIBLE_LINES
+            imeOptions = EditorInfo.IME_ACTION_DONE
+            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             setText(args.getString(CURRENT))
             setSelection(text.length)
-            maxLines = 1
         }
         val builder = MaterialAlertDialogBuilder(context)
             .setTitle(R.string.dialog_edit_title)
@@ -145,6 +154,7 @@ class EditProblemDialog : DialogFragment() {
         private const val CURRENT = "current"
         private const val MAX_LENGTH = "max_length"
         private const val CAN_RESET = "can_reset"
+        private const val MAX_VISIBLE_LINES = 4
         private const val TAG = "edit_problem_dialog"
 
         /** [catalog] : problématique du catalogue (intitulé plus long autorisé) ; [canReset] : elle a été renommée. */
