@@ -38,12 +38,12 @@ class SettingsActivity : AppCompatActivity() {
             .forEach { it.clipToOutline = true }
         binding.cardDebug.clipToOutline = true
 
-        // Toute la carte bascule l'interrupteur, pas seulement le bouton.
-        binding.activeCard.setOnClickListener {
-            binding.activeSwitch.toggle()
-            settings.setInterceptionEnabled(binding.activeSwitch.isChecked)
+        // Toute la carte bascule l'interrupteur, pas seulement le bouton. Le réglage est enregistré à chaque changement d'état,
+        // qu'il vienne d'un appui ou d'un glissement du curseur (un glissement ne déclenche pas de « clic »).
+        binding.activeCard.setOnClickListener { binding.activeSwitch.toggle() }
+        binding.activeSwitch.setOnCheckedChangeListener { _, checked ->
+            if (checked != settings.interceptionEnabled.value) settings.setInterceptionEnabled(checked)
         }
-        binding.activeSwitch.setOnClickListener { settings.setInterceptionEnabled(binding.activeSwitch.isChecked) }
 
         setupRow(binding.rowPause, R.string.settings_pause_title, R.string.settings_pause_subtitle) { showPauseDialog() }
         setupRow(binding.rowList, R.string.settings_list_title) { showListDialog() }

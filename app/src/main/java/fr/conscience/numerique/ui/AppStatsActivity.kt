@@ -24,7 +24,7 @@ class AppStatsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAppStatsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_stats)
+        BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_stats, isTabRoot = false)
         binding.back.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
         val packageName = intent.getStringExtra(AppStatsArgs.PACKAGE).orEmpty()

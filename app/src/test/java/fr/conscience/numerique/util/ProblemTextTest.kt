@@ -39,6 +39,24 @@ class ProblemTextTest {
     }
 
     @Test
+    fun `un intitule du catalogue de plus de 60 caracteres n'est pas coupe`() {
+        // « Predatory monetization (loot boxes, in-app purchases targeting children) » : 75 caractères.
+        val original = "Predatory monetization (loot boxes, in-app purchases targeting children)"
+        assertEquals(original, normalizeCustomProblem(original, MAX_CATALOG_LENGTH))
+    }
+
+    @Test
+    fun `les intitules du catalogue tiennent dans la limite large`() {
+        assertEquals(true, MAX_CATALOG_LENGTH > 75)
+    }
+
+    @Test
+    fun `la limite des personnalisees reste de 60`() {
+        assertEquals(60, normalizeCustomProblem("x".repeat(200))?.length)
+        assertEquals(MAX_CATALOG_LENGTH, normalizeCustomProblem("x".repeat(500), MAX_CATALOG_LENGTH)?.length)
+    }
+
+    @Test
     fun `la casse est conservee`() {
         assertEquals("FOMO Maison", normalizeCustomProblem("FOMO   Maison"))
     }

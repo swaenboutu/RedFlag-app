@@ -49,12 +49,25 @@ class ProblemDetailViewModel(application: Application, private val handle: Saved
             DetailState(ref, ref.catalogKey?.let(overrides::get), linked, ref in favorites)
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
-    /** Renomme n'importe quelle problématique ; [onResult] reçoit false si le nom est déjà pris. */
-    fun rename(newLabel: String, onResult: (Boolean) -> Unit) {
+    /**
+     * Renomme n'importe quelle problématique ; [onResult] reçoit false si le nom est déjà celui d'une autre problématique
+     * (du catalogue ou personnalisée). [originalLabel] : l'intitulé d'origine d'une problématique du catalogue ; s'il est
+     * retapé tel quel, on rétablit simplement l'original (traduit) au lieu d'enregistrer un texte figé.
+     */
+    fun rename(newLabel: String, originalLabel: String? = null, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
             val current = handle.get<String?>(DetailArgs.CUSTOM_LABEL)
+            val self = ProblemRef(catalogKey, current)
+            if (repository.displayedLabels(getApplication()).isLabelTaken(newLabel, except = self)) {
+                onResult(false)
+                return@launch
+            }
             if (catalogKey != null) {
-                repository.setCatalogLabel(catalogKey, newLabel)
+                if (originalLabel != null && newLabel == originalLabel) {
+                    repository.resetCatalogLabel(catalogKey)
+                } else {
+                    repository.setCatalogLabel(catalogKey, newLabel)
+                }
                 onResult(true)
             } else if (current != null && repository.renameCustomProblem(current, newLabel)) {
                 handle[DetailArgs.CUSTOM_LABEL] = newLabel

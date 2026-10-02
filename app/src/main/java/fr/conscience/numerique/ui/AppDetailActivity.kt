@@ -28,7 +28,7 @@ class AppDetailActivity : AppCompatActivity() {
         )
         binding.list.adapter = adapter
         binding.back.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
-        BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_apps)
+        BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_apps, isTabRoot = false)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {

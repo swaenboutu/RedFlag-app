@@ -29,6 +29,17 @@ class ProblemsManagerActivity : AppCompatActivity() {
         binding.newProblem.setOnClickListener { addProblem() }
         BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_problems)
 
+        // Le dialogue de saisie survit à la rotation : on écoute son résultat dès la création de l'écran.
+        NewProblemDialog.listen(this) { label, category ->
+            viewModel.add(label, category) { added ->
+                if (added) {
+                    viewModel.expandTheme(category)
+                } else {
+                    Toast.makeText(this, R.string.error_already_exists, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.rows.collect { rows ->
@@ -46,13 +57,5 @@ class ProblemsManagerActivity : AppCompatActivity() {
         BottomNav.select(binding.bottomBar.bottomNav, R.id.nav_problems)
     }
 
-    private fun addProblem() = showNewProblemDialog(this) { label, category ->
-        viewModel.add(label, category) { added ->
-            if (added) {
-                viewModel.expandTheme(category)
-            } else {
-                Toast.makeText(this, R.string.error_already_exists, Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
+    private fun addProblem() = NewProblemDialog.show(this)
 }

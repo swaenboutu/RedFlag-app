@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -17,10 +16,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import fr.conscience.numerique.R
+import fr.conscience.numerique.data.ProblemCatalog
 import fr.conscience.numerique.data.displayLabel
 import fr.conscience.numerique.data.ProblemRef
 import fr.conscience.numerique.databinding.ActivityProblemDetailBinding
-import fr.conscience.numerique.util.normalizeCustomProblem
 import kotlinx.coroutines.launch
 
 /** Détail d'une problématique : intitulé modifiable, apps liées (dissociables), ajout de liens. */
@@ -46,6 +45,13 @@ class ProblemDetailActivity : AppCompatActivity() {
 
         binding.back.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
         binding.edit.setOnClickListener { showEditDialog() }
+        EditProblemDialog.listen(this) { result ->
+            val current = state ?: return@listen
+            when (result) {
+                EditProblemDialog.Result.Reset -> viewModel.resetLabel()
+                is EditProblemDialog.Result.Rename -> onRenamed(current, result.label)
+            }
+        }
         binding.favorite.setOnClickListener { viewModel.toggleFavorite() }
         binding.linkApps.setOnClickListener {
             val linked = ArrayList(state?.linkedApps.orEmpty().map { it.packageName })
@@ -84,25 +90,28 @@ class ProblemDetailActivity : AppCompatActivity() {
 
     private fun showEditDialog() {
         val current = state ?: return
-        val input = EditText(this).apply {
-            setText(titleOf(current))
-            setSelection(text.length)
-            maxLines = 1
-        }
-        val builder = MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.dialog_edit_title)
-            .setView(dialogInput(input))
-            .setPositiveButton(R.string.save) { _, _ ->
-                val label = normalizeCustomProblem(input.text.toString()) ?: return@setPositiveButton
-                viewModel.rename(label) { ok ->
-                    if (!ok) Toast.makeText(this, R.string.error_already_exists, Toast.LENGTH_SHORT).show()
-                }
-            }
-            .setNegativeButton(R.string.cancel, null)
-        // Une problématique du catalogue déjà renommée peut retrouver son intitulé traduit d'origine.
-        if (current.override != null) builder.setNeutralButton(R.string.action_reset_label) { _, _ -> viewModel.resetLabel() }
-        builder.show()
+        EditProblemDialog.show(
+            this,
+            current = titleOf(current),
+            catalog = current.ref.catalogKey != null,
+            canReset = current.override != null,
+        )
     }
+
+    /**
+     * Enregistre un nouvel intitulé, sauf s'il n'a pas changé : valider sans rien modifier ne doit rien écrire (sinon un
+     * intitulé du catalogue deviendrait un texte figé, qui ne se traduit plus).
+     */
+    private fun onRenamed(current: DetailState, label: String) {
+        if (label == titleOf(current)) return
+        viewModel.rename(label, originalLabel = original(current)) { ok ->
+            if (!ok) Toast.makeText(this, R.string.error_already_exists, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /** L'intitulé d'origine (traduit) d'une problématique du catalogue ; null pour une personnalisée. */
+    private fun original(state: DetailState): String? =
+        state.ref.catalogKey?.let(ProblemCatalog::find)?.let { getString(it.label) }
 
     private fun showDeleteDialog() {
         val current = state ?: return

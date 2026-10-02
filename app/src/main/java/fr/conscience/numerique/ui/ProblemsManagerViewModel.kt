@@ -128,6 +128,13 @@ class ProblemsManagerViewModel(application: Application) : AndroidViewModel(appl
 
     /** [onResult] reçoit false si le nom est déjà pris. */
     fun add(label: String, category: String?, onResult: (Boolean) -> Unit) {
-        viewModelScope.launch { onResult(repository.addCustomProblem(label, category)) }
+        viewModelScope.launch {
+            // Refusé si une autre problématique, du catalogue ou personnalisée, porte déjà ce nom.
+            if (repository.displayedLabels(getApplication()).isLabelTaken(label)) {
+                onResult(false)
+                return@launch
+            }
+            onResult(repository.addCustomProblem(label, category))
+        }
     }
 }
