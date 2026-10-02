@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import fr.conscience.numerique.container
 import fr.conscience.numerique.R
+import fr.conscience.numerique.data.SettingsStore
 import fr.conscience.numerique.databinding.ActivityMainBinding
 import fr.conscience.numerique.service.isFrictionServiceEnabled
 import kotlinx.coroutines.launch
@@ -23,7 +24,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (!container.settings.onboardingDone) {
+        // « Lancement » = depuis l'icône de l'app, sur un écran neuf : pas une rotation, pas un retour depuis un autre écran de l'app.
+        val freshLaunch = savedInstanceState == null && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
+        val settings = container.settings
+        if (SettingsStore.shouldShowOnboarding(settings.onboardingDone, settings.alwaysShowOnboarding.value, freshLaunch)) {
             startActivity(Intent(this, OnboardingActivity::class.java))
             finish()
             return

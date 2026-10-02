@@ -88,12 +88,13 @@ device_classes_for_changes() {
             # Ce qui sert à construire tous les ViewModels, ou la base qu'ils lisent.
             */ui/ViewModelFactory.kt|*/AppContainer.kt|*/data/AppRepository.kt|*/data/Daos.kt|*/data/Entities.kt)
                 add ui.StatsViewModelsTest; add ui.AppListViewModelsTest; add ui.OnboardingViewModelsTest; add ui.ProblemViewModelsTest; add ui.HomeAndStatsScreensTest ;;&
+            */ui/MainActivity.kt|*/ui/OnboardingPermissionActivity.kt) add ui.ForcedOnboardingTest ;;&
             # Accueil et statistiques, à l'écran.
             */ui/MainActivity.kt|*/ui/StatsActivity.kt|*/ui/AppListAdapter.kt|*/ui/StatsAdapter.kt|*/ui/MainViewModel.kt|*/ui/StatsViewModel.kt|*/layout/activity_main.xml|*/layout/activity_stats.xml|*/layout/item_app.xml|*/layout/item_stats_app.xml)
                 add ui.HomeAndStatsScreensTest ;;&
             app/schemas/*|*/data/AppDatabase.kt|*/data/Entities.kt) add data.MigrationTest; add data.AppRepositoryTest ;;
             */data/AppRepository.kt|*/data/Daos.kt) add data.AppRepositoryTest ;;
-            */data/SettingsStore.kt) add data.SettingsStoreTest ;;
+            */data/SettingsStore.kt) add data.SettingsStoreTest; add ui.ForcedOnboardingTest ;;&
             */data/InstalledAppsProvider.kt) add data.InstalledAppsProviderTest ;;
             */AppContainer.kt|*/ui/InterstitialActivity.kt|*/service/Friction*.kt|*/layout/activity_interstitial.xml|*/layout/item_problem_pill.xml|*/ui/ProblemPillAdapter.kt)
                 add ui.InterstitialActivityTest ;;

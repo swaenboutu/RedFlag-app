@@ -28,22 +28,21 @@ class SettingsStore(context: Context) {
 
     private val _alwaysShowOnboarding = MutableStateFlow(isDebuggable && prefs.getBoolean(KEY_ALWAYS_SHOW_ONBOARDING, false))
 
-    /** Debug : vrai = l'accueil s'affiche à chaque démarrage de l'app (processus neuf), sans effacer les données. */
+    /**
+     * Debug : vrai = l'accueil s'affiche à chaque lancement de l'app depuis son icône, sans effacer les données (voir
+     * [shouldShowOnboarding]). Un lancement, et non un démarrage du processus : le service d'accessibilité garde le processus
+     * en vie, qui ne repart alors jamais de zéro.
+     */
     val alwaysShowOnboarding: StateFlow<Boolean> = _alwaysShowOnboarding
 
-    /** Vrai une fois l'écran d'accueil passé : il ne s'affiche qu'au premier lancement (ou à chaque démarrage si forcé). */
+    /** Vrai une fois l'écran d'accueil passé : il ne s'affiche plus ensuite (sauf si le réglage de debug le force). */
     var onboardingDone: Boolean
-        get() = if (_alwaysShowOnboarding.value) onboardingSeenThisRun else prefs.getBoolean(KEY_ONBOARDING_DONE, false)
-        set(value) {
-            onboardingSeenThisRun = value
-            prefs.edit { putBoolean(KEY_ONBOARDING_DONE, value) }
-        }
+        get() = prefs.getBoolean(KEY_ONBOARDING_DONE, false)
+        set(value) = prefs.edit { putBoolean(KEY_ONBOARDING_DONE, value) }
 
     fun setAlwaysShowOnboarding(value: Boolean) {
         if (!isDebuggable) return
         prefs.edit { putBoolean(KEY_ALWAYS_SHOW_ONBOARDING, value) }
-        // La session en cours a dépassé l'accueil : il ne réapparaît qu'au prochain démarrage, pas en plein réglage.
-        if (value) onboardingSeenThisRun = true
         _alwaysShowOnboarding.value = value
     }
 
@@ -63,9 +62,12 @@ class SettingsStore(context: Context) {
     }
 
     companion object {
-        /** Accueil déjà passé depuis le démarrage du processus : évite de le relancer en boucle quand il est forcé (réglage de debug). */
-        @Volatile
-        private var onboardingSeenThisRun = false
+        /**
+         * L'accueil doit-il s'afficher ? Au premier lancement ; ou, si le réglage de debug le demande, à chaque lancement de
+         * l'app depuis son icône ([freshLaunch]), pas quand on revient sur un écran déjà ouvert ni quand l'app se rouvre d'elle-même.
+         */
+        fun shouldShowOnboarding(done: Boolean, alwaysShow: Boolean, freshLaunch: Boolean): Boolean =
+            !done || (alwaysShow && freshLaunch)
 
         const val DEFAULT_PAUSE_MINUTES = 60
 
