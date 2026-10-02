@@ -191,9 +191,12 @@ class OnboardingSkipTest {
             scenario.await { scenario.isEnabled(R.id.btnNext) }
             assertTrue("une problématique cochée : « Suivant » actif", scenario.isEnabled(R.id.btnNext))
 
-            scenario.onActivity { it.findViewById<View>(R.id.btnNext).performClick() }
-            scenario.await { scenario.state == androidx.lifecycle.Lifecycle.State.DESTROYED }
-            assertEquals("« Suivant » ramène à la liste", androidx.lifecycle.Lifecycle.State.DESTROYED, scenario.state)
+            var finishing = false
+            scenario.onActivity {
+                it.findViewById<View>(R.id.btnNext).performClick()
+                finishing = it.isFinishing // finish() est immédiat : pas besoin d'attendre la destruction, lente sur un émulateur chargé
+            }
+            assertTrue("« Suivant » ramène à la liste", finishing)
         }
     }
 
@@ -202,10 +205,12 @@ class OnboardingSkipTest {
         val intent = OnboardingAppDetailActivity.intent(context, "test.skip.app", "Une app")
 
         ActivityScenario.launch<OnboardingAppDetailActivity>(intent).use { scenario ->
-            scenario.onActivity { it.findViewById<View>(R.id.btnSkip).performClick() }
-            scenario.await { scenario.state == androidx.lifecycle.Lifecycle.State.DESTROYED }
-
-            assertEquals(androidx.lifecycle.Lifecycle.State.DESTROYED, scenario.state)
+            var finishing = false
+            scenario.onActivity {
+                it.findViewById<View>(R.id.btnSkip).performClick()
+                finishing = it.isFinishing
+            }
+            assertTrue("« Passer » ramène à la liste", finishing)
         }
     }
 
