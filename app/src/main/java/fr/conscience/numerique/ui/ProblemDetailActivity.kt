@@ -65,7 +65,7 @@ class ProblemDetailActivity : AppCompatActivity() {
                     binding.title.text = titleOf(current)
                     showFavorite(current.favorite)
                     binding.noApps.visibility = if (current.linkedApps.isEmpty()) View.VISIBLE else View.GONE
-                    binding.deleteProblem.visibility = if (current.ref.customLabel != null) View.VISIBLE else View.GONE
+                    binding.deleteProblem.visibility = if (current.ref.isCustom) View.VISIBLE else View.GONE
                     adapter.submitList(current.linkedApps)
                 }
             }
@@ -132,7 +132,6 @@ class ProblemDetailActivity : AppCompatActivity() {
     companion object {
         fun intent(context: Context, ref: ProblemRef) =
             Intent(context, ProblemDetailActivity::class.java)
-                .putExtra(DetailArgs.CATALOG_KEY, ref.catalogKey)
-                .putExtra(DetailArgs.CUSTOM_LABEL, ref.customLabel)
+                .putExtra(DetailArgs.PROBLEM_ID, ref.id)
     }
 }

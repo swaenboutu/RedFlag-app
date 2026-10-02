@@ -8,6 +8,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -21,8 +22,8 @@ class AppRepositoryTest {
     private lateinit var db: AppDatabase
     private lateinit var repository: AppRepository
 
-    private val fomo = ProblemRef(catalogKey = "fomo")
-    private val sexism = ProblemRef(catalogKey = "sexism")
+    private val fomo = ProblemRef.catalog("fomo")
+    private val sexism = ProblemRef.catalog("sexism")
 
     @Before
     fun setUp() {
@@ -85,9 +86,19 @@ class AppRepositoryTest {
 
     @Test
     fun customProblemNamesAreUniqueIgnoringCase() = run {
-        assertTrue(repository.addCustomProblem("Trop de pubs"))
-        assertFalse(repository.addCustomProblem("trop de PUBS"))
-        assertEquals(1, repository.customLabels.first().size)
+        assertNotNull(repository.addCustomProblem("Trop de pubs"))
+        assertNull(repository.addCustomProblem("trop de PUBS"))
+        assertEquals(1, repository.customProblems.first().size)
+    }
+
+    @Test
+    fun eachCustomProblemGetsItsOwnIdentifier() = run {
+        val first = repository.addCustomProblem("Un")!!
+        val second = repository.addCustomProblem("Deux")!!
+
+        assertTrue(first.isCustom && second.isCustom)
+        assertNotEquals(first, second)
+        assertEquals(setOf(first.id, second.id), repository.customProblems.first().map { it.id }.toSet())
     }
 
     @Test
@@ -100,48 +111,49 @@ class AppRepositoryTest {
 
     @Test
     fun renamingACustomProblemUpdatesLinksFavoritesAndKeepsTheTheme() = run {
-        val old = ProblemRef(customLabel = "ancien")
-        repository.addCustomProblem("ancien", category = "privacy")
-        repository.linkProblem("app.a", "App A", old)
-        repository.setFavorite(old, true)
+        val ref = repository.addCustomProblem("ancien", category = "privacy")!!
+        repository.linkProblem("app.a", "App A", ref)
+        repository.setFavorite(ref, true)
 
-        assertTrue(repository.renameCustomProblem("ancien", "nouveau"))
+        assertTrue(repository.renameCustomProblem(ref.id, "nouveau"))
 
-        val renamed = ProblemRef(customLabel = "nouveau")
-        assertEquals(listOf(renamed), repository.find("app.a")?.problems?.map { it.toRef() })
-        assertTrue(renamed in repository.favorites.first())
-        assertFalse(old in repository.favorites.first())
-        assertEquals("privacy", repository.customProblems.first().single().category)
+        // L'identifiant ne change pas : les liens et les favoris suivent sans rien à mettre à jour.
+        assertEquals(listOf(ref), repository.find("app.a")?.problems?.map { it.toRef() })
+        assertTrue(ref in repository.favorites.first())
+        val custom = repository.customProblems.first().single()
+        assertEquals(ref.id, custom.id)
+        assertEquals("nouveau", custom.label)
+        assertEquals("privacy", custom.category)
+        assertEquals("nouveau", repository.labelOverrides.first()[ref.id])
     }
 
     @Test
     fun renamingToAnExistingNameIsRefused() = run {
-        repository.addCustomProblem("un")
+        val un = repository.addCustomProblem("un")!!
         repository.addCustomProblem("deux")
 
-        assertFalse(repository.renameCustomProblem("un", "DEUX"))
-        assertEquals(setOf("un", "deux"), repository.customLabels.first().toSet())
+        assertFalse(repository.renameCustomProblem(un.id, "DEUX"))
+        assertEquals(setOf("un", "deux"), repository.customProblems.first().map { it.label }.toSet())
+        assertTrue("garder son propre nom, à la casse près, est permis", repository.renameCustomProblem(un.id, "UN"))
     }
 
     @Test
     fun deletingACustomProblemRemovesItEverywhere() = run {
-        val custom = ProblemRef(customLabel = "a supprimer")
-        repository.addCustomProblem("a supprimer")
+        val custom = repository.addCustomProblem("a supprimer")!!
         repository.linkProblem("app.a", "App A", custom)
         repository.linkProblem("app.a", "App A", fomo)
         repository.setFavorite(custom, true)
 
-        repository.deleteCustomProblem("a supprimer")
+        repository.deleteCustomProblem(custom.id)
 
-        assertTrue(repository.customLabels.first().isEmpty())
+        assertTrue(repository.customProblems.first().isEmpty())
         assertEquals(listOf(fomo), repository.find("app.a")?.problems?.map { it.toRef() })
         assertFalse(custom in repository.favorites.first())
 
         // Une app dont c'était la seule problématique sort de la surveillance.
-        val only = ProblemRef(customLabel = "seule")
-        repository.addCustomProblem("seule")
+        val only = repository.addCustomProblem("seule")!!
         repository.linkProblem("app.b", "App B", only)
-        repository.deleteCustomProblem("seule")
+        repository.deleteCustomProblem(only.id)
         assertNull(repository.find("app.b"))
     }
 

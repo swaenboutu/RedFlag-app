@@ -11,6 +11,7 @@ import fr.conscience.numerique.data.MIGRATION_2_3
 import fr.conscience.numerique.data.MIGRATION_3_4
 import fr.conscience.numerique.data.MIGRATION_4_5
 import fr.conscience.numerique.data.MIGRATION_5_6
+import fr.conscience.numerique.data.MIGRATION_6_7
 import fr.conscience.numerique.data.SettingsStore
 import fr.conscience.numerique.service.FrictionGate
 import kotlinx.coroutines.CoroutineScope
@@ -50,5 +51,5 @@ class AppContainer(context: Context, database: AppDatabase = openDatabase(contex
 
 private fun openDatabase(context: Context): AppDatabase =
     Room.databaseBuilder(context, AppDatabase::class.java, "conscience.db")
-        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
         .build()

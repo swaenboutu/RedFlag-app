@@ -28,21 +28,21 @@ class InterstitialActivityTest {
 
     private val appA = "test.interstitial.a"
     private val appB = "test.interstitial.b"
-    private val fomo = ProblemRef(catalogKey = "fomo")
-    private val sexism = ProblemRef(catalogKey = "sexism")
+    private val fomo = ProblemRef.catalog("fomo")
+    private val sexism = ProblemRef.catalog("sexism")
 
     @Before
     fun setUp() = runBlocking {
         repository.linkProblem(appA, "Application A", fomo)
         repository.linkProblem(appB, "Application B", sexism)
-        repository.linkProblem(appB, "Application B", ProblemRef(catalogKey = "racism"))
+        repository.linkProblem(appB, "Application B", ProblemRef.catalog("racism"))
     }
 
     @After
     fun tearDown() = runBlocking {
         repository.unlinkProblem(appA, fomo)
         repository.unlinkProblem(appB, sexism)
-        repository.unlinkProblem(appB, ProblemRef(catalogKey = "racism"))
+        repository.unlinkProblem(appB, ProblemRef.catalog("racism"))
     }
 
     /** Attend (au plus 5 s) que l'écran affiche [expected] : le chargement se fait en arrière-plan. */

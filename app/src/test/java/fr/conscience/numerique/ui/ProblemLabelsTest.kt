@@ -6,9 +6,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ProblemLabelsTest {
-    private val fomo = ProblemRef(catalogKey = "fomo")
-    private val sexism = ProblemRef(catalogKey = "sexism")
-    private val mine = ProblemRef(customLabel = "Mon souci")
+    private val fomo = ProblemRef.catalog("fomo")
+    private val sexism = ProblemRef.catalog("sexism")
+    private val mine = ProblemRef("custom:1")
 
     private val labels = mapOf(fomo to "FOMO", sexism to "Sexisme", mine to "Mon souci")
 

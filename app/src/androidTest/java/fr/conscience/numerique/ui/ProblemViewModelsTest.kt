@@ -15,7 +15,7 @@ import org.junit.Test
 /** Les écrans « Vos problématiques », fiche d'une problématique et fiche d'une app, sur une base en mémoire. */
 class ProblemViewModelsTest {
     private lateinit var env: ViewModelEnv
-    private val fomo = ProblemRef(catalogKey = "fomo")
+    private val fomo = ProblemRef.catalog("fomo")
 
     @Before
     fun setUp() {
@@ -68,22 +68,22 @@ class ProblemViewModelsTest {
 
     @Test
     fun problemDetailRenamesACustomProblemAndKeepsFollowingIt() = run {
-        env.repository.addCustomProblem("ancien")
+        val ancien = env.repository.addCustomProblem("ancien")!!
         env.repository.addCustomProblem("pris")
-        val vm = problemDetail(mapOf(DetailArgs.CUSTOM_LABEL to "ancien"))
+        val vm = problemDetail(mapOf(DetailArgs.PROBLEM_ID to ancien.id))
         vm.state.await { it != null }
 
         assertFalse("nom déjà pris", awaitResult { vm.rename("PRIS", onResult = it) })
         assertTrue(awaitResult { vm.rename("nouveau", onResult = it) })
 
-        val state = vm.state.await { it?.ref?.customLabel == "nouveau" }
-        assertEquals(ProblemRef(customLabel = "nouveau"), state?.ref)
-        assertEquals(setOf("nouveau", "pris"), env.repository.customLabels.first().toSet())
+        val state = vm.state.await { it?.override == "nouveau" }
+        assertEquals("l'identifiant reste le même", ancien, state?.ref)
+        assertEquals(setOf("nouveau", "pris"), env.repository.customProblems.first().map { it.label }.toSet())
     }
 
     @Test
     fun problemDetailLinksUnlinksAndTogglesTheFavorite() = run {
-        val vm = problemDetail(mapOf(DetailArgs.CATALOG_KEY to "fomo"))
+        val vm = problemDetail(mapOf(DetailArgs.PROBLEM_ID to "fomo"))
         vm.state.await { it != null }
 
         vm.link(listOf(LinkedApp("app.a", "Alpha"), LinkedApp("app.b", "Bravo")))
@@ -99,7 +99,7 @@ class ProblemViewModelsTest {
     @Test
     fun problemDetailRenamingACatalogProblemCanBeUndone() = run {
         val original = env.context.getString(R.string.problem_fomo)
-        val vm = problemDetail(mapOf(DetailArgs.CATALOG_KEY to "fomo"))
+        val vm = problemDetail(mapOf(DetailArgs.PROBLEM_ID to "fomo"))
         vm.state.await { it != null }
 
         assertTrue(awaitResult { vm.rename("Peur de rater", original, it) })
@@ -112,16 +112,16 @@ class ProblemViewModelsTest {
 
     @Test
     fun deletingACustomProblemFromItsDetailRemovesItEverywhere() = run {
-        env.repository.addCustomProblem("a supprimer")
-        env.repository.linkProblem("app.a", "Alpha", ProblemRef(customLabel = "a supprimer"))
-        val vm = problemDetail(mapOf(DetailArgs.CUSTOM_LABEL to "a supprimer"))
+        val custom = env.repository.addCustomProblem("a supprimer")!!
+        env.repository.linkProblem("app.a", "Alpha", custom)
+        val vm = problemDetail(mapOf(DetailArgs.PROBLEM_ID to custom.id))
         var done = false
 
         vm.deleteCustom { done = true }
         awaitCondition { done }
 
         assertTrue(done)
-        assertTrue(env.repository.customLabels.first().isEmpty())
+        assertTrue(env.repository.customProblems.first().isEmpty())
         assertNull(env.repository.find("app.a"))
     }
 
@@ -136,7 +136,7 @@ class ProblemViewModelsTest {
         assertEquals(1, (rows.first() as DetailRow.Header).count)
         assertEquals("« Associées » en premier", R.string.category_linked, rows.filterIsInstance<DetailRow.Theme>().first().id)
 
-        val sexism = ProblemRef(catalogKey = "sexism")
+        val sexism = ProblemRef.catalog("sexism")
         vm.toggle(sexism, checked = false)
         vm.rows.await { (it.first() as DetailRow.Header).count == 2 }
 

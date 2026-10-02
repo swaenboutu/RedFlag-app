@@ -9,49 +9,52 @@ import org.junit.Test
 
 class ProblemRefTest {
     @Test
-    fun `l'identifiant de favori d'une problematique du catalogue`() {
-        assertEquals("catalog:sexism", ProblemRef(catalogKey = "sexism").favoriteId())
+    fun `une problematique du catalogue a pour identifiant sa cle`() {
+        val ref = ProblemRef.catalog("sexism")
+
+        assertEquals("sexism", ref.id)
+        assertEquals("sexism", ref.catalogKey)
+        assertFalse(ref.isCustom)
     }
 
     @Test
-    fun `l'identifiant de favori d'une problematique personnalisee`() {
-        assertEquals("custom:trop de pubs", ProblemRef(customLabel = "trop de pubs").favoriteId())
+    fun `une problematique personnalisee a un identifiant generé et pas de cle de catalogue`() {
+        val ref = ProblemRef.newCustom()
+
+        assertTrue(ref.id.startsWith(CUSTOM_PREFIX))
+        assertTrue(ref.isCustom)
+        assertNull(ref.catalogKey)
     }
 
     @Test
-    fun `un identifiant de favori se relit tel quel`() {
-        val refs = listOf(
-            ProblemRef(catalogKey = "fomo"),
-            ProblemRef(customLabel = "trop de pubs"),
-            // Le texte libre peut contenir le séparateur : seul le premier préfixe compte.
-            ProblemRef(customLabel = "a:b:c"),
-            ProblemRef(customLabel = "catalog:piege"),
-        )
-        refs.forEach { assertEquals(it, favoriteRef(it.favoriteId())) }
+    fun `chaque nouvelle personnalisee recoit un identifiant different`() {
+        val ids = List(200) { ProblemRef.newCustom().id }
+
+        assertEquals(ids.size, ids.toSet().size)
     }
 
     @Test
-    fun `un identifiant inconnu n'est pas un favori`() {
-        assertNull(favoriteRef("autre:x"))
-        assertNull(favoriteRef(""))
-    }
-
-    @Test
-    fun `une problematique du catalogue et une personnalisee de meme texte restent distinctes`() {
-        assertNotEquals(ProblemRef(catalogKey = "fomo").favoriteId(), ProblemRef(customLabel = "fomo").favoriteId())
+    fun `un identifiant personnalise ne peut pas etre confondu avec une cle du catalogue`() {
+        // Les clés du catalogue ne contiennent jamais « : », le préfixe des personnalisées.
+        ProblemCatalog.allRefs.forEach { ref ->
+            assertFalse(ref.id, ref.isCustom)
+            assertFalse(ref.id, ref.id.contains(':'))
+        }
+        assertNotEquals(ProblemRef.catalog("fomo"), ProblemRef.newCustom())
     }
 
     @Test
     fun `une problematique associee se compare a sa reference`() {
-        val problem = Problem(packageName = "app", catalogKey = "sexism")
-        assertTrue(problem.matches(ProblemRef(catalogKey = "sexism")))
-        assertFalse(problem.matches(ProblemRef(catalogKey = "racism")))
-        assertFalse(problem.matches(ProblemRef(customLabel = "sexism")))
+        val problem = Problem(packageName = "app", problemId = "sexism")
+
+        assertTrue(problem.matches(ProblemRef.catalog("sexism")))
+        assertFalse(problem.matches(ProblemRef.catalog("racism")))
+        assertFalse(problem.matches(ProblemRef("custom:sexism")))
     }
 
     @Test
-    fun `toRef reprend la cle ou le texte libre`() {
-        assertEquals(ProblemRef(catalogKey = "fomo"), Problem(packageName = "a", catalogKey = "fomo").toRef())
-        assertEquals(ProblemRef(customLabel = "x"), Problem(packageName = "a", customLabel = "x").toRef())
+    fun `toRef reprend l'identifiant`() {
+        assertEquals(ProblemRef.catalog("fomo"), Problem(packageName = "a", problemId = "fomo").toRef())
+        assertEquals(ProblemRef("custom:x"), Problem(packageName = "a", problemId = "custom:x").toRef())
     }
 }

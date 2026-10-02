@@ -37,17 +37,17 @@ class ProblemCatalogTest {
 
     @Test
     fun `allRefs liste tout le catalogue dans l'ordre des themes`() {
-        assertEquals(all.map { ProblemRef(catalogKey = it.key) }, ProblemCatalog.allRefs)
+        assertEquals(all.map { ProblemRef.catalog(it.key) }, ProblemCatalog.allRefs)
     }
 
     @Test
     fun `une personnalisee rangee dans un theme suit les problematiques du catalogue`() {
         val mental = ProblemCatalog.categories.first()
-        val custom = listOf(CustomProblem("mon souci", category = mental.key))
+        val custom = listOf(CustomProblem("custom:1", "mon souci", category = mental.key))
 
         val content = ProblemCatalog.themeContents(custom).first()
 
-        assertEquals(mental.refs + ProblemRef(customLabel = "mon souci"), content.refs)
+        assertEquals(mental.refs + ProblemRef("custom:1"), content.refs)
     }
 
     @Test
@@ -57,32 +57,32 @@ class ProblemCatalogTest {
 
     @Test
     fun `une personnalisee sans theme n'apparait dans aucun theme mais dans Personnalise`() {
-        val custom = listOf(CustomProblem("sans theme"))
+        val custom = listOf(CustomProblem("custom:2", "sans theme"))
 
-        assertTrue(ProblemCatalog.themeContents(custom).none { ProblemRef(customLabel = "sans theme") in it.refs })
-        assertEquals(listOf(ProblemRef(customLabel = "sans theme")), ProblemCatalog.customWithoutTheme(custom))
+        assertTrue(ProblemCatalog.themeContents(custom).none { ProblemRef("custom:2") in it.refs })
+        assertEquals(listOf(ProblemRef("custom:2")), ProblemCatalog.customWithoutTheme(custom))
     }
 
     @Test
     fun `une personnalisee dont le theme n'existe plus retombe dans Personnalise`() {
-        val custom = listOf(CustomProblem("orpheline", category = "theme_supprime"))
+        val custom = listOf(CustomProblem("custom:3", "orpheline", category = "theme_supprime"))
 
-        assertEquals(listOf(ProblemRef(customLabel = "orpheline")), ProblemCatalog.customWithoutTheme(custom))
-        assertFalse(ProblemCatalog.themeContents(custom).any { ProblemRef(customLabel = "orpheline") in it.refs })
+        assertEquals(listOf(ProblemRef("custom:3")), ProblemCatalog.customWithoutTheme(custom))
+        assertFalse(ProblemCatalog.themeContents(custom).any { ProblemRef("custom:3") in it.refs })
     }
 
     @Test
     fun `une personnalisee n'est rangee qu'a un seul endroit`() {
         val mental = ProblemCatalog.categories.first()
         val custom = listOf(
-            CustomProblem("rangee", category = mental.key),
-            CustomProblem("libre"),
-            CustomProblem("orpheline", category = "theme_supprime"),
+            CustomProblem("custom:a", "rangee", category = mental.key),
+            CustomProblem("custom:b", "libre"),
+            CustomProblem("custom:c", "orpheline", category = "theme_supprime"),
         )
         val placed = ProblemCatalog.themeContents(custom).flatMap { it.refs } + ProblemCatalog.customWithoutTheme(custom)
 
-        listOf("rangee", "libre", "orpheline").forEach { label ->
-            assertEquals(label, 1, placed.count { it == ProblemRef(customLabel = label) })
+        listOf("custom:a", "custom:b", "custom:c").forEach { id ->
+            assertEquals(id, 1, placed.count { it == ProblemRef(id) })
         }
     }
 }

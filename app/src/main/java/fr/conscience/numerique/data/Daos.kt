@@ -21,20 +21,17 @@ abstract class MonitoredAppDao {
     @Query("SELECT * FROM problems")
     abstract fun observeProblems(): Flow<List<Problem>>
 
-    @Query("SELECT label FROM custom_problems ORDER BY label COLLATE NOCASE")
-    abstract fun observeCustomLabels(): Flow<List<String>>
-
     @Query("SELECT * FROM custom_problems ORDER BY label COLLATE NOCASE")
     abstract fun observeCustomProblems(): Flow<List<CustomProblem>>
 
-    @Query("SELECT category FROM custom_problems WHERE label = :label")
-    protected abstract suspend fun customCategory(label: String): String?
-
-    @Query("SELECT label FROM custom_problems")
-    abstract suspend fun customLabelsOnce(): List<String>
+    @Query("SELECT * FROM custom_problems")
+    abstract suspend fun customProblemsOnce(): List<CustomProblem>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract suspend fun insertCustomLabels(labels: List<CustomProblem>)
+    abstract suspend fun insertCustomProblem(problem: CustomProblem)
+
+    @Query("UPDATE custom_problems SET label = :label WHERE id = :id")
+    abstract suspend fun renameCustom(id: String, label: String)
 
     @Query("SELECT * FROM favorites")
     abstract fun observeFavorites(): Flow<List<Favorite>>
@@ -44,9 +41,6 @@ abstract class MonitoredAppDao {
 
     @Query("DELETE FROM favorites WHERE id = :id")
     abstract suspend fun deleteFavorite(id: String)
-
-    @Query("UPDATE OR REPLACE favorites SET id = :newId WHERE id = :oldId")
-    protected abstract suspend fun renameFavorite(oldId: String, newId: String)
 
     @Query("SELECT * FROM catalog_overrides")
     abstract fun observeOverrides(): Flow<List<CatalogOverride>>
@@ -66,14 +60,11 @@ abstract class MonitoredAppDao {
     @Insert
     protected abstract suspend fun insertProblems(problems: List<Problem>)
 
-    @Query("UPDATE problems SET customLabel = :newLabel WHERE customLabel = :oldLabel")
-    protected abstract suspend fun renameInProblems(oldLabel: String, newLabel: String)
+    @Query("DELETE FROM problems WHERE problemId = :problemId")
+    protected abstract suspend fun deleteProblemsWithId(problemId: String)
 
-    @Query("DELETE FROM problems WHERE customLabel = :label")
-    protected abstract suspend fun deleteProblemsWithLabel(label: String)
-
-    @Query("DELETE FROM custom_problems WHERE label = :label")
-    protected abstract suspend fun deleteCustomLabel(label: String)
+    @Query("DELETE FROM custom_problems WHERE id = :id")
+    protected abstract suspend fun deleteCustomProblem(id: String)
 
     @Query("DELETE FROM monitored_apps WHERE packageName NOT IN (SELECT packageName FROM problems)")
     protected abstract suspend fun deleteAppsWithoutProblems()
@@ -81,49 +72,34 @@ abstract class MonitoredAppDao {
     @Query("SELECT COUNT(*) FROM monitored_apps WHERE packageName = :packageName")
     protected abstract suspend fun appCount(packageName: String): Int
 
-    @Query(
-        "SELECT COUNT(*) FROM problems WHERE packageName = :packageName " +
-            "AND catalogKey IS :catalogKey AND customLabel IS :customLabel",
-    )
-    protected abstract suspend fun problemCount(packageName: String, catalogKey: String?, customLabel: String?): Int
+    @Query("SELECT COUNT(*) FROM problems WHERE packageName = :packageName AND problemId = :problemId")
+    protected abstract suspend fun problemCount(packageName: String, problemId: String): Int
 
-    @Query(
-        "DELETE FROM problems WHERE packageName = :packageName " +
-            "AND catalogKey IS :catalogKey AND customLabel IS :customLabel",
-    )
-    protected abstract suspend fun deleteProblem(packageName: String, catalogKey: String?, customLabel: String?)
+    @Query("DELETE FROM problems WHERE packageName = :packageName AND problemId = :problemId")
+    protected abstract suspend fun deleteProblem(packageName: String, problemId: String)
 
     /** Associe une problématique à une app (créée si besoin, sans toucher à sa pause si elle existe). */
     @Transaction
     open suspend fun link(app: MonitoredApp, problem: Problem) {
         if (appCount(app.packageName) == 0) upsert(app)
-        if (problemCount(problem.packageName, problem.catalogKey, problem.customLabel) == 0) {
+        if (problemCount(problem.packageName, problem.problemId) == 0) {
             insertProblems(listOf(problem))
         }
     }
 
     /** Dissocie ; une app qui n'a plus aucune problématique sort de la surveillance. */
     @Transaction
-    open suspend fun unlink(packageName: String, catalogKey: String?, customLabel: String?) {
-        deleteProblem(packageName, catalogKey, customLabel)
+    open suspend fun unlink(packageName: String, problemId: String) {
+        deleteProblem(packageName, problemId)
         deleteAppsWithoutProblems()
-    }
-
-    @Transaction
-    open suspend fun renameCustom(oldLabel: String, newLabel: String) {
-        val category = customCategory(oldLabel)
-        deleteCustomLabel(oldLabel)
-        insertCustomLabels(listOf(CustomProblem(newLabel, category)))
-        renameInProblems(oldLabel, newLabel)
-        renameFavorite(CUSTOM_PREFIX + oldLabel, CUSTOM_PREFIX + newLabel)
     }
 
     /** Retire la problématique de toutes les apps ; celles qui n'en ont plus sortent de la surveillance. */
     @Transaction
-    open suspend fun deleteCustom(label: String) {
-        deleteProblemsWithLabel(label)
-        deleteCustomLabel(label)
-        deleteFavorite(CUSTOM_PREFIX + label)
+    open suspend fun deleteCustom(id: String) {
+        deleteProblemsWithId(id)
+        deleteCustomProblem(id)
+        deleteFavorite(id)
         deleteAppsWithoutProblems()
     }
 }

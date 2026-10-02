@@ -65,10 +65,7 @@ class AppDetailViewModel(container: AppContainer, handle: SavedStateHandle) : Vi
             .map { it.toRef() }.toSet()
 
         val themes = ProblemCatalog.themeContents(custom)
-        val knownLabels = custom.map { it.label }.toSet()
-        // Les personnalisées sans thème, plus celles déjà associées à l'app mais absentes de la liste.
-        val customRefs = (ProblemCatalog.customWithoutTheme(custom) + current.filter { it.customLabel != null && it.customLabel !in knownLabels })
-            .distinct()
+        val customRefs = ProblemCatalog.customWithoutTheme(custom)
         val allRefs = themes.flatMap { it.refs } + customRefs
 
         fun MutableList<DetailRow>.section(id: Int, refs: List<ProblemRef>) {
@@ -76,7 +73,7 @@ class AppDetailViewModel(container: AppContainer, handle: SavedStateHandle) : Vi
             add(DetailRow.Theme(id, refs.size, refs.count { it in current }, open))
             if (!open) return
             refs.forEachIndexed { i, ref ->
-                add(DetailRow.Choice(id, ref, ref.catalogKey?.let(overrides::get), ref in current, i == 0, i == refs.lastIndex))
+                add(DetailRow.Choice(id, ref, overrides[ref.id], ref in current, i == 0, i == refs.lastIndex))
             }
         }
 

@@ -11,7 +11,7 @@ import fr.conscience.numerique.data.StatsRange
 /** Les ViewModels des statistiques (liste des apps interceptées, détail d'une app), sur une base en mémoire. */
 class StatsViewModelsTest {
     private lateinit var env: ViewModelEnv
-    private val fomo = ProblemRef(catalogKey = "fomo")
+    private val fomo = ProblemRef.catalog("fomo")
 
     @Before
     fun setUp() {

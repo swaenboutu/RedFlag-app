@@ -80,7 +80,7 @@ class OnboardingAppsViewModel(private val container: AppContainer, private val c
             val overrides = repository.labelOverrides.first()
             val chosen = ProblemCatalog.allRefs.filter { it in favorites }
             steps.value = chosen.mapIndexed { i, ref ->
-                AppsStep(i + 1, chosen.size, ref, ref.displayLabel(context, ref.catalogKey?.let(overrides::get)))
+                AppsStep(i + 1, chosen.size, ref, ref.displayLabel(context, overrides[ref.id]))
             }
             // La sélection de départ est chargée avant d'afficher les apps : un clic ne peut pas être écrasé par ce chargement.
             steps.value?.firstOrNull()?.let { loadSelection(it.ref) }

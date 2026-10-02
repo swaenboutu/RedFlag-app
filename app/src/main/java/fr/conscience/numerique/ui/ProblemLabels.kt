@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.first
 suspend fun AppRepository.displayedLabels(context: Context): Map<ProblemRef, String> {
     val overrides = labelOverrides.first()
     val catalog = ProblemCatalog.categories.flatMap { it.problems }
-        .associate { ProblemRef(catalogKey = it.key) to it.displayLabel(context, overrides) }
-    val custom = customLabels.first().associate { ProblemRef(customLabel = it) to it }
+        .associate { ProblemRef.catalog(it.key) to it.displayLabel(context, overrides) }
+    val custom = customProblems.first().associate { ProblemRef(it.id) to it.label }
     return catalog + custom
 }
 

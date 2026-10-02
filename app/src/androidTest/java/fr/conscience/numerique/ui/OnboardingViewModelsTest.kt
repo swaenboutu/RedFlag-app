@@ -2,6 +2,7 @@ package fr.conscience.numerique.ui
 
 import fr.conscience.numerique.data.ProblemCatalog
 import fr.conscience.numerique.data.ProblemRef
+import fr.conscience.numerique.data.toRef
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -81,7 +82,7 @@ class OnboardingViewModelsTest {
         vm.rows.await { (it.first() as AppsRow.Header).step.position == 2 }
 
         val saved = env.repository.find(app.packageName)
-        assertEquals(listOf(refs[0]), saved?.problems?.map { p -> ProblemRef(p.catalogKey, p.customLabel) })
+        assertEquals(listOf(refs[0]), saved?.problems?.map { p -> p.toRef() })
         assertFalse("il reste une étape", finished)
     }
 

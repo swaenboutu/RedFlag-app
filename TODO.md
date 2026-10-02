@@ -13,8 +13,8 @@
   - [x] 5. Tests : ViewModels construits par une fabrique (`screenViewModel`) et testés sur une base en mémoire, écrans
     d'accueil et de statistiques testés. Pas encore d'écran testé pour : réglages, problématiques (liste), sélecteur d'apps,
     parcours d'accueil (le script `scripts/test.sh auto` les signale quand on les modifie)
-  - [ ] 6. Décision de conception : identifier une problématique personnalisée par un identifiant plutôt que par son texte
-    (renommer touche aujourd'hui 3 tables)
+  - [x] 6. Un seul identifiant par problématique (clé du catalogue, ou `custom:…` généré pour une personnalisée) : renommer
+    ne touche plus qu'une table (base en version 7)
 - [ ] **Essai à blanc de la publication sur le Play Store** (voir si l'app passerait la revue)
   - Le point sensible : l'usage du service d'accessibilité doit être justifié et déclaré
   - À préparer : politique de confidentialité en ligne, formulaire « Sécurité des données », captures, icône, signature de

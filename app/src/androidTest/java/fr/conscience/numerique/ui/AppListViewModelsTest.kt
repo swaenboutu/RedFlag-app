@@ -15,7 +15,7 @@ class AppListViewModelsTest {
     private lateinit var env: ViewModelEnv
     private lateinit var flagged: InstalledApp
     private lateinit var other: InstalledApp
-    private val fomo = ProblemRef(catalogKey = "fomo")
+    private val fomo = ProblemRef.catalog("fomo")
 
     @Before
     fun setUp() {

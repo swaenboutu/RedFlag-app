@@ -14,7 +14,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         Favorite::class,
         ChoiceEvent::class,
     ],
-    version = 6,
+    version = 7,
     exportSchema = true,
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -63,3 +63,52 @@ val MIGRATION_5_6 = object : Migration(5, 6) {
     }
 }
 
+
+/**
+ * v7 : un seul identifiant pour toutes les problématiques. Celles du catalogue gardent leur clé ; chaque problématique
+ * personnalisée, jusque-là reconnue par son texte, reçoit un identifiant généré (`custom:…`). Les tables des problématiques
+ * associées aux apps (`problems`), des personnalisées (`custom_problems`) et des favoris l'utilisent à la place du texte.
+ */
+val MIGRATION_6_7 = object : Migration(6, 7) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        // Les personnalisées de la liste, puis celles seulement associées à une app (par sécurité : la liste devrait les contenir).
+        db.execSQL("CREATE TABLE `custom_problems_new` (`id` TEXT NOT NULL, `label` TEXT NOT NULL, `category` TEXT, PRIMARY KEY(`id`))")
+        db.execSQL(
+            "INSERT INTO custom_problems_new (id, label, category) " +
+                "SELECT 'custom:' || lower(hex(randomblob(16))), label, category FROM custom_problems",
+        )
+        db.execSQL(
+            "INSERT INTO custom_problems_new (id, label) " +
+                "SELECT 'custom:' || lower(hex(randomblob(16))), customLabel FROM " +
+                "(SELECT DISTINCT customLabel FROM problems WHERE customLabel IS NOT NULL " +
+                "AND customLabel NOT IN (SELECT label FROM custom_problems_new))",
+        )
+
+        db.execSQL(
+            "CREATE TABLE `problems_new` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `packageName` TEXT NOT NULL, " +
+                "`problemId` TEXT NOT NULL, FOREIGN KEY(`packageName`) REFERENCES `monitored_apps`(`packageName`) " +
+                "ON UPDATE NO ACTION ON DELETE CASCADE )",
+        )
+        db.execSQL(
+            "INSERT INTO problems_new (id, packageName, problemId) " +
+                "SELECT p.id, p.packageName, COALESCE(p.catalogKey, (SELECT n.id FROM custom_problems_new n WHERE n.label = p.customLabel)) " +
+                "FROM problems p WHERE p.catalogKey IS NOT NULL OR p.customLabel IS NOT NULL",
+        )
+        db.execSQL("DROP TABLE `problems`")
+        db.execSQL("ALTER TABLE `problems_new` RENAME TO `problems`")
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_problems_packageName` ON `problems` (`packageName`)")
+
+        db.execSQL("DROP TABLE `custom_problems`")
+        db.execSQL("ALTER TABLE `custom_problems_new` RENAME TO `custom_problems`")
+
+        // Favoris : « catalog:clé » devient « clé », « custom:texte » devient l'identifiant de la personnalisée.
+        db.execSQL("CREATE TABLE `favorites_new` (`id` TEXT NOT NULL, PRIMARY KEY(`id`))")
+        db.execSQL("INSERT OR IGNORE INTO favorites_new (id) SELECT substr(id, 9) FROM favorites WHERE id LIKE 'catalog:%'")
+        db.execSQL(
+            "INSERT OR IGNORE INTO favorites_new (id) " +
+                "SELECT n.id FROM favorites f JOIN custom_problems n ON f.id = 'custom:' || n.label",
+        )
+        db.execSQL("DROP TABLE `favorites`")
+        db.execSQL("ALTER TABLE `favorites_new` RENAME TO `favorites`")
+    }
+}

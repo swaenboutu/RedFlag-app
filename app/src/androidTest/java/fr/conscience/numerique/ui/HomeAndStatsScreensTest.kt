@@ -27,7 +27,7 @@ class HomeAndStatsScreensTest {
     private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
     private val repository get() = context.container.repository
     private val settings get() = context.container.settings
-    private val fomo = ProblemRef(catalogKey = "fomo")
+    private val fomo = ProblemRef.catalog("fomo")
     private lateinit var pkg: String
     private var onboardingWasDone = false
 

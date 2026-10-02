@@ -59,7 +59,7 @@ class OnboardingProblemsViewModel(container: AppContainer) : ViewModel() {
                 add(OnboardingRow.Theme(category.title, refs.size, refs.count { it in favorites }, open))
                 if (!open) return@forEach
                 refs.forEachIndexed { i, ref ->
-                    add(OnboardingRow.Choice(category.title, ref, ref.catalogKey?.let(overrides::get), ref in favorites, !full || ref in favorites, i == 0, i == refs.lastIndex))
+                    add(OnboardingRow.Choice(category.title, ref, overrides[ref.id], ref in favorites, !full || ref in favorites, i == 0, i == refs.lastIndex))
                 }
             }
         }

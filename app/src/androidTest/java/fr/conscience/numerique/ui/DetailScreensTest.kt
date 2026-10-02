@@ -23,7 +23,7 @@ class DetailScreensTest {
     private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
     private val repository get() = context.container.repository
     private val pkg = "test.detail.screens"
-    private val ref = ProblemRef(catalogKey = "fomo")
+    private val ref = ProblemRef.catalog("fomo")
 
     @Before
     fun setUp() = runBlocking { repository.linkProblem(pkg, "Application détail", ref) }

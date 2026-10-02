@@ -15,7 +15,7 @@ data class ProblemCategory(
     val problems: List<PredefinedProblem>,
 ) {
     /** Les problématiques du catalogue de ce thème, sous forme de références. */
-    val refs: List<ProblemRef> get() = problems.map { ProblemRef(catalogKey = it.key) }
+    val refs: List<ProblemRef> get() = problems.map { ProblemRef.catalog(it.key) }
 }
 
 /** Le contenu d'une carte de thème : ses problématiques du catalogue, puis les personnalisées qui y sont rangées. */
@@ -95,13 +95,13 @@ object ProblemCatalog {
 
     /** Les thèmes avec, à la suite du catalogue, les problématiques personnalisées [custom] rangées dedans. */
     fun themeContents(custom: List<CustomProblem>): List<ThemeContent> {
-        val byCategory = custom.groupBy({ it.category }, { ProblemRef(customLabel = it.label) })
+        val byCategory = custom.groupBy({ it.category }, { ProblemRef(it.id) })
         return categories.map { ThemeContent(it, it.refs + byCategory[it.key].orEmpty()) }
     }
 
     /** Les problématiques personnalisées sans thème (ou dont le thème n'existe plus) : elles vont dans « Personnalisé ». */
     fun customWithoutTheme(custom: List<CustomProblem>): List<ProblemRef> =
-        custom.filter { it.category?.let(::findCategory) == null }.map { ProblemRef(customLabel = it.label) }
+        custom.filter { it.category?.let(::findCategory) == null }.map { ProblemRef(it.id) }
 }
 
 /** Intitulé d'une entrée du catalogue : [override] (choisi par l'utilisateur), sinon la traduction courante. */
@@ -111,10 +111,10 @@ fun PredefinedProblem.displayLabel(context: Context, override: String?): String 
 fun PredefinedProblem.displayLabel(context: Context, overrides: Map<String, String>): String =
     displayLabel(context, overrides[key])
 
-/** Texte à afficher pour une référence : catalogue ([override] ou traduction) ou texte libre tel quel. */
+/** Texte à afficher pour une référence : catalogue ([override] ou traduction) ; une personnalisée n'a que son nom, passé en [override]. */
 fun ProblemRef.displayLabel(context: Context, override: String?): String =
-        catalogKey?.let(ProblemCatalog::find)?.displayLabel(context, override) ?: customLabel.orEmpty()
+    catalogKey?.let(ProblemCatalog::find)?.displayLabel(context, override) ?: override.orEmpty()
 
-/** Texte à afficher : catalogue (surcharge ou traduction) ou texte libre tel quel. */
+/** Texte à afficher : catalogue (surcharge ou traduction) ou nom de la personnalisée. [overrides] : voir `AppRepository.labelOverrides`. */
 fun Problem.displayLabel(context: Context, overrides: Map<String, String>): String? =
-    catalogKey?.let { key -> ProblemCatalog.find(key)?.displayLabel(context, overrides) } ?: customLabel
+    ProblemCatalog.find(problemId)?.displayLabel(context, overrides) ?: overrides[problemId]

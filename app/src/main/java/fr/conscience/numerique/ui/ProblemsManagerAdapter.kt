@@ -120,7 +120,7 @@ class ProblemsManagerAdapter(
         override fun areItemsTheSame(old: ManagerRow, new: ManagerRow) = when {
             old is ManagerRow.Theme && new is ManagerRow.Theme -> old.id == new.id
             old is ManagerRow.Catalog && new is ManagerRow.Catalog -> old.sectionId == new.sectionId && old.problem.key == new.problem.key
-            old is ManagerRow.Custom && new is ManagerRow.Custom -> old.sectionId == new.sectionId && old.label == new.label
+            old is ManagerRow.Custom && new is ManagerRow.Custom -> old.sectionId == new.sectionId && old.id == new.id
             else -> false
         }
 

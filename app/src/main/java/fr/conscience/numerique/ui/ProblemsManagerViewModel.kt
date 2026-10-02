@@ -41,6 +41,7 @@ sealed interface ManagerRow {
 
     data class Custom(
         val sectionId: Int,
+        val id: String,
         val label: String,
         val apps: List<LinkedApp>,
         val first: Boolean,
@@ -50,8 +51,8 @@ sealed interface ManagerRow {
 
 /** Référence de la problématique portée par une ligne (null pour un thème). */
 fun ManagerRow.toRef(): ProblemRef? = when (this) {
-    is ManagerRow.Catalog -> ProblemRef(catalogKey = problem.key)
-    is ManagerRow.Custom -> ProblemRef(customLabel = label)
+    is ManagerRow.Catalog -> ProblemRef.catalog(problem.key)
+    is ManagerRow.Custom -> ProblemRef(id)
     is ManagerRow.Theme -> null
 }
 
@@ -59,7 +60,7 @@ private sealed interface Entry {
     val apps: List<LinkedApp>
 
     data class Cat(val problem: PredefinedProblem, override val apps: List<LinkedApp>) : Entry
-    data class Cus(val label: String, override val apps: List<LinkedApp>) : Entry
+    data class Cus(val id: String, val label: String, override val apps: List<LinkedApp>) : Entry
 }
 
 class ProblemsManagerViewModel(container: AppContainer, private val context: Context) : ViewModel() {
@@ -94,7 +95,7 @@ class ProblemsManagerViewModel(container: AppContainer, private val context: Con
                 add(
                     when (entry) {
                         is Entry.Cat -> ManagerRow.Catalog(sectionId, entry.problem, overrides[entry.problem.key], entry.apps, first, last)
-                        is Entry.Cus -> ManagerRow.Custom(sectionId, entry.label, entry.apps, first, last)
+                        is Entry.Cus -> ManagerRow.Custom(sectionId, entry.id, entry.label, entry.apps, first, last)
                     },
                 )
             }
@@ -102,16 +103,16 @@ class ProblemsManagerViewModel(container: AppContainer, private val context: Con
 
         fun entryOf(ref: ProblemRef): Entry {
             val predefined = ref.catalogKey?.let(ProblemCatalog::find)
-            return if (predefined != null) Entry.Cat(predefined, appsOf(ref)) else Entry.Cus(ref.customLabel.orEmpty(), appsOf(ref))
+            return if (predefined != null) Entry.Cat(predefined, appsOf(ref)) else Entry.Cus(ref.id, overrides[ref.id].orEmpty(), appsOf(ref))
         }
         val catalogEntries = ProblemCatalog.themeContents(custom).map { it.category.title to it.refs.map(::entryOf) }
-        val customEntries = custom.map { entryOf(ProblemRef(customLabel = it.label)) as Entry.Cus }
+        val customEntries = custom.map { entryOf(ProblemRef(it.id)) as Entry.Cus }
 
         buildList {
             // Favoris : d'abord ceux du catalogue (dans l'ordre des thèmes), puis les personnalisés.
             val favoriteEntries: List<Entry> =
-                catalogEntries.flatMap { it.second }.filterIsInstance<Entry.Cat>().filter { ProblemRef(catalogKey = it.problem.key) in favorites } +
-                    customEntries.filter { ProblemRef(customLabel = it.label) in favorites }
+                catalogEntries.flatMap { it.second }.filterIsInstance<Entry.Cat>().filter { ProblemRef.catalog(it.problem.key) in favorites } +
+                    customEntries.filter { ProblemRef(it.id) in favorites }
             if (favoriteEntries.isNotEmpty()) addSection(R.string.category_favorites, favoriteEntries)
 
             catalogEntries.forEach { (title, entries) -> addSection(title, entries) }
@@ -134,7 +135,7 @@ class ProblemsManagerViewModel(container: AppContainer, private val context: Con
                 onResult(false)
                 return@launch
             }
-            onResult(repository.addCustomProblem(label, category))
+            onResult(repository.addCustomProblem(label, category) != null)
         }
     }
 }
