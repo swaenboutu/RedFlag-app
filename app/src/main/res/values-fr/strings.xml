@@ -187,7 +187,7 @@
 
     <string name="accessibility_service_description">Détecte uniquement le nom de l\'application qui passe au premier plan, pour afficher un rappel avant l\'ouverture d\'une application que vous avez signalée. Aucun contenu d\'écran n\'est lu et aucune donnée ne quitte votre appareil.</string>
 
-    <string name="category_mental">Bien-être mental &amp; attention</string>
+    <string name="category_mental">Bien-être mental</string>
     <string name="category_social">Éthique sociale</string>
     <string name="category_environment">Impact environnemental</string>
     <string name="category_exploitation">Exploitation humaine</string>

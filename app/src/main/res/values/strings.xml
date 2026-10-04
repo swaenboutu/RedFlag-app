@@ -174,7 +174,7 @@
 
     <string name="accessibility_service_description">Only detects the name of the app that comes to the foreground, in order to show a reminder before you open an app you have flagged. No screen content is read and no data leaves your device.</string>
 
-    <string name="category_mental">Mental health &amp; attention</string>
+    <string name="category_mental">Mental well-being</string>
     <string name="category_social">Social ethics</string>
     <string name="category_environment">Environmental impact</string>
     <string name="category_exploitation">Human exploitation</string>

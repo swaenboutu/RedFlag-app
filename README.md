@@ -64,6 +64,26 @@ La clé de signature (`~/.android-keys/conscience-numerique.jks`) et `keystore.p
 l'installation depuis la source choisie, puis, sur Android 13 et plus, autoriser les « paramètres restreints » de l'application avant
 d'activer le service d'accessibilité.
 
+## Site web (docs/)
+
+Site statique, sans serveur ni dépendance : une page par langue (`docs/index.html` (anglais) et `docs/fr/` (français)), un menu à ancres, la FAQ, des captures et un
+formulaire de contact. Aucune ressource externe (polices et scripts sont dans
+`docs/assets/`).
+
+```bash
+python -m http.server 8000 -d docs     # aperçu sur http://localhost:8000
+node scripts/site.mjs sync-faq         # recopie la FAQ de l'application (res/raw/faq.xml et raw-fr/faq.xml) dans les deux pages
+node scripts/site.mjs check            # liens, ancres, images, langues, FAQ à jour, adresse de contact (aussi joué par scripts/test.sh)
+node scripts/site.mjs set-email adresse@exemple.fr   # adresse de contact : actuellement example@email.com
+```
+
+La FAQ a donc une seule source (les fichiers XML de l'application) : la modifier là, puis `sync-faq`. Le formulaire prépare un message dans le
+logiciel de messagerie du visiteur (lien `mailto:`) : aucun service tiers ne reçoit ses données. Hébergement possible : GitHub Pages (branche
+`main`, dossier `/docs` ; un dépôt privé exige un compte payant) ou tout hébergeur de fichiers statiques.
+
+À compléter quand le nom sera trouvé : le nom (en-têtes, titres, pied de page, politique de confidentialité), l'adresse de contact, le lien de
+téléchargement, la date de la politique de confidentialité, et les captures d'écran si l'interface change.
+
 ## Problématiques et langues
 
 Le catalogue prédéfini (7 catégories, 23 problématiques) est dans `data/ProblemCatalog.kt`. Chaque

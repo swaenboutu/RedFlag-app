@@ -25,6 +25,12 @@ locate() {
     echo "$kind ${rel%.kt}" | tr '/' '.'
 }
 
+run_site() { # le site statique (docs/) : liens, ancres, langues, FAQ à jour. Rapide ; ignoré sans Node.
+    command -v node >/dev/null || { echo ">> site ignoré (Node introuvable)"; return 0; }
+    echo ">> site"
+    node scripts/site.mjs check
+}
+
 run_unit() { # $@ = noms de classes (vide = tout)
     local args=()
     for c in "$@"; do args+=(--tests "*.$c"); done
@@ -104,7 +110,7 @@ device_classes_for_changes() {
             # Un test modifié : lui seul. Les tests unitaires sont de toute façon rejoués.
             */androidTest/*Test.kt) out+=("$(locate "$(basename "$f" .kt)" | cut -d' ' -f2)") ;;
             */androidTest/*ViewModelEnv.kt) add ui.StatsViewModelsTest; add ui.AppListViewModelsTest; add ui.OnboardingViewModelsTest; add ui.ProblemViewModelsTest ;;
-            */src/test/*|*.md|scripts/*|.gitignore|TODO.md|LICENSE|licenses/*) ;;
+            */src/test/*|*.md|docs/*|scripts/*|.gitignore|TODO.md|LICENSE|licenses/*) ;;
             # ViewModels : leur test (sans écran). `;;&` : on continue, un ViewModel peut aussi concerner un écran plus bas.
             */ui/StatsViewModel.kt|*/ui/AppStatsViewModel.kt) add ui.StatsViewModelsTest ;;&
             */ui/MainViewModel.kt|*/ui/AppPickerViewModel.kt) add ui.AppListViewModelsTest ;;&
@@ -163,9 +169,11 @@ case "$mode" in
         ;;
     commit)
         run_unit
+        run_site
         ;;
     auto)
         run_unit
+        run_site
         mapfile -t classes < <(device_classes_for_changes)
         if [ ${#classes[@]} -eq 0 ] || [ -z "${classes[0]}" ]; then
             echo ">> aucun test sur appareil concerné par les fichiers modifiés"
@@ -177,6 +185,7 @@ case "$mode" in
         ;;
     full)
         run_unit
+        run_site
         run_device
         echo ">> lint"
         "${GRADLE[@]}" :app:lintDebug
