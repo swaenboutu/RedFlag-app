@@ -52,6 +52,18 @@ service d'accessibilité s'il l'était : l'app reste donc sur l'émulateur (seul
 Ouvrir le dossier dans Android Studio, puis lancer sur l'AVD. Activer ensuite le service dans
 *Paramètres > Accessibilité > Conscience Numérique* (la bannière de l'écran principal y renvoie).
 
+## Publier une version de test (GitHub Releases)
+
+`scripts/release.sh` construit l'APK signé de production dans `build/release/` (avec sa somme SHA-256) ; avec `--publish`, il crée la
+release GitHub (pré-version) après confirmation. Il faut la CLI GitHub (`winget install GitHub.cli`, puis `gh auth login`), un arbre de
+travail propre, des commits poussés, et une version (`versionName`/`versionCode` dans `app/build.gradle.kts`) pas encore publiée.
+Sans la CLI, joindre l'APK à la main : GitHub > Releases > Draft a new release.
+
+La clé de signature (`~/.android-keys/conscience-numerique.jks`) et `keystore.properties` ne sont jamais versionnés : **les sauvegarder**
+(une application signée avec une autre clé ne peut plus se mettre à jour par-dessus l'ancienne). Sur le téléphone du testeur : autoriser
+l'installation depuis la source choisie, puis, sur Android 13 et plus, autoriser les « paramètres restreints » de l'application avant
+d'activer le service d'accessibilité.
+
 ## Problématiques et langues
 
 Le catalogue prédéfini (7 catégories, 23 problématiques) est dans `data/ProblemCatalog.kt`. Chaque
