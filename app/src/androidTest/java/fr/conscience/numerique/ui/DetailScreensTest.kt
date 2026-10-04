@@ -7,6 +7,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import fr.conscience.numerique.container
 import fr.conscience.numerique.data.ProblemRef
+import fr.conscience.numerique.ui.apps.AppDetailActivity
+import fr.conscience.numerique.ui.problems.ProblemDetailActivity
+import fr.conscience.numerique.ui.stats.AppStatsActivity
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals

@@ -9,7 +9,7 @@ Nom : **Red Flag**, sous-titre « Ethical app check » (titre de la fiche du sto
 le titre de ce README et le site (`docs/`) sont à modifier à la main. L'identifiant technique `fr.conscience.numerique` est resté celui
 d'avant le choix du nom : il ne pourra plus changer après la première publication.
 
-Cahier des charges : [pitch-dev-android-ios.md](pitch-dev-android-ios.md).
+Cahiers des charges : [Android](pitch-dev-android.md), [iOS](pitch-dev-ios.md), [design](pitch-designer.md).
 Licence : [GPL v3](LICENSE) (copyleft : toute version modifiée et distribuée doit rester sous GPL, code source ouvert).
 
 ## Stack
@@ -21,11 +21,14 @@ Kotlin, MVVM, Room (KSP), vues XML + ViewBinding, Material 3. `minSdk 26`, `targ
 
 ```
 app/src/main/java/fr/conscience/numerique/
-├── data/      Room (entités, DAO, base), repository, liste des apps installées
+├── data/      Room (entités, DAO par table, base), repository, liste des apps installées, cache des icônes
 ├── service/   FrictionAccessibilityService (détection du premier plan), FrictionGate
-├── ui/        MainActivity (liste + labellisation), InterstitialActivity, ViewModel
+├── ui/        Un dossier par domaine : apps (liste, détail d'une app), problems (liste et détail des problématiques),
+│              stats, settings (Réglages et FAQ), interruption (écran « Une seconde »), onboarding, common (éléments partagés)
 └── util/      Utilitaires purs (parseProblems)
 ```
+
+`fixtures/` : deux apps vides (Fixture A et B), installées par `scripts/test.sh` pendant les tests sur appareil pour que les écrans aient des apps ordinaires à lister (un émulateur de base n'a que des apps système, masquées), puis retirées. Jamais publiées.
 
 ## Lancer
 

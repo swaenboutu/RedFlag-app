@@ -8,6 +8,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import fr.conscience.numerique.R
 import fr.conscience.numerique.container
 import fr.conscience.numerique.data.ProblemRef
+import fr.conscience.numerique.ui.interruption.InterstitialActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After

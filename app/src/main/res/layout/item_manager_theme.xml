@@ -24,7 +24,7 @@
             android:orientation="vertical"
             android:paddingVertical="10dp">
 
-            <fr.conscience.numerique.ui.HeadingTextView
+            <fr.conscience.numerique.ui.common.HeadingTextView
                 android:id="@+id/themeTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

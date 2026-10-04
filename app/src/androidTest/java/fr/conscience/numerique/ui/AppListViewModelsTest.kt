@@ -2,6 +2,10 @@ package fr.conscience.numerique.ui
 
 import fr.conscience.numerique.data.InstalledApp
 import fr.conscience.numerique.data.ProblemRef
+import fr.conscience.numerique.ui.apps.AppFilter
+import fr.conscience.numerique.ui.apps.AppPickerArgs
+import fr.conscience.numerique.ui.apps.AppPickerViewModel
+import fr.conscience.numerique.ui.apps.MainViewModel
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -20,6 +24,7 @@ class AppListViewModelsTest {
     @Before
     fun setUp() {
         env = ViewModelEnv()
+        assumeUserApps(env.context, 2)
         env.container.settings.setHideSystemApps(true)
         // Deux apps visibles avec le réglage par défaut : l'une sera signalée, l'autre non.
         val visible = env.container.installedApps.list(hideSystemApps = true)

@@ -7,6 +7,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import fr.conscience.numerique.ui.problems.toRef
 import java.util.UUID
 
 @Entity(tableName = "monitored_apps")

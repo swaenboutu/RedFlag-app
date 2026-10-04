@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable
 data class InstalledApp(val packageName: String, val label: String, val icon: Drawable)
 
 /** Liste les apps lançables via PackageManager ; les icônes viennent du système, jamais embarquées. */
-class InstalledAppsProvider(private val context: Context) {
+class InstalledAppsProvider(private val context: Context, private val icons: AppIconCache? = null) {
     /**
      * [hideSystemApps] : masque les apps système, sauf celles que l'utilisateur a mises à jour
      * (Chrome, par exemple, est une app système mise à jour depuis le Play Store).
@@ -29,7 +29,11 @@ class InstalledAppsProvider(private val context: Context) {
                 isListed(it.activityInfo.packageName, it.activityInfo.applicationInfo.isPurelySystem(), hideSystemApps, alwaysInclude)
             }
             .distinctBy { it.activityInfo.packageName }
-            .map { InstalledApp(it.activityInfo.packageName, it.loadLabel(pm).toString(), it.loadIcon(pm)) }
+            .map {
+                val icon = it.loadIcon(pm)
+                icons?.put(it.activityInfo.packageName, icon)
+                InstalledApp(it.activityInfo.packageName, it.loadLabel(pm).toString(), icon)
+            }
     }
 
     private fun ApplicationInfo.isPurelySystem() =

@@ -1,5 +1,9 @@
 package fr.conscience.numerique.ui
 
+import fr.conscience.numerique.ui.apps.MainActivity
+import fr.conscience.numerique.ui.common.AccessibilityDisclosureDialog
+import fr.conscience.numerique.ui.onboarding.OnboardingPermissionActivity
+import fr.conscience.numerique.ui.settings.SettingsActivity
 import java.io.File
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -25,8 +29,8 @@ class AccessibilityDisclosureGuardTest {
 
     @Test
     fun `l'ecran principal et les reglages ouvrent la fenetre d'avertissement`() {
-        val main = File("src/main/java/fr/conscience/numerique/ui/MainActivity.kt").readText()
-        val settings = File("src/main/java/fr/conscience/numerique/ui/SettingsActivity.kt").readText()
+        val main = File("src/main/java/fr/conscience/numerique/ui/apps/MainActivity.kt").readText()
+        val settings = File("src/main/java/fr/conscience/numerique/ui/settings/SettingsActivity.kt").readText()
 
         assertTrue("MainActivity", "AccessibilityDisclosureDialog.show" in main)
         assertTrue("SettingsActivity", "AccessibilityDisclosureDialog.show" in settings)

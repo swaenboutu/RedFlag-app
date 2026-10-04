@@ -2,6 +2,14 @@ package fr.conscience.numerique.ui
 
 import fr.conscience.numerique.R
 import fr.conscience.numerique.data.ProblemRef
+import fr.conscience.numerique.ui.apps.AppDetailArgs
+import fr.conscience.numerique.ui.apps.AppDetailViewModel
+import fr.conscience.numerique.ui.apps.DetailRow
+import fr.conscience.numerique.ui.problems.DetailArgs
+import fr.conscience.numerique.ui.problems.LinkedApp
+import fr.conscience.numerique.ui.problems.ManagerRow
+import fr.conscience.numerique.ui.problems.ProblemDetailViewModel
+import fr.conscience.numerique.ui.problems.ProblemsManagerViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After

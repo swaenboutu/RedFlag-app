@@ -3,6 +3,11 @@ package fr.conscience.numerique.ui
 import fr.conscience.numerique.data.ProblemCatalog
 import fr.conscience.numerique.data.ProblemRef
 import fr.conscience.numerique.data.toRef
+import fr.conscience.numerique.ui.onboarding.AppsRow
+import fr.conscience.numerique.ui.onboarding.OnboardingAppsViewModel
+import fr.conscience.numerique.ui.onboarding.OnboardingProblemsViewModel
+import fr.conscience.numerique.ui.onboarding.OnboardingRow
+import fr.conscience.numerique.ui.problems.toRef
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -59,6 +64,7 @@ class OnboardingViewModelsTest {
 
     @Test
     fun theAppsStepsFollowTheChosenProblemsAndNextSavesTheChoice() = runBlocking {
+        assumeUserApps(env.context, 1)
         env.repository.setFavorite(refs[0], true)
         env.repository.setFavorite(refs[1], true)
         val vm = env.viewModel { OnboardingAppsViewModel(env.container, env.context) }

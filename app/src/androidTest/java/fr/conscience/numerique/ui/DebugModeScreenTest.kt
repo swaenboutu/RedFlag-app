@@ -7,6 +7,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import fr.conscience.numerique.R
 import fr.conscience.numerique.container
 import fr.conscience.numerique.data.DebugUnlock
+import fr.conscience.numerique.ui.settings.SettingsActivity
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse

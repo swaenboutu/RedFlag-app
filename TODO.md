@@ -2,38 +2,70 @@
 
 À reprendre plus tard. Cochez au fur et à mesure.
 
-## Liste
+## À décider d'abord
 
-- [ ] **Vérifier les points 3 à 6 de la revue de code**
-  - [x] 3. Factoriser les duplications : libellé d'une problématique (recalculé à 4 endroits), calcul des sections
-    (`ProblemsManagerViewModel` / `AppDetailViewModel`), chargement d'icône (3 adaptateurs), `Problem.toRef()`, accès au
-    conteneur (`(application as ConscienceApp).container`, 8 fichiers)
-  - [ ] 4. Structure : sous-dossiers de `ui/` par écran (apps, problématiques, réglages, interruption), scinder
-    `MonitoredAppDao`, chargement des icônes sur le fil principal et toutes en mémoire au démarrage (petit cache)
-  - [x] 5. Tests : ViewModels construits par une fabrique (`screenViewModel`) et testés sur une base en mémoire, écrans
-    d'accueil et de statistiques testés. Pas encore d'écran testé pour : réglages, problématiques (liste), sélecteur d'apps,
-    parcours d'accueil (le script `scripts/test.sh auto` les signale quand on les modifie)
-  - [x] 6. Un seul identifiant par problématique (clé du catalogue, ou `custom:…` généré pour une personnalisée) : renommer
-    ne touche plus qu'une table (base en version 7)
-- [ ] **Essai à blanc de la publication sur le Play Store** (voir si l'app passerait la revue)
-  - Le point sensible : l'usage du service d'accessibilité doit être justifié et déclaré
-  - À préparer : politique de confidentialité en ligne, formulaire « Sécurité des données », captures, icône, signature de
-    la version de production
-  - Piste de test interne + rapport pré-lancement de la Play Console
+- [ ] **Identifiant de l'app** (`fr.conscience.numerique`, utilisé comme `applicationId` et comme package Kotlin) : il date
+  d'avant le nom « Red Flag » et ne pourra plus changer après la première publication sur Play. À choisir avant (par
+  exemple `app.redflag`, à adapter à un domaine ou un nom qu'on possède). Le renommer touche `app/build.gradle.kts`,
+  les dossiers `java/…`, le manifeste, `scripts/*` (service d'accessibilité, `pm clear`), le README et le schéma Room.
+
+## Publication sur le Play Store
+
+Fait : AAB et APK release signés (`scripts/release.sh`), `targetSdk` 37, écran d'accueil qui explique le service
+d'accessibilité et demande un accord explicite, FAQ, site statique (`docs/`, EN + FR), release GitHub `v0.1.0`
+(ancien nom, privée).
+
+- [ ] **Compte développeur** : création, vérification d'identité, enregistrement de l'app (vérification des développeurs
+  Google)
+- [ ] **Mettre le site en ligne** (GitHub Pages sur `docs/`) : son adresse sert de politique de confidentialité
+  - Remplacer l'adresse provisoire `example@email.com` : `node scripts/site.mjs set-email <adresse>`
+  - Relire la politique de confidentialité (section « Vie privée » du site) ; elle doit avoir sa propre adresse
+    (page ou ancre stable) à donner à la Play Console
+- [ ] **Déclaration d'usage du service d'accessibilité** dans la Play Console, avec une vidéo de démonstration
+  (activation du service, interruption, « Non, fermer l'application »)
+- [ ] **Formulaire « Sécurité des données »** (réponse : aucune donnée collectée ni partagée), classification du contenu,
+  public cible
+- [ ] **Fiche du store** : titre « Red Flag – Ethical app check », description courte et longue (EN + FR), icône 512 px,
+  image de présentation 1024×500, captures (on peut reprendre celles de `docs/assets/img/`)
+- [ ] **Test fermé** : 12 testeurs pendant 14 jours avant la production (compte personnel récent), puis rapport
+  pré-lancement
+- [ ] **Version de production** : `versionCode` / `versionName` (`0.1.0` actuellement), republier la release GitHub sous
+  le nom « Red Flag » (la `v0.1.0` porte l'ancien)
+- [ ] Clé de signature : elle s'appelle encore `conscience-numerique.jks` (renommer est facultatif, ne pas la perdre : sans
+  elle, plus de mises à jour)
+
+## Qualité
+
+- [ ] **Essayer l'app sur un vrai téléphone** : le Redmi A5 n'est pas détecté par `adb` (débogage USB, pilote). Vérifier
+  surtout le service d'accessibilité, la superposition et les consignes d'économie d'énergie de Xiaomi
+- [ ] **Écrans encore sans test** : réglages, liste des problématiques, sélecteur d'apps, parcours d'accueil (le script
+  `scripts/test.sh auto` les signale quand on les modifie)
+- [ ] **Langue de l'app** : `ProblemsManagerViewModel` et `ProblemDetailViewModel` gardent un contexte d'application
+  (`applicationContext`), dont la langue peut ne pas suivre celle choisie pour l'app, comme c'était le cas pour la FAQ.
+  Vérifier, et renforcer le test `theFaqFollowsTheLanguageChosenForTheApp` (il passe aussi avec l'ancien code)
+- [ ] Polices du site en WOFF2 (elles sont en TTF, plus lourdes)
+
+## Fonctionnalités
+
 - [ ] **Ajouter une langue** (par exemple l'espagnol)
   - Nouveau dossier `values-es/` avec les mêmes clés que `values/` (vérification de parité : voir la commande ci-dessous),
     dont les 23 problématiques du catalogue
+  - `res/raw-es/faq.xml` pour la FAQ, puis `node scripts/site.mjs sync-faq` et une page `docs/es/`
   - Ajouter la langue dans `res/xml/locales_config.xml`
   - Les pluriels espagnols ont une forme `many` en plus
-- [ ] **FAQ** : l'application, son fonctionnement, son côté éthique et sa politique de confidentialité
-  - Remplacera le Lorem Ipsum de « Comment ça marche » (Réglages), texte `settings_help_body`
-  - La politique de confidentialité sert aussi pour le Play Store (point ci-dessus)
 
-## Déjà ouvert (rappel)
+## Fait
 
-- Le nom est « Red Flag » (`app_name` et `app_subtitle` dans `app/src/main/res/values/brand.xml`). L'identifiant de l'app
-  (`fr.conscience.numerique`) date d'avant ce choix et ne pourra plus changer après publication : le choisir avant.
-- Texte « Comment ça marche » : Lorem Ipsum provisoire
+- [x] Doublons factorisés (libellés, sections, icônes, `toRef()`, accès au conteneur) : revue de code, point 3
+- [x] ViewModels par fabrique (`screenViewModel`), testés sur base en mémoire ; accueil et statistiques testés : point 5
+- [x] Un seul identifiant par problématique, base en version 7 : point 6
+- [x] Structure, point 4 : `ui/` en sous-dossiers par domaine, `MonitoredAppDao` scindé (un DAO par table), icônes en cache
+  (`AppIconCache`, remplie au démarrage pour les apps signalées, lecture hors du fil principal)
+- [x] FAQ (écran « Comment ça marche », générée aussi pour le site) ; le Lorem Ipsum a disparu
+- [x] Nom « Red Flag » et sous-titre « Ethical app check » (`app_name`, `app_subtitle` dans `brand.xml`)
+- [x] Site statique EN + FR, captures régénérées (`docs/`)
+- [x] Essai à blanc de la revue Play : points sensibles identifiés (accessibilité, `targetSdk`, test fermé, politique de
+  confidentialité)
 
 ## Vérifier la parité des langues
 

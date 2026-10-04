@@ -2,6 +2,9 @@ package fr.conscience.numerique.ui
 
 import fr.conscience.numerique.data.FaqEntry
 import fr.conscience.numerique.data.FaqTheme
+import fr.conscience.numerique.ui.settings.FaqRow
+import fr.conscience.numerique.ui.settings.faqKey
+import fr.conscience.numerique.ui.settings.faqRows
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

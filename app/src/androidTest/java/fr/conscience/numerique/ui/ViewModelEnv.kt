@@ -9,10 +9,12 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import fr.conscience.numerique.AppContainer
+import fr.conscience.numerique.container
 import fr.conscience.numerique.data.AppDatabase
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withTimeout
+import org.junit.Assume.assumeTrue
 
 /**
  * De quoi tester un ViewModel seul, sans écran : un conteneur sur une base en mémoire (la vraie base de l'app n'est pas touchée),
@@ -48,3 +50,12 @@ class ViewModelEnv {
 
 /** Attend (au plus 5 s) que l'état vérifie [predicate] : les ViewModels calculent leur état en arrière-plan. */
 suspend fun <T> StateFlow<T>.await(predicate: (T) -> Boolean): T = withTimeout(5_000) { first(predicate) }
+
+/**
+ * Ces tests ont besoin d'apps non système installées, que l'accueil liste (un émulateur de base, surtout ancien, n'en a pas
+ * toujours : seules des apps système, masquées par défaut). Sans elles, ils sont ignorés plutôt qu'en échec.
+ */
+fun assumeUserApps(context: Context, count: Int) {
+    val found = context.container.installedApps.list(hideSystemApps = true).size
+    assumeTrue("il faut au moins $count app(s) non système installée(s) (trouvées : $found)", found >= count)
+}

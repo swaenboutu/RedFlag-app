@@ -11,6 +11,13 @@ import fr.conscience.numerique.R
 import fr.conscience.numerique.container
 import fr.conscience.numerique.data.ProblemCatalog
 import fr.conscience.numerique.data.ProblemRef
+import fr.conscience.numerique.ui.apps.AppDetailActivity
+import fr.conscience.numerique.ui.apps.MainActivity
+import fr.conscience.numerique.ui.onboarding.OnboardingAppDetailActivity
+import fr.conscience.numerique.ui.onboarding.OnboardingAppListActivity
+import fr.conscience.numerique.ui.onboarding.OnboardingAppsActivity
+import fr.conscience.numerique.ui.onboarding.OnboardingPermissionActivity
+import fr.conscience.numerique.ui.onboarding.OnboardingProblemsActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -111,6 +118,7 @@ class OnboardingSkipTest {
 
     @Test
     fun theListOfAllAppsLeadsToThePermissionsWhateverTheChoice() {
+        assumeUserApps(context, 1)
         ActivityScenario.launch(OnboardingAppListActivity::class.java).use { scenario ->
             scenario.await {
                 var count = 0
@@ -127,6 +135,7 @@ class OnboardingSkipTest {
 
     @Test
     fun nextOnTheListOfAllAppsIsEnabledOnceAnAppIsFlagged() = runBlocking {
+        assumeUserApps(context, 1)
         val pkg = context.container.installedApps.list(hideSystemApps = true)
             .first { repository.find(it.packageName) == null }.packageName
         flaggedPackage = pkg
@@ -147,6 +156,7 @@ class OnboardingSkipTest {
 
     @Test
     fun anAppOfTheListOpensTheOnboardingVersionOfItsDetail() {
+        assumeUserApps(context, 1)
         val onboarding = instrumentation.addMonitor(OnboardingAppDetailActivity::class.java.name, null, false)
         val regular = instrumentation.addMonitor(AppDetailActivity::class.java.name, null, false)
         try {
@@ -174,6 +184,7 @@ class OnboardingSkipTest {
 
     @Test
     fun theOnboardingAppDetailHasNoBottomBarAndNextNeedsAProblem() = runBlocking {
+        assumeUserApps(context, 1)
         val app = context.container.installedApps.list(hideSystemApps = true).first { repository.find(it.packageName) == null }
         flaggedPackage = app.packageName
         val intent = OnboardingAppDetailActivity.intent(context, app.packageName, app.label)

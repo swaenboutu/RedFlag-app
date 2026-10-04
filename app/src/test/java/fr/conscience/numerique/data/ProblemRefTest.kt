@@ -1,5 +1,6 @@
 package fr.conscience.numerique.data
 
+import fr.conscience.numerique.ui.problems.toRef
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals

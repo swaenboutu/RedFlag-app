@@ -9,9 +9,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import fr.conscience.numerique.R
 import fr.conscience.numerique.data.loadFaq
+import fr.conscience.numerique.ui.settings.FaqActivity
+import fr.conscience.numerique.ui.settings.SettingsActivity
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
+import org.junit.Assume.assumeTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -104,6 +107,8 @@ class FaqScreenTest {
 
     @Test
     fun theFaqFollowsTheLanguageChosenForTheApp() {
+        // La commande `cmd locale` (langue par app, depuis le shell) n'existe que depuis Android 13.
+        assumeTrue(android.os.Build.VERSION.SDK_INT >= 33)
         // Même process, langue de l'app changée : la FAQ doit se lire dans cette langue (et pas celle de l'application au démarrage).
         setAppLanguage("fr-FR")
         try {

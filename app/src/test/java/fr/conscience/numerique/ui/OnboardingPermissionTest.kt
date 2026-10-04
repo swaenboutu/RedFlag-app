@@ -1,5 +1,6 @@
 package fr.conscience.numerique.ui
 
+import fr.conscience.numerique.ui.onboarding.shouldFinishOnboardingOnReturn
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test

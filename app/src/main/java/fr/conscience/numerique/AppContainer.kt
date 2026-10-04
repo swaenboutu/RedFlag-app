@@ -3,6 +3,7 @@ package fr.conscience.numerique
 import android.content.Context
 import androidx.room.Room
 import fr.conscience.numerique.data.AppDatabase
+import fr.conscience.numerique.data.AppIconCache
 import fr.conscience.numerique.data.AppRepository
 import fr.conscience.numerique.data.InstalledApp
 import fr.conscience.numerique.data.InstalledAppsProvider
@@ -30,7 +31,8 @@ import kotlinx.coroutines.withContext
 class AppContainer(context: Context, database: AppDatabase = openDatabase(context)) {
     val settings = SettingsStore(context)
     val repository = AppRepository(database)
-    val installedApps = InstalledAppsProvider(context)
+    val icons = AppIconCache(context)
+    val installedApps = InstalledAppsProvider(context, icons)
     val frictionGate = FrictionGate()
 
     /** Pour ce qui doit se terminer même si l'écran qui l'a lancé disparaît (une écriture en base, par exemple). */

@@ -2,14 +2,16 @@ package fr.conscience.numerique.ui
 
 import android.content.Context
 import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import android.widget.TextView
 import fr.conscience.numerique.R
 import fr.conscience.numerique.container
 import fr.conscience.numerique.data.ProblemRef
+import fr.conscience.numerique.ui.apps.MainActivity
+import fr.conscience.numerique.ui.stats.StatsActivity
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -36,6 +38,7 @@ class HomeAndStatsScreensTest {
         onboardingWasDone = settings.onboardingDone
         settings.onboardingDone = true // sinon l'accueil renvoie vers le parcours de première utilisation
         // Une vraie app installée (l'accueil ne liste que celles-là) que l'utilisateur n'avait pas déjà signalée.
+        assumeUserApps(context, 1)
         pkg = context.container.installedApps.list(hideSystemApps = true).first { repository.find(it.packageName) == null }.packageName
         repository.linkProblem(pkg, "Application signalée", fomo)
         repository.recordChoice(pkg, proceeded = false)
@@ -43,7 +46,7 @@ class HomeAndStatsScreensTest {
 
     @After
     fun tearDown() = runBlocking {
-        repository.unlinkProblem(pkg, fomo)
+        if (::pkg.isInitialized) repository.unlinkProblem(pkg, fomo)
         settings.onboardingDone = onboardingWasDone
     }
 

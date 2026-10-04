@@ -2,8 +2,8 @@ package fr.conscience.numerique.ui
 
 import android.app.Activity
 import android.app.Instrumentation
-import android.content.Intent
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.IntentFilter
 import android.provider.Settings
 import android.view.View
@@ -16,6 +16,9 @@ import androidx.test.platform.app.InstrumentationRegistry
 import fr.conscience.numerique.R
 import fr.conscience.numerique.container
 import fr.conscience.numerique.service.isFrictionServiceEnabled
+import fr.conscience.numerique.ui.apps.MainActivity
+import fr.conscience.numerique.ui.common.AccessibilityDisclosureDialog
+import fr.conscience.numerique.ui.settings.SettingsActivity
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull

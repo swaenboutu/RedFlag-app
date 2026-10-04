@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <fr.conscience.numerique.ui.HeadingTextView
+            <fr.conscience.numerique.ui.common.HeadingTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -78,7 +78,7 @@
             </LinearLayout>
 
             <!-- Interruption -->
-            <fr.conscience.numerique.ui.HeadingTextView
+            <fr.conscience.numerique.ui.common.HeadingTextView
                 style="@style/Widget.Conscience.SettingsSection"
                 android:text="@string/settings_section_interruption" />
 
@@ -92,7 +92,7 @@
             </LinearLayout>
 
             <!-- Applications -->
-            <fr.conscience.numerique.ui.HeadingTextView
+            <fr.conscience.numerique.ui.common.HeadingTextView
                 style="@style/Widget.Conscience.SettingsSection"
                 android:text="@string/settings_section_apps" />
 
@@ -112,7 +112,7 @@
             </LinearLayout>
 
             <!-- Aide -->
-            <fr.conscience.numerique.ui.HeadingTextView
+            <fr.conscience.numerique.ui.common.HeadingTextView
                 style="@style/Widget.Conscience.SettingsSection"
                 android:text="@string/settings_section_help" />
 
@@ -139,7 +139,7 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <fr.conscience.numerique.ui.HeadingTextView
+                <fr.conscience.numerique.ui.common.HeadingTextView
                     style="@style/Widget.Conscience.SettingsSection"
                     android:text="@string/settings_section_debug" />
 

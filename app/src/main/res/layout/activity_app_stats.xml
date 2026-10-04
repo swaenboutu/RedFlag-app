@@ -180,7 +180,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="220dp">
 
-                    <fr.conscience.numerique.ui.StackedBarChartView
+                    <fr.conscience.numerique.ui.stats.StackedBarChartView
                         android:id="@+id/chart"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />

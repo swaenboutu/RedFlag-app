@@ -50,7 +50,7 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
-        <fr.conscience.numerique.ui.HeadingTextView
+        <fr.conscience.numerique.ui.common.HeadingTextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
             android:background="@color/interstitial_divider"
             android:importantForAccessibility="no" />
 
-        <fr.conscience.numerique.ui.HeadingTextView
+        <fr.conscience.numerique.ui.common.HeadingTextView
             android:id="@+id/question"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

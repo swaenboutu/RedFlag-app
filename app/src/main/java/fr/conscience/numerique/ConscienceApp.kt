@@ -2,6 +2,8 @@ package fr.conscience.numerique
 
 import android.app.Application
 import android.content.Context
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class ConscienceApp : Application() {
     lateinit var container: AppContainer
@@ -10,6 +12,10 @@ class ConscienceApp : Application() {
     override fun onCreate() {
         super.onCreate()
         container = AppContainer(this)
+        // Les icônes des apps signalées sont prêtes avant qu'un écran ou une interruption en ait besoin.
+        container.applicationScope.launch {
+            container.icons.preload(container.repository.monitoredApps.first().map { it.app.packageName })
+        }
     }
 }
 

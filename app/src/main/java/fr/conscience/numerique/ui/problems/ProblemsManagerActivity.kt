@@ -1,0 +1,63 @@
+package fr.conscience.numerique.ui.problems
+
+import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import fr.conscience.numerique.R
+import fr.conscience.numerique.databinding.ActivityProblemsManagerBinding
+import fr.conscience.numerique.ui.common.BottomNav
+import fr.conscience.numerique.ui.common.NewProblemDialog
+import fr.conscience.numerique.ui.common.screenViewModel
+import kotlinx.coroutines.launch
+
+/** « Vos problématiques » : thèmes repliables, chaque problématique ouvre son détail. */
+class ProblemsManagerActivity : AppCompatActivity() {
+    private val viewModel: ProblemsManagerViewModel by screenViewModel { c, ctx, _ -> ProblemsManagerViewModel(c, ctx) }
+    private lateinit var binding: ActivityProblemsManagerBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityProblemsManagerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        val adapter = ProblemsManagerAdapter(
+            onThemeClick = { viewModel.toggle(it.id) },
+            onProblemClick = { row -> row.toRef()?.let { startActivity(ProblemDetailActivity.intent(this, it)) } },
+        )
+        binding.list.adapter = adapter
+        binding.newProblem.setOnClickListener { addProblem() }
+        BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_problems)
+
+        // Le dialogue de saisie survit à la rotation : on écoute son résultat dès la création de l'écran.
+        NewProblemDialog.listen(this) { label, category ->
+            viewModel.add(label, category) { added ->
+                if (added) {
+                    viewModel.expandTheme(category)
+                } else {
+                    Toast.makeText(this, R.string.error_already_exists, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.rows.collect { rows ->
+                    // Si la liste est en haut, elle y reste : sans cela, une carte ajoutée en tête (« Vos favoris »)
+                    // apparaîtrait au-dessus de la partie visible.
+                    val atTop = !binding.list.canScrollVertically(-1)
+                    adapter.submitList(rows) { if (atTop) binding.list.scrollToPosition(0) }
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        BottomNav.select(binding.bottomBar.bottomNav, R.id.nav_problems)
+    }
+
+    private fun addProblem() = NewProblemDialog.show(this)
+}

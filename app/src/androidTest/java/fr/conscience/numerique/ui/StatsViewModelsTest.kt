@@ -1,12 +1,15 @@
 package fr.conscience.numerique.ui
 
 import fr.conscience.numerique.data.ProblemRef
+import fr.conscience.numerique.data.StatsRange
+import fr.conscience.numerique.ui.stats.AppStatsArgs
+import fr.conscience.numerique.ui.stats.AppStatsViewModel
+import fr.conscience.numerique.ui.stats.StatsViewModel
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import fr.conscience.numerique.data.StatsRange
 
 /** Les ViewModels des statistiques (liste des apps interceptées, détail d'une app), sur une base en mémoire. */
 class StatsViewModelsTest {

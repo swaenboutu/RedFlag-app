@@ -19,6 +19,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun monitoredAppDao(): MonitoredAppDao
+    abstract fun customProblemDao(): CustomProblemDao
+    abstract fun favoriteDao(): FavoriteDao
+    abstract fun catalogOverrideDao(): CatalogOverrideDao
     abstract fun choiceEventDao(): ChoiceEventDao
 }
 

@@ -5,6 +5,8 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import fr.conscience.numerique.R
+import fr.conscience.numerique.ui.common.EditProblemDialog
+import fr.conscience.numerique.ui.settings.FaqActivity
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue

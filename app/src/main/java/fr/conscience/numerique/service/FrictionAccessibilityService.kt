@@ -9,7 +9,7 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.inputmethod.InputMethodManager
 import fr.conscience.numerique.container
 import fr.conscience.numerique.data.MonitoredAppWithProblems
-import fr.conscience.numerique.ui.InterstitialActivity
+import fr.conscience.numerique.ui.interruption.InterstitialActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

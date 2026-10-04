@@ -32,7 +32,7 @@
         android:theme="@style/Theme.Conscience">
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.apps.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,66 +41,66 @@
         </activity>
 
         <activity
-            android:name=".ui.OnboardingActivity"
+            android:name=".ui.onboarding.OnboardingActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.OnboardingProblemsActivity"
+            android:name=".ui.onboarding.OnboardingProblemsActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.OnboardingAppsActivity"
+            android:name=".ui.onboarding.OnboardingAppsActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".ui.OnboardingAppListActivity"
+            android:name=".ui.onboarding.OnboardingAppListActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.OnboardingAppDetailActivity"
+            android:name=".ui.onboarding.OnboardingAppDetailActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.OnboardingPermissionActivity"
+            android:name=".ui.onboarding.OnboardingPermissionActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.ProblemDetailActivity"
+            android:name=".ui.problems.ProblemDetailActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.AppPickerActivity"
+            android:name=".ui.apps.AppPickerActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".ui.ProblemsManagerActivity"
+            android:name=".ui.problems.ProblemsManagerActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".ui.StatsActivity"
+            android:name=".ui.stats.StatsActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.AppStatsActivity"
+            android:name=".ui.stats.AppStatsActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.SettingsActivity"
+            android:name=".ui.settings.SettingsActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.FaqActivity"
+            android:name=".ui.settings.FaqActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.AppDetailActivity"
+            android:name=".ui.apps.AppDetailActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ui.InterstitialActivity"
+            android:name=".ui.interruption.InterstitialActivity"
             android:exported="false"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"

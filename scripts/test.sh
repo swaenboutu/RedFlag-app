@@ -64,6 +64,7 @@ pick_device() {
 }
 
 APP_ID=fr.conscience.numerique
+FIXTURE_ID=fr.conscience.numerique.fixture
 
 # Gradle désinstalle l'app à la fin des tests sur appareil : on la remet (en debug), et on réactive son service d'accessibilité
 # s'il l'était (les réglages « secure » ne sont modifiables que sur un émulateur ou un appareil de développement ; sinon, sans effet).
@@ -84,11 +85,16 @@ run_device() { # $@ = noms complets de classes (vide = tout)
         args+=("-Pandroid.testInstrumentationRunnerArguments.class=$*")
     fi
     echo ">> tests sur appareil ${*:-(tous)}"
+    # Des apps ordinaires, que les écrans listent (un émulateur de base n'a que des apps système, masquées) ; retirées à la fin.
+    "${GRADLE[@]}" :fixtures:installADebug :fixtures:installBDebug
     local services status=0
     services=$(adb shell settings get secure enabled_accessibility_services 2>/dev/null | tr -d '\r' || true)
     # Données vidées plutôt qu'app désinstallée : le même point de départ (rien ne doit rester de l'utilisation précédente).
     adb shell pm clear "$APP_ID" >/dev/null 2>&1 || true
+    # Avant Android 9, le lanceur de tests refuse de réinstaller une app déjà là (INSTALL_FAILED_ALREADY_EXISTS) : on la retire.
+    if [ "$(adb shell getprop ro.build.version.sdk | tr -d '')" -lt 28 ]; then adb uninstall "$APP_ID" >/dev/null 2>&1 || true; fi
     "${GRADLE[@]}" :app:connectedDebugAndroidTest "${args[@]}" || status=$?
+    for fixture in a b; do adb uninstall "$FIXTURE_ID.$fixture" >/dev/null 2>&1 || true; done
     restore_app "$services"
     return $status
 }
@@ -106,44 +112,44 @@ device_classes_for_changes() {
         case "$f" in
             "") ;;
             # Build, manifeste, dépendances : tout.
-            *build.gradle.kts|*AndroidManifest.xml|gradle/*|*/libs.versions.toml) echo ALL; return ;;
+            *build.gradle.kts|*AndroidManifest.xml|gradle/*|*/libs.versions.toml|fixtures/*) echo ALL; return ;;
             # Un test modifié : lui seul. Les tests unitaires sont de toute façon rejoués.
             */androidTest/*Test.kt) out+=("$(locate "$(basename "$f" .kt)" | cut -d' ' -f2)") ;;
             */androidTest/*ViewModelEnv.kt) add ui.StatsViewModelsTest; add ui.AppListViewModelsTest; add ui.OnboardingViewModelsTest; add ui.ProblemViewModelsTest ;;
             */src/test/*|*.md|docs/*|scripts/*|.gitignore|TODO.md|LICENSE|licenses/*) ;;
             # ViewModels : leur test (sans écran). `;;&` : on continue, un ViewModel peut aussi concerner un écran plus bas.
-            */ui/StatsViewModel.kt|*/ui/AppStatsViewModel.kt) add ui.StatsViewModelsTest ;;&
-            */ui/MainViewModel.kt|*/ui/AppPickerViewModel.kt) add ui.AppListViewModelsTest ;;&
-            */ui/Onboarding*ViewModel.kt) add ui.OnboardingViewModelsTest ;;&
-            */ui/ProblemsManagerViewModel.kt|*/ui/ProblemDetailViewModel.kt|*/ui/AppDetailViewModel.kt) add ui.ProblemViewModelsTest ;;&
+            */ui/*/StatsViewModel.kt|*/ui/*/AppStatsViewModel.kt) add ui.StatsViewModelsTest ;;&
+            */ui/*/MainViewModel.kt|*/ui/*/AppPickerViewModel.kt) add ui.AppListViewModelsTest ;;&
+            */ui/*/Onboarding*ViewModel.kt) add ui.OnboardingViewModelsTest ;;&
+            */ui/*/ProblemsManagerViewModel.kt|*/ui/*/ProblemDetailViewModel.kt|*/ui/*/AppDetailViewModel.kt) add ui.ProblemViewModelsTest ;;&
             # Ce qui sert à construire tous les ViewModels, ou la base qu'ils lisent.
-            */ui/ViewModelFactory.kt|*/AppContainer.kt|*/data/AppRepository.kt|*/data/Daos.kt|*/data/Entities.kt)
+            */ui/*/ViewModelFactory.kt|*/AppContainer.kt|*/data/AppRepository.kt|*/data/Daos.kt|*/data/Entities.kt)
                 add ui.StatsViewModelsTest; add ui.AppListViewModelsTest; add ui.OnboardingViewModelsTest; add ui.ProblemViewModelsTest; add ui.HomeAndStatsScreensTest ;;&
-            */ui/MainActivity.kt|*/ui/OnboardingPermissionActivity.kt) add ui.ForcedOnboardingTest ;;&
+            */ui/*/MainActivity.kt|*/ui/*/OnboardingPermissionActivity.kt) add ui.ForcedOnboardingTest ;;&
             # Accueil et statistiques, à l'écran.
-            */ui/MainActivity.kt|*/ui/StatsActivity.kt|*/ui/AppListAdapter.kt|*/ui/StatsAdapter.kt|*/ui/MainViewModel.kt|*/ui/StatsViewModel.kt|*/layout/activity_main.xml|*/layout/activity_stats.xml|*/layout/item_app.xml|*/layout/item_stats_app.xml)
+            */ui/*/MainActivity.kt|*/ui/*/StatsActivity.kt|*/ui/*/AppListAdapter.kt|*/ui/*/StatsAdapter.kt|*/ui/*/MainViewModel.kt|*/ui/*/StatsViewModel.kt|*/layout/activity_main.xml|*/layout/activity_stats.xml|*/layout/item_app.xml|*/layout/item_stats_app.xml)
                 add ui.HomeAndStatsScreensTest ;;&
             app/schemas/*|*/data/AppDatabase.kt|*/data/Entities.kt) add data.MigrationTest; add data.AppRepositoryTest ;;
             */data/AppRepository.kt|*/data/Daos.kt) add data.AppRepositoryTest ;;
             */data/SettingsStore.kt) add data.SettingsStoreTest; add ui.ForcedOnboardingTest; add ui.DebugModeScreenTest ;;&
             */data/InstalledAppsProvider.kt) add data.InstalledAppsProviderTest ;;
-            */AppContainer.kt|*/ui/InterstitialActivity.kt|*/service/Friction*.kt|*/layout/activity_interstitial.xml|*/layout/item_problem_pill.xml|*/ui/ProblemPillAdapter.kt)
+            */AppContainer.kt|*/ui/*/InterstitialActivity.kt|*/service/Friction*.kt|*/layout/activity_interstitial.xml|*/layout/item_problem_pill.xml|*/ui/*/ProblemPillAdapter.kt)
                 add ui.InterstitialActivityTest ;;
-            */ui/BottomNav.kt|*/layout/view_bottom_nav.xml|*/ui/AppStats*.kt|*/ui/AppDetail*.kt|*/ui/ProblemDetail*.kt|*/layout/activity_app_stats.xml|*/layout/activity_app_detail.xml|*/layout/activity_problem_detail.xml)
+            */ui/*/BottomNav.kt|*/layout/view_bottom_nav.xml|*/ui/*/AppStats*.kt|*/ui/*/AppDetail*.kt|*/ui/*/ProblemDetail*.kt|*/layout/activity_app_stats.xml|*/layout/activity_app_detail.xml|*/layout/activity_problem_detail.xml)
                 add ui.DetailScreensTest ;;
             # Parcours d'accueil : étapes, boutons « Passer », et ce que leurs ViewModels calculent.
-            */ui/Onboarding*.kt|*/layout/activity_onboarding*.xml|*/layout/item_onboarding*.xml) add ui.OnboardingSkipTest ;;&
+            */ui/*/Onboarding*.kt|*/layout/activity_onboarding*.xml|*/layout/item_onboarding*.xml) add ui.OnboardingSkipTest ;;&
             # Fenêtres de saisie des problématiques.
-            */ui/Dialogs.kt|*/layout/dialog_new_problem.xml) add ui.EditProblemDialogTest ;;
+            */ui/*/Dialogs.kt|*/layout/dialog_new_problem.xml) add ui.EditProblemDialogTest ;;
             # Mode debug (sept appuis sur la version) : le réglage lui-même et la section des Réglages.
             */data/DebugUnlock.kt) add ui.DebugModeScreenTest ;;&
             # Avertissement avant les réglages d'accessibilité (exigé par Google Play) : bandeau, Réglages, fenêtre.
-            */ui/Dialogs.kt|*/ui/OnboardingPermissionActivity.kt|*/ui/MainActivity.kt|*/service/*Accessibility*.kt|*/res/xml/accessibility_service_config.xml) add ui.AccessibilityDisclosureTest ;;&
+            */ui/*/Dialogs.kt|*/ui/*/OnboardingPermissionActivity.kt|*/ui/*/MainActivity.kt|*/service/*Accessibility*.kt|*/res/xml/accessibility_service_config.xml) add ui.AccessibilityDisclosureTest ;;&
             # FAQ (et les Réglages qui y mènent, la carte de thème qu'elle partage avec d'autres écrans).
-            */ui/Faq*.kt|*/data/Faq.kt|*/layout/activity_faq.xml|*/layout/item_faq_*.xml|*/ui/SettingsActivity.kt|*/layout/activity_settings.xml|*/ui/ThemeCard.kt|*/ui/CardStyle.kt|*/layout/item_manager_theme.xml)
+            */ui/*/Faq*.kt|*/data/Faq.kt|*/layout/activity_faq.xml|*/layout/item_faq_*.xml|*/ui/*/SettingsActivity.kt|*/layout/activity_settings.xml|*/ui/*/ThemeCard.kt|*/ui/*/CardStyle.kt|*/layout/item_manager_theme.xml)
                 add ui.FaqScreenTest ;;
             # Couverts par les tests unitaires, déjà joués.
-            */data/Stats.kt|*/data/ProblemCatalog.kt|*/util/*|*/ui/ProblemLabels.kt|*/res/values*/strings.xml|*/res/raw*/faq.xml) ;;
+            */data/Stats.kt|*/data/ProblemCatalog.kt|*/util/*|*/ui/*/ProblemLabels.kt|*/res/values*/strings.xml|*/res/raw*/faq.xml) ;;
             *) [ "$matched" -eq 1 ] || uncovered+=("$f") ;;
         esac
     done <<< "$files"
