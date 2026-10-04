@@ -28,8 +28,7 @@
     <string name="cancel">Cancel</string>
     <string name="add">Add</string>
 
-    <!-- Lorem ipsum provisoire : texte d'accueil à rédiger. -->
-    <string name="onboarding_body">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</string>
+    <string name="onboarding_body">Before you open an app you have flagged, a short pause asks whether you really want to. Choose the issues that matter to you and the apps that raise them: everything stays on your phone.</string>
     <string name="onboarding_start">Get started</string>
     <string name="onboarding_problems_title">What matters to you?</string>
     <string name="onboarding_problems_body">Select the issues that matter to you. They will be added to your favorites, so you can find them easily later.</string>
@@ -40,7 +39,8 @@
     <string name="onboarding_apps_body">Select the apps this issue applies to. You can change this at any time.</string>
     <string name="onboarding_permission_title">You\'re almost there</string>
     <string name="onboarding_permission_body">To warn you before you open an app you have flagged, %1$s needs Android\'s accessibility service. It only detects the name of the app coming to the foreground: no screen content is read and no data leaves your device.\n\nIn the settings that open, find “%1$s” and turn it on.</string>
-    <string name="onboarding_permission_action">Open accessibility settings</string>
+    <string name="accessibility_consent_action">Agree and continue</string>
+    <string name="accessibility_disclosure_title">Accessibility service</string>
     <string name="onboarding_permission_enabled">All set: the service is on.</string>
     <string name="onboarding_finish">Finish</string>
     <string name="onboarding_skip_remaining">Skip the remaining issues</string>

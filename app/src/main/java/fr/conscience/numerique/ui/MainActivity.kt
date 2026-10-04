@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_apps)
         binding.enableService.setOnClickListener {
-            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            AccessibilityDisclosureDialog.show(this)
         }
         binding.search.doAfterTextChanged { viewModel.setQuery(it?.toString().orEmpty()) }
         binding.filterAll.setOnClickListener { viewModel.setFilter(AppFilter.ALL) }

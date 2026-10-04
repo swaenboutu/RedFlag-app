@@ -131,6 +131,8 @@ device_classes_for_changes() {
             */ui/Dialogs.kt|*/layout/dialog_new_problem.xml) add ui.EditProblemDialogTest ;;
             # Mode debug (sept appuis sur la version) : le réglage lui-même et la section des Réglages.
             */data/DebugUnlock.kt) add ui.DebugModeScreenTest ;;&
+            # Avertissement avant les réglages d'accessibilité (exigé par Google Play) : bandeau, Réglages, fenêtre.
+            */ui/Dialogs.kt|*/ui/OnboardingPermissionActivity.kt|*/ui/MainActivity.kt|*/service/*Accessibility*.kt|*/res/xml/accessibility_service_config.xml) add ui.AccessibilityDisclosureTest ;;&
             # FAQ (et les Réglages qui y mènent, la carte de thème qu'elle partage avec d'autres écrans).
             */ui/Faq*.kt|*/data/Faq.kt|*/layout/activity_faq.xml|*/layout/item_faq_*.xml|*/ui/SettingsActivity.kt|*/layout/activity_settings.xml|*/ui/ThemeCard.kt|*/ui/CardStyle.kt|*/layout/item_manager_theme.xml)
                 add ui.FaqScreenTest ;;

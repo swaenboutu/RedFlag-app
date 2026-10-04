@@ -30,8 +30,7 @@
     <string name="cancel">Annuler</string>
     <string name="add">Ajouter</string>
 
-    <!-- Lorem ipsum provisoire : texte d'accueil à rédiger. -->
-    <string name="onboarding_body">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</string>
+    <string name="onboarding_body">Avant d’ouvrir une application que vous avez signalée, une courte pause vous demande si vous le voulez vraiment. Choisissez les problématiques qui comptent pour vous et les applications concernées : tout reste sur votre téléphone.</string>
     <string name="onboarding_start">Commencer</string>
     <string name="onboarding_problems_title">Ce qui compte pour vous</string>
     <string name="onboarding_problems_body">Sélectionnez les problématiques qui vous importent. Elles seront ajoutées à vos favoris, pour les retrouver facilement ensuite.</string>
@@ -42,7 +41,8 @@
     <string name="onboarding_apps_body">Sélectionnez les applications concernées par cette problématique. Vous pourrez modifier ce choix à tout moment.</string>
     <string name="onboarding_permission_title">Vous y êtes presque</string>
     <string name="onboarding_permission_body">Pour vous prévenir avant l\'ouverture d\'une application signalée, %1$s a besoin du service d\'accessibilité d\'Android. Il détecte uniquement le nom de l\'application qui passe au premier plan : aucun contenu de l\'écran n\'est lu et aucune donnée ne quitte votre téléphone.\n\nDans les réglages qui s\'ouvrent, cherchez « %1$s » et activez-le.</string>
-    <string name="onboarding_permission_action">Ouvrir les réglages d\'accessibilité</string>
+    <string name="accessibility_consent_action">Accepter et continuer</string>
+    <string name="accessibility_disclosure_title">Service d\'accessibilité</string>
     <string name="onboarding_permission_enabled">Tout est prêt : le service est activé.</string>
     <string name="onboarding_finish">Terminer</string>
     <string name="onboarding_skip_remaining">Passer les problématiques restantes</string>

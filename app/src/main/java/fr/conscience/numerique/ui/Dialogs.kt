@@ -2,7 +2,9 @@ package fr.conscience.numerique.ui
 
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
@@ -173,6 +175,35 @@ class EditProblemDialog : DialogFragment() {
         fun listen(activity: FragmentActivity, onResult: (Result) -> Unit) {
             activity.supportFragmentManager.setFragmentResultListener(REQUEST_KEY, activity) { _, result ->
                 onResult(if (result.getBoolean(RESET)) Result.Reset else Result.Rename(checkNotNull(result.getString(LABEL))))
+            }
+        }
+    }
+}
+
+/**
+ * Avertissement avant d'ouvrir les réglages d'accessibilité, depuis le bandeau de l'écran principal et depuis les Réglages : ce que le
+ * service lit, à quoi il sert, qu'aucune donnée ne quitte l'appareil, et un consentement explicite. Google Play l'exige pour toute
+ * application qui n'est pas un outil d'accessibilité ; l'écran des autorisations de l'accueil joue le même rôle avec le même texte.
+ */
+class AccessibilityDisclosureDialog : DialogFragment() {
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val context = requireContext()
+        return MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.accessibility_disclosure_title)
+            .setMessage(getString(R.string.onboarding_permission_body, getString(R.string.app_name)))
+            .setPositiveButton(R.string.accessibility_consent_action) { _, _ ->
+                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .create()
+    }
+
+    companion object {
+        private const val TAG = "accessibility_disclosure_dialog"
+
+        fun show(activity: FragmentActivity) {
+            if (activity.supportFragmentManager.findFragmentByTag(TAG) == null) {
+                AccessibilityDisclosureDialog().show(activity.supportFragmentManager, TAG)
             }
         }
     }

@@ -51,7 +51,7 @@ class SettingsActivity : AppCompatActivity() {
         setupRow(binding.rowPause, R.string.settings_pause_title, R.string.settings_pause_subtitle) { showPauseDialog() }
         setupRow(binding.rowList, R.string.settings_list_title) { showListDialog() }
         setupRow(binding.rowPermissions, R.string.settings_permissions_title) {
-            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            AccessibilityDisclosureDialog.show(this)
         }
         setupRow(binding.rowHelp, R.string.settings_help_title) { startActivity(Intent(this, FaqActivity::class.java)) }
         // Sept appuis sur le numéro de version activent le mode debug, comme pour le mode développeur d'Android.

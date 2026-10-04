@@ -47,7 +47,7 @@ class OnboardingPermissionActivity : AppCompatActivity() {
             binding.btnMain.setText(R.string.onboarding_finish)
             binding.btnMain.setOnClickListener { finishOnboarding() }
         } else {
-            binding.btnMain.setText(R.string.onboarding_permission_action)
+            binding.btnMain.setText(R.string.accessibility_consent_action)
             binding.btnMain.setOnClickListener {
                 openedSettings = true
                 startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
