@@ -31,8 +31,8 @@
 
 ## Déjà ouvert (rappel)
 
-- Le nom « Conscience Numérique » est provisoire : `app_name` dans `app/src/main/res/values/brand.xml`. L'identifiant
-  de l'app (`fr.conscience.numerique`) ne pourra plus changer après publication : le choisir avant.
+- Le nom est « Red Flag » (`app_name` et `app_subtitle` dans `app/src/main/res/values/brand.xml`). L'identifiant de l'app
+  (`fr.conscience.numerique`) date d'avant ce choix et ne pourra plus changer après publication : le choisir avant.
 - Texte « Comment ça marche » : Lorem Ipsum provisoire
 
 ## Vérifier la parité des langues

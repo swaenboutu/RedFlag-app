@@ -1,13 +1,9 @@
 package fr.conscience.numerique.ui
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import fr.conscience.numerique.data.FaqTheme
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 /**
@@ -47,19 +43,20 @@ fun faqRows(themes: List<FaqTheme>, openThemes: Set<String>, openQuestions: Set<
     }
 }
 
-/** « Comment ça marche » : la FAQ, avec ses thèmes et ses questions fermés au départ. */
-class FaqViewModel(private val themes: List<FaqTheme>) : ViewModel() {
-    private val openThemes = MutableStateFlow(emptySet<String>())
-    private val openQuestions = MutableStateFlow(emptySet<String>())
+/** Ce qui est ouvert : des thèmes et des questions (clés de [faqKey]). */
+data class FaqOpen(val themes: Set<String> = emptySet(), val questions: Set<String> = emptySet())
 
-    val rows: StateFlow<List<FaqRow>> = combine(openThemes, openQuestions) { themesOpen, questionsOpen ->
-        faqRows(themes, themesOpen, questionsOpen)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), faqRows(themes, emptySet(), emptySet()))
+/**
+ * « Comment ça marche » : retient ce qui est ouvert. La FAQ elle-même est lue par l'écran, avec ses propres ressources : le ViewModel
+ * survit à un changement de langue, mais pas l'écran, qui relit alors la FAQ dans la nouvelle langue.
+ */
+class FaqViewModel : ViewModel() {
+    private val _open = MutableStateFlow(FaqOpen())
+    val open: StateFlow<FaqOpen> = _open
 
-    fun toggleTheme(id: String) = openThemes.update { if (id in it) it - id else it + id }
+    fun toggleTheme(id: String) = _open.update { it.copy(themes = it.themes.toggled(id)) }
 
-    fun toggleQuestion(themeId: String, entryId: String) {
-        val key = faqKey(themeId, entryId)
-        openQuestions.update { if (key in it) it - key else it + key }
-    }
+    fun toggleQuestion(themeId: String, entryId: String) = _open.update { it.copy(questions = it.questions.toggled(faqKey(themeId, entryId))) }
+
+    private fun Set<String>.toggled(key: String) = if (key in this) this - key else this + key
 }

@@ -5,5 +5,8 @@
         Utilisé partout via @string/app_name (icône, écrans, service d'accessibilité) ou getString(R.string.app_name)
         dans les textes qui le citent. Identique dans toutes les langues, donc non traduisible.
     -->
-    <string name="app_name" translatable="false">Conscience Numérique</string>
+    <string name="app_name" translatable="false">Red Flag</string>
+
+    <!-- Sous-titre affiché sous le nom à l'accueil ; titre complet de la fiche du store : « Red Flag – Ethical app check ». -->
+    <string name="app_subtitle" translatable="false">Ethical app check</string>
 </resources>

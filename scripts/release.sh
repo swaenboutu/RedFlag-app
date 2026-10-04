@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Construit l'APK signé de la version de production, prêt à être joint à une « release » GitHub.
 #
-#   scripts/release.sh             construit build/release/conscience-numerique-v<version>.apk (+ somme de contrôle SHA-256)
+#   scripts/release.sh             construit build/release/red-flag-v<version>.apk (+ somme de contrôle SHA-256)
 #   scripts/release.sh --publish   construit, puis crée la release GitHub v<version> avec l'APK (demande confirmation ; nécessite
 #                                  la CLI GitHub : `winget install GitHub.cli`, puis `gh auth login`)
 #
@@ -18,7 +18,7 @@ version=$(sed -n 's/^ *versionName = "\(.*\)"/\1/p' app/build.gradle.kts | head 
 [ -n "$version" ] || { echo "versionName introuvable dans app/build.gradle.kts" >&2; exit 2; }
 tag="v$version"
 out="build/release"
-apk="$out/conscience-numerique-$tag.apk"
+apk="$out/red-flag-$tag.apk"
 
 echo ">> version $version"
 ./gradlew --console=plain -q :app:assembleRelease
@@ -43,5 +43,5 @@ git status -sb | head -1 | grep -q 'ahead' && { echo "Des commits ne sont pas po
 printf 'Publier la release %s (publique) avec %s ? [oui/non] ' "$tag" "$(basename "$apk")"
 read -r answer
 [ "$answer" = "oui" ] || { echo "Annulé."; exit 0; }
-gh release create "$tag" "$apk" "$apk.sha256" --title "Conscience Numérique $version" --generate-notes --prerelease
+gh release create "$tag" "$apk" "$apk.sha256" --title "Red Flag $version" --generate-notes --prerelease
 echo ">> release $tag publiée (marquée « pré-version »)."

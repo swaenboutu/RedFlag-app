@@ -92,6 +92,36 @@ class FaqScreenTest {
         }
     }
 
+
+    /** Change la langue de l'app comme le fait Android (réglages), depuis un test : `adb shell cmd locale set-app-locales`. */
+    private fun setAppLanguage(tag: String?) {
+        val args = if (tag == null) "" else " --locales $tag"
+        val output = instrumentation.uiAutomation
+            .executeShellCommand("cmd locale set-app-locales ${instrumentation.targetContext.packageName}$args")
+        android.os.ParcelFileDescriptor.AutoCloseInputStream(output).use { it.readBytes() }
+        Thread.sleep(1_000) // le système applique la langue de façon asynchrone
+    }
+
+    @Test
+    fun theFaqFollowsTheLanguageChosenForTheApp() {
+        // Même process, langue de l'app changée : la FAQ doit se lire dans cette langue (et pas celle de l'application au démarrage).
+        setAppLanguage("fr-FR")
+        try {
+            ActivityScenario.launch(FaqActivity::class.java).use { scenario ->
+                scenario.awaitCount(faq.size)
+                var title = ""
+                scenario.onActivity {
+                    val holder = it.findViewById<RecyclerView>(R.id.list).findViewHolderForAdapterPosition(0)!!
+                    title = holder.itemView.findViewById<TextView>(R.id.themeTitle).text.toString()
+                }
+
+                assertEquals("L’application", title)
+            }
+        } finally {
+            setAppLanguage(null)
+        }
+    }
+
     @Test
     fun theHelpRowOfTheSettingsOpensTheFaqScreen() {
         val monitor = instrumentation.addMonitor(FaqActivity::class.java.name, null, false)

@@ -1,12 +1,13 @@
-# Conscience Numérique (Android)
+# Red Flag (Android)
 
 Application de **friction intentionnelle éthique** : quand vous ouvrez une application que vous avez
 vous-même signalée comme problématique, un écran vous rappelle vos valeurs et vous demande si vous
 voulez vraiment continuer. Le but n'est pas de bloquer, mais de créer une pause consciente.
 
-Le nom « Conscience Numérique » est provisoire. Pour le changer, il suffit de modifier
-`app_name` dans [brand.xml](app/src/main/res/values/brand.xml) : il est repris partout (icône,
-écrans, service d'accessibilité) ; le titre de ce README est à modifier à la main.
+Nom : **Red Flag**, sous-titre « Ethical app check » (titre de la fiche du store : « Red Flag – Ethical app check »). Ils sont définis par
+`app_name` et `app_subtitle` dans [brand.xml](app/src/main/res/values/brand.xml) et repris partout (icône, écrans, service d'accessibilité) ;
+le titre de ce README et le site (`docs/`) sont à modifier à la main. L'identifiant technique `fr.conscience.numerique` est resté celui
+d'avant le choix du nom : il ne pourra plus changer après la première publication.
 
 Cahier des charges : [pitch-dev-android-ios.md](pitch-dev-android-ios.md).
 Licence : [GPL v3](LICENSE) (copyleft : toute version modifiée et distribuée doit rester sous GPL, code source ouvert).
@@ -50,7 +51,7 @@ Les tests sur appareil vident les données de l'app au départ, puis la réinsta
 service d'accessibilité s'il l'était : l'app reste donc sur l'émulateur (seules ses données sont remises à zéro).
 
 Ouvrir le dossier dans Android Studio, puis lancer sur l'AVD. Activer ensuite le service dans
-*Paramètres > Accessibilité > Conscience Numérique* (la bannière de l'écran principal y renvoie).
+*Paramètres > Accessibilité > Red Flag* (la bannière de l'écran principal y renvoie).
 
 ## Publier une version de test (GitHub Releases)
 
