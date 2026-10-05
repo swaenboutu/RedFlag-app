@@ -33,6 +33,7 @@ d'accessibilité et demande un accord explicite, FAQ, site statique (`docs/`, EN
   le nom « Red Flag » (la `v0.1.0` porte l'ancien)
 - [ ] Clé de signature : elle s'appelle encore `conscience-numerique.jks` (renommer est facultatif, ne pas la perdre : sans
   elle, plus de mises à jour)
+- [ ] En français, modifier le terme "Problématique" par le terme "Motif", plus court et moins négatif.
 
 ## Qualité
 
