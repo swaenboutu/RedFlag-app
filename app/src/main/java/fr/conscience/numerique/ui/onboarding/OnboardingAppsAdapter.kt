@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import fr.conscience.numerique.R
 import fr.conscience.numerique.databinding.ItemOnboardingAppBinding
 import fr.conscience.numerique.databinding.ItemOnboardingAppsHeaderBinding
 import fr.conscience.numerique.databinding.ItemOnboardingEmptyBinding
@@ -43,9 +42,7 @@ class OnboardingAppsAdapter(
         val binding = (holder as Holder<*>).binding
         when (val row = getItem(position)) {
             is AppsRow.Header -> with(binding as ItemOnboardingAppsHeaderBinding) {
-                step.text = root.context.getString(R.string.onboarding_apps_step, row.step.position, row.step.total)
-                problem.text = row.step.label
-                // Le texte ne change que si l'étape a changé (recherche remise à zéro) : jamais pendant la frappe.
+                // The text only changes when the step has changed (search reset), never while typing.
                 if (search.text.toString() != currentQuery()) search.setText(currentQuery())
             }
             AppsRow.Empty -> Unit

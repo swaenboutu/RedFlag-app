@@ -8,11 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import fr.conscience.numerique.R
 import fr.conscience.numerique.databinding.ActivityOnboardingAppsBinding
 import fr.conscience.numerique.ui.common.screenViewModel
 import kotlinx.coroutines.launch
 
-/** Accueil, étape 3 : une page par problématique choisie, pour cocher les applications concernées. */
+/** Welcome tour, step 3: one page per chosen issue, to tick the apps concerned. The issue title stays pinned above the list. */
 class OnboardingAppsActivity : AppCompatActivity() {
     private val viewModel: OnboardingAppsViewModel by screenViewModel { c, ctx, _ -> OnboardingAppsViewModel(c, ctx) }
 
@@ -42,6 +43,10 @@ class OnboardingAppsActivity : AppCompatActivity() {
                 launch { viewModel.rows.collect { rows ->
                     adapter.submitList(rows)
                     val step = (rows.firstOrNull() as? AppsRow.Header)?.step
+                    if (step != null) {
+                        binding.step.text = getString(R.string.onboarding_apps_step, step.position, step.total)
+                        binding.problem.text = step.label
+                    }
                     binding.btnSkipRemaining.visibility = if (step != null && step.position < step.total) View.VISIBLE else View.GONE
                 } }
                 launch { viewModel.canSave.collect { binding.btnNext.isEnabled = it } }

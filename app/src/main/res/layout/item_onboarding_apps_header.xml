@@ -5,34 +5,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingStart="20dp"
-    android:paddingTop="40dp"
+    android:paddingTop="4dp"
     android:paddingEnd="20dp"
     android:paddingBottom="20dp">
 
     <TextView
-        android:id="@+id/step"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/inter_semibold"
-        android:includeFontPadding="false"
-        android:textColor="?attr/colorOnSurfaceVariant"
-        android:textSize="13sp" />
-
-    <fr.conscience.numerique.ui.common.HeadingTextView
-        android:id="@+id/problem"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/bricolage_grotesque"
-        android:includeFontPadding="false"
-        android:textColor="?attr/colorOnSurface"
-        android:textSize="26sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:includeFontPadding="false"
         android:text="@string/onboarding_apps_body"
         android:textColor="?attr/colorOnSurfaceVariant"
