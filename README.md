@@ -1,105 +1,101 @@
 # Red Flag (Android)
 
-Application de **friction intentionnelle éthique** : quand vous ouvrez une application que vous avez
-vous-même signalée comme problématique, un écran vous rappelle vos valeurs et vous demande si vous
-voulez vraiment continuer. Le but n'est pas de bloquer, mais de créer une pause consciente.
+An app for **intentional, ethical friction**: when you open an app you have flagged as problematic yourself, a screen reminds
+you of your values and asks whether you really want to continue. The goal is not to block, but to create a conscious pause.
 
-Nom : **Red Flag**, sous-titre « Ethical app check » (titre de la fiche du store : « Red Flag – Ethical app check »). Ils sont définis par
-`app_name` et `app_subtitle` dans [brand.xml](app/src/main/res/values/brand.xml) et repris partout (icône, écrans, service d'accessibilité) ;
-le titre de ce README et le site (`docs/`) sont à modifier à la main. L'identifiant technique `fr.conscience.numerique` est resté celui
-d'avant le choix du nom : il ne pourra plus changer après la première publication.
+Name: **Red Flag**, subtitle "Ethical app check" (store listing title: "Red Flag – Ethical app check"). Both are defined by
+`app_name` and `app_subtitle` in [brand.xml](app/src/main/res/values/brand.xml) and used everywhere (icon, screens, accessibility
+service); the title of this README and the website (`docs/`) have to be changed by hand. The technical identifier
+`fr.conscience.numerique` is the one from before the name was chosen: it cannot change after the first publication.
 
-Cahiers des charges : [Android](pitch-dev-android.md), [iOS](pitch-dev-ios.md), [design](pitch-designer.md).
-Licence : [GPL v3](LICENSE) (copyleft : toute version modifiée et distribuée doit rester sous GPL, code source ouvert).
+Specifications: [Android](pitch-dev-android.md), [iOS](pitch-dev-ios.md), [design](pitch-designer.md) (in French).
+License: [GPL v3](LICENSE) (copyleft: any modified version that is distributed must remain under the GPL, with its source code open).
 
 ## Stack
 
-Kotlin, MVVM, Room (KSP), vues XML + ViewBinding, Material 3. `minSdk 26`, `targetSdk 37`.
-100 % local : aucun backend, aucune télémétrie, sauvegardes désactivées.
+Kotlin, MVVM, Room (KSP), XML views + ViewBinding, Material 3. `minSdk 26`, `targetSdk 37`.
+100% local: no backend, no telemetry, backups disabled.
 
 ## Structure
 
 ```
 app/src/main/java/fr/conscience/numerique/
-├── data/      Room (entités, DAO par table, base), repository, liste des apps installées, cache des icônes
-├── service/   FrictionAccessibilityService (détection du premier plan), FrictionGate
-├── ui/        Un dossier par domaine : apps (liste, détail d'une app), problems (liste et détail des problématiques),
-│              stats, settings (Réglages et FAQ), interruption (écran « Une seconde »), onboarding, common (éléments partagés)
-└── util/      Utilitaires purs (parseProblems)
+├── data/      Room (entities, one DAO per table, database), repository, installed apps list, icon cache
+├── service/   FrictionAccessibilityService (foreground app detection), FrictionGate
+├── ui/        One folder per area: apps (list, app detail), problems (list and detail of the issues),
+│              stats, settings (Settings and FAQ), interruption ("One second" screen), onboarding, common (shared pieces)
+└── util/      Pure utilities (parseProblems)
 ```
 
-`fixtures/` : deux apps vides (Fixture A et B), installées par `scripts/test.sh` pendant les tests sur appareil pour que les écrans aient des apps ordinaires à lister (un émulateur de base n'a que des apps système, masquées), puis retirées. Jamais publiées.
+`fixtures/`: two empty apps (Fixture A and B), installed by `scripts/test.sh` during the device tests so that the screens have
+ordinary apps to list (a basic emulator only has system apps, which are hidden), then removed. Never published.
 
-## Lancer
+## Running
 
 ```
 gradlew.bat :app:assembleDebug
-gradlew.bat :app:testDebugUnitTest         # tests unitaires (sans appareil)
-gradlew.bat :app:connectedDebugAndroidTest # tests sur appareil (émulateur lancé) : migrations, base de données, écrans
+gradlew.bat :app:testDebugUnitTest         # unit tests (no device)
+gradlew.bat :app:connectedDebugAndroidTest # device tests (emulator running): migrations, database, screens
 ```
 
-Pour ne pas rejouer toute la suite à chaque modification, `scripts/test.sh` (Git Bash) choisit les tests :
+To avoid replaying the whole suite after every change, `scripts/test.sh` (Git Bash) picks the tests:
 
 ```
-scripts/test.sh focus FrictionGateTest InterstitialActivityTest   # seulement ces classes (unitaire ou appareil, détecté)
-scripts/test.sh commit                                            # tous les tests unitaires, avant un commit
-scripts/test.sh auto                                              # unitaires + tests sur appareil concernés par les fichiers modifiés (signale ceux qui n'ont aucun test)
-scripts/test.sh full                                              # avant un push ou une version : tout + lint
+scripts/test.sh focus FrictionGateTest InterstitialActivityTest   # only these classes (unit or device, detected automatically)
+scripts/test.sh commit                                            # all unit tests, before a commit
+scripts/test.sh auto                                              # unit tests + the device tests concerned by the modified files (reports files that have no test)
+scripts/test.sh full                                              # before a push or a release: everything + lint
 ```
 
-Un hook `pre-push` (`scripts/hooks/`) lance `full` avant chaque `git push` et l'annule en cas d'échec (émulateur requis ;
-`git push --no-verify` pour passer outre). Après un clone : `git config core.hooksPath scripts/hooks`.
+A `pre-push` hook (`scripts/hooks/`) runs `full` before every `git push` and cancels the push if it fails (an emulator is
+required; `git push --no-verify` to bypass it). After a clone: `git config core.hooksPath scripts/hooks`.
 
-Les tests sur appareil vident les données de l'app au départ, puis la réinstallent (en debug) à leur fin, en réactivant son
-service d'accessibilité s'il l'était : l'app reste donc sur l'émulateur (seules ses données sont remises à zéro).
+The device tests clear the app's data at the start, then reinstall it (as debug) at the end, re-enabling its accessibility
+service if it was on: the app therefore stays on the emulator (only its data is reset).
 
-Ouvrir le dossier dans Android Studio, puis lancer sur l'AVD. Activer ensuite le service dans
-*Paramètres > Accessibilité > Red Flag* (la bannière de l'écran principal y renvoie).
+Open the folder in Android Studio, then run on the AVD. Then enable the service in
+*Settings > Accessibility > Red Flag* (the banner on the main screen leads there).
 
-## Publier une version de test (GitHub Releases)
+## Publishing a test version (GitHub Releases)
 
-`scripts/release.sh` construit l'APK signé de production dans `build/release/` (avec sa somme SHA-256) ; avec `--publish`, il crée la
-release GitHub (pré-version) après confirmation. Il faut la CLI GitHub (`winget install GitHub.cli`, puis `gh auth login`), un arbre de
-travail propre, des commits poussés, et une version (`versionName`/`versionCode` dans `app/build.gradle.kts`) pas encore publiée.
-Sans la CLI, joindre l'APK à la main : GitHub > Releases > Draft a new release.
+`scripts/release.sh` builds the signed production APK in `build/release/` (with its SHA-256 checksum); with `--publish`, it creates the
+GitHub release (pre-release) after confirmation. It needs the GitHub CLI (`winget install GitHub.cli`, then `gh auth login`), a clean
+working tree, pushed commits, and a version (`versionName`/`versionCode` in `app/build.gradle.kts`) that has not been published yet.
+Without the CLI, attach the APK by hand: GitHub > Releases > Draft a new release.
 
-La clé de signature (`~/.android-keys/conscience-numerique.jks`) et `keystore.properties` ne sont jamais versionnés : **les sauvegarder**
-(une application signée avec une autre clé ne peut plus se mettre à jour par-dessus l'ancienne). Sur le téléphone du testeur : autoriser
-l'installation depuis la source choisie, puis, sur Android 13 et plus, autoriser les « paramètres restreints » de l'application avant
-d'activer le service d'accessibilité.
+The signing key (`~/.android-keys/conscience-numerique.jks`) and `keystore.properties` are never versioned: **back them up**
+(an app signed with another key can no longer be updated over the old one). On the tester's phone: allow installation from the
+chosen source, then, on Android 13 and later, allow the app's "restricted settings" before enabling the accessibility service.
 
-## Site web (docs/)
+## Website (docs/)
 
-Site statique, sans serveur ni dépendance : une page par langue (`docs/index.html` (anglais) et `docs/fr/` (français)), un menu à ancres, la FAQ, des captures et un
-formulaire de contact. Aucune ressource externe (polices et scripts sont dans
-`docs/assets/`).
+A static website, with no server or dependency: one page per language (`docs/index.html` (English) and `docs/fr/` (French)), an
+anchor menu, the FAQ, screenshots and a contact form. No external resource (fonts and scripts are in `docs/assets/`).
 
 ```bash
-python -m http.server 8000 -d docs     # aperçu sur http://localhost:8000
-node scripts/site.mjs sync-faq         # recopie la FAQ de l'application (res/raw/faq.xml et raw-fr/faq.xml) dans les deux pages
-node scripts/site.mjs check            # liens, ancres, images, langues, FAQ à jour, adresse de contact (aussi joué par scripts/test.sh)
-node scripts/site.mjs set-email adresse@exemple.fr   # adresse de contact : actuellement example@email.com
+python -m http.server 8000 -d docs     # preview at http://localhost:8000
+node scripts/site.mjs sync-faq         # copies the app's FAQ (res/raw/faq.xml and raw-fr/faq.xml) into both pages
+node scripts/site.mjs check            # links, anchors, images, languages, FAQ up to date, contact address (also run by scripts/test.sh)
+node scripts/site.mjs set-email address@example.com   # contact address: currently example@email.com
 ```
 
-La FAQ a donc une seule source (les fichiers XML de l'application) : la modifier là, puis `sync-faq`. Le formulaire prépare un message dans le
-logiciel de messagerie du visiteur (lien `mailto:`) : aucun service tiers ne reçoit ses données. Hébergement possible : GitHub Pages (branche
-`main`, dossier `/docs` ; un dépôt privé exige un compte payant) ou tout hébergeur de fichiers statiques.
+The FAQ therefore has a single source (the app's XML files): edit it there, then run `sync-faq`. The form prepares a message in the
+visitor's mail client (a `mailto:` link): no third-party service receives their data. Possible hosting: GitHub Pages (branch
+`main`, folder `/docs`; a private repository requires a paid account) or any static file host.
 
-À compléter quand le nom sera trouvé : le nom (en-têtes, titres, pied de page, politique de confidentialité), l'adresse de contact, le lien de
-téléchargement, la date de la politique de confidentialité, et les captures d'écran si l'interface change.
+To complete when the name is final: the name (headers, titles, footer, privacy policy), the contact address, the download link, the
+date of the privacy policy, and the screenshots if the interface changes.
 
-## Problématiques et langues
+## Issues and languages
 
-Le catalogue prédéfini (7 catégories, 23 problématiques) est dans `data/ProblemCatalog.kt`. Chaque
-entrée a une **clé stable** stockée en base ; son libellé vient des ressources : `values/strings.xml`
-(en-US, par défaut) et `values-fr/strings.xml` (fr-FR). Pour ajouter une problématique : une entrée
-dans le catalogue + une chaîne `problem_*` dans **les deux** fichiers. Les problématiques
-personnalisées sont du texte libre, affiché tel quel dans toutes les langues. La langue de l'app
-peut se changer dans les réglages Android (`locales_config.xml`).
+The predefined catalog (7 categories, 23 issues) is in `data/ProblemCatalog.kt`. Each entry has a **stable key** stored in the
+database; its label comes from the resources: `values/strings.xml` (en-US, the default) and `values-fr/strings.xml` (fr-FR). To
+add an issue: one entry in the catalog + one `problem_*` string in **both** files. Custom issues are free text, displayed as is
+in every language. The app's language can be changed in the Android settings (`locales_config.xml`).
 
-## Choix à connaître
+## Design choices to know
 
-- « Non » renvoie à l'écran d'accueil ; l'app cible n'est pas tuée (Android ne l'autorise pas sans
-  permission dédiée).
-- Le service ne lit **aucun contenu d'écran** (`canRetrieveWindowContent="false"`).
-- Les icônes des apps tierces sont chargées via `PackageManager`, jamais embarquées.
+- "No" sends the user back to the home screen; the target app is not killed (Android does not allow it without a dedicated
+  permission).
+- The service reads **no screen content** (`canRetrieveWindowContent="false"`).
+- The icons of third-party apps are loaded through `PackageManager`, never bundled.
