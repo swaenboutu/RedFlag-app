@@ -4,11 +4,11 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- The Red Flag logo: a pole and a flag. -->
+    <!-- Themed icon (Android 13+): one colour, the system tints it. -->
     <path
-        android:fillColor="@color/logo_cream"
+        android:fillColor="#FFFFFF"
         android:pathData="M41.16,34h0a4.69,4.69 0 0 1 4.69,4.69v30.62a4.69,4.69 0 0 1 -4.69,4.69h-0a4.69,4.69 0 0 1 -4.69,-4.69v-30.62a4.69,4.69 0 0 1 4.69,-4.69z" />
     <path
-        android:fillColor="@color/logo_coral"
+        android:fillColor="#FFFFFF"
         android:pathData="M55.73,34h11.36a4.44,4.44 0 0 1 4.44,4.44v14.32a4.44,4.44 0 0 1 -4.44,4.44h-11.36a4.44,4.44 0 0 1 -4.44,-4.44v-14.32a4.44,4.44 0 0 1 4.44,-4.44z" />
 </vector>

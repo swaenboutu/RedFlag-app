@@ -29,8 +29,8 @@ d'accessibilité et demande un accord explicite, FAQ, site statique (`docs/`, EN
   image de présentation 1024×500, captures (on peut reprendre celles de `docs/assets/img/`)
 - [ ] **Test fermé** : 12 testeurs pendant 14 jours avant la production (compte personnel récent), puis rapport
   pré-lancement
-- [ ] **Publier la version 0.2.0** (construite : `build/release/red-flag-v0.2.0.apk` et `.aab`, `versionCode` 2) : release GitHub
-  `v0.2.0` sous le nom « Red Flag » (la `v0.1.0` porte l'ancien), puis fiche Play
+- [ ] **Publier la version 0.2.1** (`versionCode` 3 ; APK : `scripts/release.sh`) : release GitHub `v0.2.1` sous le nom « Red Flag »
+  (la `v0.1.0` porte l'ancien), puis fiche Play
 - [ ] En français, **modifier le terme "Problématique"** par le terme "enjeux".
 
 ## Qualité

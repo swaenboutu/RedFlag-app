@@ -173,16 +173,11 @@
     </plurals>
     <string name="picker_custom_hint">Écrivez votre propre problématique (dans la langue de votre choix)</string>
 
-    <string name="interstitial_title">Une <annotation font="accent">seconde</annotation></string>
-    <plurals name="interstitial_subtitle">
-        <!-- Jamais affiché pour 0 : l'interruption exige au moins une problématique. -->
-        <item quantity="one" tools:ignore="ImpliedQuantity">Vous avez associé cette application à la problématique suivante :</item>
-        <item quantity="other">Vous avez associé cette application aux %d problématiques suivantes :</item>
-        <item quantity="many">Vous avez associé cette application aux %d problématiques suivantes :</item>
-    </plurals>
-    <string name="interstitial_question">Est-ce vraiment important de lancer l’application maintenant ?</string>
-    <string name="btn_continue">Oui, lancer %1$s</string>
-    <string name="btn_back">Non, fermer l’application</string>
+    <string name="interstitial_title">Une seconde.</string>
+    <string name="interstitial_subtitle">Vous avez signalé %1$s pour :</string>
+    <string name="interstitial_question">Est-ce vraiment important de l’ouvrir maintenant ?</string>
+    <string name="btn_continue">Oui, l’ouvrir</string>
+    <string name="btn_back">Non, pas maintenant</string>
     <string name="btn_pause">Ne plus me demander pendant %1$s</string>
 
     <string name="accessibility_service_description">Détecte uniquement le nom de l\'application qui passe au premier plan, pour afficher un rappel avant l\'ouverture d\'une application que vous avez signalée. Aucun contenu d\'écran n\'est lu et aucune donnée ne quitte votre appareil.</string>

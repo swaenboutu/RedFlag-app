@@ -91,8 +91,10 @@ run_device() { # $@ = noms complets de classes (vide = tout)
     services=$(adb shell settings get secure enabled_accessibility_services 2>/dev/null | tr -d '\r' || true)
     # Données vidées plutôt qu'app désinstallée : le même point de départ (rien ne doit rester de l'utilisation précédente).
     adb shell pm clear "$APP_ID" >/dev/null 2>&1 || true
-    # Avant Android 9, le lanceur de tests refuse de réinstaller une app déjà là (INSTALL_FAILED_ALREADY_EXISTS) : on la retire.
-    if [ "$(adb shell getprop ro.build.version.sdk | tr -d '')" -lt 28 ]; then adb uninstall "$APP_ID" >/dev/null 2>&1 || true; fi
+    # Before Android 9 the test runner refuses to reinstall an app that is already there (INSTALL_FAILED_ALREADY_EXISTS): remove it first.
+    local sdk
+    sdk=$(adb shell getprop ro.build.version.sdk 2>/dev/null | tr -dc '0-9')
+    if [ "${sdk:-99}" -lt 28 ]; then adb uninstall "$APP_ID" >/dev/null 2>&1 || true; fi
     "${GRADLE[@]}" :app:connectedDebugAndroidTest "${args[@]}" || status=$?
     for fixture in a b; do adb uninstall "$FIXTURE_ID.$fixture" >/dev/null 2>&1 || true; done
     restore_app "$services"
@@ -133,7 +135,7 @@ device_classes_for_changes() {
             */data/AppRepository.kt|*/data/Daos.kt) add data.AppRepositoryTest ;;
             */data/SettingsStore.kt) add data.SettingsStoreTest; add ui.ForcedOnboardingTest; add ui.DebugModeScreenTest ;;&
             */data/InstalledAppsProvider.kt) add data.InstalledAppsProviderTest ;;
-            */AppContainer.kt|*/ui/*/InterstitialActivity.kt|*/service/Friction*.kt|*/layout/activity_interstitial.xml|*/layout/item_problem_pill.xml|*/ui/*/ProblemPillAdapter.kt)
+            */AppContainer.kt|*/ui/*/InterstitialActivity.kt|*/service/Friction*.kt|*/layout/activity_interstitial.xml)
                 add ui.InterstitialActivityTest ;;
             */ui/*/BottomNav.kt|*/layout/view_bottom_nav.xml|*/ui/*/AppStats*.kt|*/ui/*/AppDetail*.kt|*/ui/*/ProblemDetail*.kt|*/layout/activity_app_stats.xml|*/layout/activity_app_detail.xml|*/layout/activity_problem_detail.xml)
                 add ui.DetailScreensTest ;;

@@ -51,11 +51,11 @@ class InterstitialActivityTest {
         var shown = ""
         val deadline = System.currentTimeMillis() + 5_000
         while (System.currentTimeMillis() < deadline) {
-            onActivity { shown = it.findViewById<TextView>(R.id.appName).text.toString() }
-            if (shown == expected) break
+            onActivity { shown = it.findViewById<TextView>(R.id.subtitle).text.toString() }
+            if (shown.contains(expected)) break
             Thread.sleep(50)
         }
-        return shown
+        return if (shown.contains(expected)) expected else shown
     }
 
     /** Ce que fait Android quand il réutilise l'écran : il appelle `onNewIntent` (protégé) avec le nouvel intent. */
@@ -158,7 +158,7 @@ class InterstitialActivityTest {
     fun showsTheAppAndFollowsTheAppItIsReusedFor() {
         ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
             assertEquals("Application A", scenario.waitForAppName("Application A"))
-            assertTrue(scenario.text(R.id.btnContinue).contains("Application A"))
+            assertTrue(scenario.text(R.id.subtitle).contains("Application A"))
 
             // La même app qui revient : rien ne change.
             scenario.deliverNewIntent(InterstitialActivity.intent(context, appA))
@@ -167,7 +167,13 @@ class InterstitialActivityTest {
             // Une autre app à interrompre passe au premier plan : Android réutilise l'écran existant.
             scenario.deliverNewIntent(InterstitialActivity.intent(context, appB))
             assertEquals("Application B", scenario.waitForAppName("Application B"))
-            assertTrue("le bouton « Oui » cite la nouvelle app", scenario.text(R.id.btnContinue).contains("Application B"))
+            assertTrue("le sous-titre cite la nouvelle app", scenario.text(R.id.subtitle).contains("Application B"))
+
+            // Toutes les problématiques de l'app sont listées, sans « et N autres ».
+            val problems = scenario.text(R.id.problems)
+            val sexismLabel = context.getString(R.string.problem_sexism)
+            val racismLabel = context.getString(R.string.problem_racism)
+            assertTrue("les deux problématiques sont listées", problems.contains(sexismLabel) && problems.contains(racismLabel))
         }
     }
 

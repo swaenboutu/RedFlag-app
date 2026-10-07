@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Rounded outline (clipToOutline) of the app icon on the interruption screen; transparent, so round icons keep their shape. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@android:color/transparent" />
+    <corners android:radius="20dp" />
+</shape>

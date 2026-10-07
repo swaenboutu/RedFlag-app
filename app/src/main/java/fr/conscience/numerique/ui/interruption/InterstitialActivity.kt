@@ -3,11 +3,11 @@ package fr.conscience.numerique.ui.interruption
 import android.content.Context
 import android.content.Intent
 import android.graphics.Paint
+import android.graphics.Typeface
 import android.os.Bundle
-import android.text.Annotation
 import android.text.SpannableString
-import android.text.SpannedString
 import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -16,7 +16,6 @@ import fr.conscience.numerique.R
 import fr.conscience.numerique.container
 import fr.conscience.numerique.data.displayLabel
 import fr.conscience.numerique.databinding.ActivityInterstitialBinding
-import fr.conscience.numerique.ui.common.ProblemPillAdapter
 import fr.conscience.numerique.ui.common.formatPause
 import fr.conscience.numerique.ui.common.iconOf
 import kotlinx.coroutines.Job
@@ -26,7 +25,6 @@ import kotlinx.coroutines.launch
 /** Écran de friction : affiché avant qu'une app labelisée ne soit utilisée. */
 class InterstitialActivity : AppCompatActivity() {
     private lateinit var binding: ActivityInterstitialBinding
-    private val adapter = ProblemPillAdapter()
     private var loadJob: Job? = null
 
     /** App actuellement concernée. Change si l'écran est relancé pour une autre app (voir [onNewIntent]). */
@@ -50,15 +48,12 @@ class InterstitialActivity : AppCompatActivity() {
             override fun handleOnBackPressed() = decline()
         })
 
-        binding.title.text = accentedTitle()
         binding.appIcon.clipToOutline = true
         binding.btnContinue.setOnClickListener { proceed() }
         binding.btnBack.setOnClickListener { decline() }
         binding.btnPause.text = getString(R.string.btn_pause, formatPause(this, container.settings.pauseMinutes.value))
         binding.btnPause.paintFlags = binding.btnPause.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         binding.btnPause.setOnClickListener { pause() }
-
-        binding.problemsList.adapter = adapter
 
         load(targetPackage)
     }
@@ -106,25 +101,24 @@ class InterstitialActivity : AppCompatActivity() {
             val appName = monitored?.app?.appName ?: pkg
             val labels = monitored?.problems.orEmpty().mapNotNull { it.displayLabel(this@InterstitialActivity, overrides) }
 
-            binding.appName.text = appName
             binding.appIcon.setImageDrawable(iconOf(pkg))
-            binding.subtitle.text = resources.getQuantityString(R.plurals.interstitial_subtitle, labels.size, labels.size)
-            binding.btnContinue.text = getString(R.string.btn_continue, appName)
-            adapter.submit(labels)
+            binding.subtitle.text = subtitleFor(appName)
+            // Every issue is listed, none is summarised; the dot stays glued to the issue before it so a line never starts with one.
+            binding.problems.text = labels.joinToString("\u00A0· ")
+            binding.problems.contentDescription = labels.joinToString(", ")
         }
     }
 
-    /** Le mot balisé `<annotation font="accent">` du titre passe en couleur d'accent. */
-    private fun accentedTitle(): CharSequence {
-        val source = getText(R.string.interstitial_title) as SpannedString
-        val styled = SpannableString(source)
-        val accent = ContextCompat.getColor(this, R.color.interstitial_accent)
-        source.getSpans(0, source.length, Annotation::class.java)
-            .filter { it.key == "font" && it.value == "accent" }
-            .forEach {
-                styled.setSpan(ForegroundColorSpan(accent), source.getSpanStart(it), source.getSpanEnd(it), 0)
-            }
-        return styled
+    /** "You flagged <app> for:", with the app's name in bold. */
+    private fun subtitleFor(appName: String): CharSequence {
+        val text = getString(R.string.interstitial_subtitle, appName)
+        val start = text.indexOf(appName)
+        return SpannableString(text).apply {
+            if (start < 0) return@apply
+            val end = start + appName.length
+            setSpan(StyleSpan(Typeface.BOLD), start, end, 0)
+            setSpan(ForegroundColorSpan(ContextCompat.getColor(this@InterstitialActivity, R.color.interruption_text)), start, end, 0)
+        }
     }
 
     /** [snoozed] : le passage vient du lien « Ne plus demander pendant… » (compté à part dans les statistiques). */

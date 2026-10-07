@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#2E4A62</color>
-    <color name="ic_launcher_foreground">#FFFFFF</color>
+    <!-- Logo: a cream pole and a coral flag on a dark navy tile. -->
+    <color name="logo_navy">#0F1B2D</color>
+    <color name="logo_cream">#F5F1E8</color>
+    <color name="logo_coral">#FF7A5C</color>
+    <color name="ic_launcher_background">@color/logo_navy</color>
 
     <color name="favorite_star">#E88A1A</color>
 
@@ -29,6 +32,12 @@
 
     <!-- Écran d'interruption -->
     <color name="app_background">#F3F4F8</color>
+    <!-- Interruption screen: dark navy, cream text, coral accents (same palette as the logo). -->
+    <color name="interruption_background">@color/logo_navy</color>
+    <color name="interruption_text">@color/logo_cream</color>
+    <color name="interruption_text_muted">#B7C1D2</color>
+    <color name="interruption_text_subtle">#AAB5C8</color>
+    <color name="interruption_outline">#5B6B84</color>
     <color name="interstitial_background">#1F2A5C</color>
     <color name="interstitial_circle">#2B3873</color>
     <color name="interstitial_accent">#FFB547</color>

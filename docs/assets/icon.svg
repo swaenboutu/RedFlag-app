@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Red Flag">
-  <circle cx="32" cy="32" r="32" fill="#2e4a62"/>
-  <rect x="19" y="16" width="9" height="32" rx="1.5" fill="#fff"/>
-  <rect x="36" y="16" width="9" height="32" rx="1.5" fill="#fff"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Red Flag">
+  <path fill="#0F1B2D" d="M21,0h54a21,21 0 0 1 21,21v54a21,21 0 0 1 -21,21h-54a21,21 0 0 1 -21,-21v-54a21,21 0 0 1 21,-21z"/>
+  <path fill="#F5F1E8" d="M34.84,27.5h0a4.81,4.81 0 0 1 4.81,4.81v31.38a4.81,4.81 0 0 1 -4.81,4.81h-0a4.81,4.81 0 0 1 -4.81,-4.81v-31.38a4.81,4.81 0 0 1 4.81,-4.81z"/>
+  <path fill="#FF7A5C" d="M49.77,27.5h11.64a4.56,4.56 0 0 1 4.56,4.56v14.68a4.56,4.56 0 0 1 -4.56,4.56h-11.64a4.56,4.56 0 0 1 -4.56,-4.56v-14.68a4.56,4.56 0 0 1 4.56,-4.56z"/>
 </svg>

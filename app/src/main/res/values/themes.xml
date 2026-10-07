@@ -40,7 +40,7 @@
 
     <!-- Écran d'interruption : toujours sombre. -->
     <style name="Theme.Conscience.Interstitial" parent="Theme.Conscience">
-        <item name="android:windowBackground">@color/interstitial_background</item>
+        <item name="android:windowBackground">@color/interruption_background</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
