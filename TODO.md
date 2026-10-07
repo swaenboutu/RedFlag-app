@@ -31,7 +31,6 @@ d'accessibilité et demande un accord explicite, FAQ, site statique (`docs/`, EN
   pré-lancement
 - [ ] **Publier la version 0.2.1** (`versionCode` 3 ; APK : `scripts/release.sh`) : release GitHub `v0.2.1` sous le nom « Red Flag »
   (la `v0.1.0` porte l'ancien), puis fiche Play
-- [ ] En français, **modifier le terme "Problématique"** par le terme "enjeux".
 
 ## Qualité
 
@@ -65,6 +64,12 @@ d'accessibilité et demande un accord explicite, FAQ, site statique (`docs/`, EN
 - [x] Site statique EN + FR, captures régénérées (`docs/`)
 - [x] Essai à blanc de la revue Play : points sensibles identifiés (accessibilité, `targetSdk`, test fermé, politique de
   confidentialité)
+
+## Vocabulaire
+
+- En français, « problématique » est devenu « enjeu » dans l'application, la FAQ et le site (`values-fr/strings.xml`, `raw-fr/faq.xml`,
+  `docs/fr/`). Restent à jour à la main, si besoin : les pitchs (`pitch-*.md`) et les commentaires du code. Les noms de code
+  (`Problem`, `nav_problems`…) et le terme anglais « issue » ne changent pas.
 
 ## Vérifier la parité des langues
 

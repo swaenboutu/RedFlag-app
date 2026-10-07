@@ -5,7 +5,7 @@
     <string name="banner_service_off">La friction est inactive. Activez le service d\'accessibilité pour être alerté avant d\'ouvrir une application que vous avez signalée.</string>
     <string name="banner_action">Activer</string>
     <string name="apps_title">Vos applications</string>
-    <string name="apps_hint">Touchez une app pour lui associer des problématiques.</string>
+    <string name="apps_hint">Touchez une app pour lui associer des enjeux.</string>
     <string name="apps_empty">Aucune application trouvée</string>
     <string name="search_hint">Rechercher une application</string>
     <string name="filter_all">Toutes</string>
@@ -13,43 +13,43 @@
     <string name="filter_unflagged">Non signalées</string>
 
     <plurals name="app_detail_subtitle">
-        <item quantity="one">%d problématique associée</item>
-        <item quantity="other">%d problématiques associées</item>
-        <item quantity="many">%d problématiques associées</item>
+        <item quantity="one">%d enjeu associé</item>
+        <item quantity="other">%d enjeux associés</item>
+        <item quantity="many">%d enjeux associés</item>
     </plurals>
     <string name="app_detail_question">Qu’est-ce qui vous pose problème ici ?</string>
     <plurals name="app_detail_info">
-        <item quantity="one">À chaque lancement de %1$s, vous verrez cette problématique avant d’ouvrir l’app.</item>
-        <item quantity="other">À chaque lancement de %1$s, vous verrez ces %2$d problématiques avant d’ouvrir l’app.</item>
-        <item quantity="many">À chaque lancement de %1$s, vous verrez ces %2$d problématiques avant d’ouvrir l’app.</item>
+        <item quantity="one">À chaque lancement de %1$s, vous verrez cet enjeu avant d’ouvrir l’app.</item>
+        <item quantity="other">À chaque lancement de %1$s, vous verrez ces %2$d enjeux avant d’ouvrir l’app.</item>
+        <item quantity="many">À chaque lancement de %1$s, vous verrez ces %2$d enjeux avant d’ouvrir l’app.</item>
     </plurals>
     <string name="app_detail_info_none">%1$s s’ouvrira normalement, sans rappel.</string>
-    <string name="problems_none">Aucune problématique</string>
+    <string name="problems_none">Aucun enjeu</string>
 
     <string name="save">Enregistrer</string>
     <string name="cancel">Annuler</string>
     <string name="add">Ajouter</string>
 
-    <string name="onboarding_body">Avant d’ouvrir une application que vous avez signalée, une courte pause vous demande si vous le voulez vraiment. Choisissez les problématiques qui comptent pour vous et les applications concernées : tout reste sur votre téléphone.</string>
+    <string name="onboarding_body">Avant d’ouvrir une application que vous avez signalée, une courte pause vous demande si vous le voulez vraiment. Choisissez les enjeux qui comptent pour vous et les applications concernées : tout reste sur votre téléphone.</string>
     <string name="onboarding_start">Commencer</string>
     <string name="onboarding_problems_title">Ce qui compte pour vous</string>
-    <string name="onboarding_problems_body">Sélectionnez les problématiques qui vous importent. Elles seront ajoutées à vos favoris, pour les retrouver facilement ensuite.</string>
+    <string name="onboarding_problems_body">Sélectionnez les enjeux qui vous importent. Ils seront ajoutés à vos favoris, pour les retrouver facilement ensuite.</string>
     <string name="onboarding_continue">Continuer</string>
     <string name="onboarding_next">Suivant</string>
     <string name="onboarding_skip">Passer</string>
-    <string name="onboarding_apps_step">Problématique %1$d sur %2$d</string>
-    <string name="onboarding_apps_body">Sélectionnez les applications concernées par cette problématique. Vous pourrez modifier ce choix à tout moment.</string>
+    <string name="onboarding_apps_step">Enjeu %1$d sur %2$d</string>
+    <string name="onboarding_apps_body">Sélectionnez les applications concernées par cet enjeu. Vous pourrez modifier ce choix à tout moment.</string>
     <string name="onboarding_permission_title">Vous y êtes presque</string>
     <string name="onboarding_permission_body">Pour vous prévenir avant l\'ouverture d\'une application signalée, %1$s a besoin du service d\'accessibilité d\'Android. Il détecte uniquement le nom de l\'application qui passe au premier plan : aucun contenu de l\'écran n\'est lu et aucune donnée ne quitte votre téléphone.\n\nDans les réglages qui s\'ouvrent, cherchez « %1$s » et activez-le.</string>
     <string name="accessibility_consent_action">Accepter et continuer</string>
     <string name="accessibility_disclosure_title">Service d\'accessibilité</string>
     <string name="onboarding_permission_enabled">Tout est prêt : le service est activé.</string>
     <string name="onboarding_finish">Terminer</string>
-    <string name="onboarding_skip_remaining">Passer les problématiques restantes</string>
+    <string name="onboarding_skip_remaining">Passer les enjeux restants</string>
     <string name="onboarding_app_list_title">Quelles applications vous concernent ?</string>
-    <string name="onboarding_app_list_body">Touchez une application pour choisir les problématiques qu’elle pose. Vous pourrez modifier ce choix à tout moment.</string>
+    <string name="onboarding_app_list_body">Touchez une application pour choisir les enjeux qu’elle soulève. Vous pourrez modifier ce choix à tout moment.</string>
     <string name="nav_apps">Applications</string>
-    <string name="nav_problems">Problématiques</string>
+    <string name="nav_problems">Enjeux</string>
     <string name="nav_stats">Stats</string>
     <string name="nav_settings">Réglages</string>
     <string name="stats_title">Statistiques</string>
@@ -108,7 +108,7 @@
     <string name="settings_debug_reset_title">Réinitialiser l\'app</string>
     <string name="settings_debug_reset_subtitle">Efface tout, comme au premier lancement.</string>
     <string name="settings_debug_reset_confirm_title">Réinitialiser l\'app ?</string>
-    <string name="settings_debug_reset_confirm_message">Tous les réglages, les apps associées, les favoris, les problématiques personnalisées et l\'historique seront effacés, et l\'app se fermera.</string>
+    <string name="settings_debug_reset_confirm_message">Tous les réglages, les apps associées, les favoris, les enjeux personnalisés et l\'historique seront effacés, et l\'app se fermera.</string>
     <string name="settings_debug_reset_confirm_action">Tout effacer</string>
     <plurals name="duration_minutes">
         <item quantity="one">%d minute</item>
@@ -121,12 +121,12 @@
         <item quantity="many">%d heures</item>
     </plurals>
 
-    <string name="problems_title">Vos problématiques</string>
+    <string name="problems_title">Vos enjeux</string>
     <string name="problems_manage_hint">Touchez un thème pour l’ouvrir ou le refermer.</string>
-    <string name="action_new_problem">+  Nouvelle problématique</string>
-    <string name="dialog_new_problem_title">Nouvelle problématique</string>
+    <string name="action_new_problem">+  Nouvel enjeu</string>
+    <string name="dialog_new_problem_title">Nouvel enjeu</string>
     <string name="dialog_new_problem_theme">Thème</string>
-    <string name="custom_empty">Aucune problématique pour l’instant</string>
+    <string name="custom_empty">Aucun enjeu pour l’instant</string>
     <string name="apps_none">Aucune application</string>
     <plurals name="faq_questions">
         <item quantity="one">%d question</item>
@@ -134,9 +134,9 @@
         <item quantity="many">%d questions</item>
     </plurals>
     <plurals name="theme_problems">
-        <item quantity="one">%d problématique</item>
-        <item quantity="other">%d problématiques</item>
-        <item quantity="many">%d problématiques</item>
+        <item quantity="one">%d enjeu</item>
+        <item quantity="other">%d enjeux</item>
+        <item quantity="many">%d enjeux</item>
     </plurals>
     <plurals name="theme_checked">
         <item quantity="one">%d cochée</item>
@@ -154,24 +154,24 @@
     <string name="action_link">Lier</string>
     <string name="action_link_apps">Lier à des applications</string>
     <string name="action_unlink">Dissocier</string>
-    <string name="action_delete_problem">Supprimer cette problématique</string>
+    <string name="action_delete_problem">Supprimer cet enjeu</string>
     <string name="action_reset_label">Rétablir l\'original</string>
     <string name="action_favorite_add">Ajouter aux favoris</string>
     <string name="action_favorite_remove">Retirer des favoris</string>
-    <string name="dialog_edit_title">Modifier la problématique</string>
+    <string name="dialog_edit_title">Modifier l’enjeu</string>
     <string name="detail_linked_apps">Applications liées</string>
-    <string name="detail_no_apps">Aucune application n\'est encore liée à cette problématique.</string>
+    <string name="detail_no_apps">Aucune application n\'est encore liée à cet enjeu.</string>
     <string name="picker_apps_title">Choisir des applications</string>
     <string name="picker_apps_search">Rechercher une application</string>
-    <string name="dialog_delete_title">Supprimer cette problématique ?</string>
+    <string name="dialog_delete_title">Supprimer cet enjeu ?</string>
     <string name="dialog_delete_message">« %1$s » sera retirée de %2$s.</string>
-    <string name="error_already_exists">Cette problématique existe déjà.</string>
+    <string name="error_already_exists">Cet enjeu existe déjà.</string>
     <plurals name="apps_count">
         <item quantity="one">%d application</item>
         <item quantity="other">%d applications</item>
         <item quantity="many">%d applications</item>
     </plurals>
-    <string name="picker_custom_hint">Écrivez votre propre problématique (dans la langue de votre choix)</string>
+    <string name="picker_custom_hint">Écrivez votre propre enjeu (dans la langue de votre choix)</string>
 
     <string name="interstitial_title">Une seconde.</string>
     <string name="interstitial_subtitle">Vous avez signalé %1$s pour :</string>

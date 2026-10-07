@@ -18,9 +18,8 @@
         <entry id="flag_app">
             <question>Comment signaler une application ?</question>
             <answer>
-                Dans l’onglet Applications, touchez une application et cochez les problématiques qui vous concernent. Vous pouvez
-                aussi partir d’une problématique, dans l’onglet Problématiques, et y associer plusieurs applications. S’il en
-                manque une, vous pouvez ajouter la vôtre.
+                Dans l’onglet Applications, touchez une application et cochez les enjeux qui vous concernent. Vous pouvez
+                aussi partir d’un enjeu, dans l’onglet Enjeux, et y associer plusieurs applications. S’il en manque un, vous pouvez ajouter le vôtre.
             </answer>
         </entry>
         <entry id="buttons">
@@ -41,7 +40,7 @@
         <entry id="data">
             <question>Où sont stockées mes données ?</question>
             <answer>
-                Tout reste sur votre téléphone : les applications signalées, vos problématiques, vos réglages et vos statistiques.
+                Tout reste sur votre téléphone : les applications signalées, vos enjeux, vos réglages et vos statistiques.
                 Rien n’est envoyé nulle part, et l’application ne demande même pas l’autorisation d’accéder à Internet.
             </answer>
         </entry>
@@ -69,7 +68,7 @@
             <question>Qui décide quelles applications posent problème ?</question>
             <answer>
                 C’est vous. L’application ne rend aucun verdict et ne tient aucune liste d’applications « mauvaises » : vous
-                choisissez, parmi une liste de problématiques ou les vôtres, celles qui comptent pour vous.
+                choisissez, parmi une liste d’enjeux ou les vôtres, ceux qui comptent pour vous.
             </answer>
         </entry>
         <entry id="free_software">
