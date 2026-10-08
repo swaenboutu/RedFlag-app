@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.provider.Settings
+import android.text.format.DateUtils
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -25,10 +26,12 @@ import fr.conscience.numerique.service.isFrictionServiceEnabled
 import fr.conscience.numerique.ui.common.AccessibilityDisclosureDialog
 import fr.conscience.numerique.ui.common.BottomNav
 import fr.conscience.numerique.ui.common.formatPause
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
-/** Réglages : interrupteur général, durée de la pause, liste des apps, autorisations, aide. */
+/** Settings: main switch, pause duration, apps list, permissions, help. */
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
     private val settings get() = container.settings
@@ -44,11 +47,18 @@ class SettingsActivity : AppCompatActivity() {
             .forEach { it.clipToOutline = true }
         binding.cardDebug.clipToOutline = true
 
-        // Toute la carte bascule l'interrupteur, pas seulement le bouton. Le réglage est enregistré à chaque changement d'état,
-        // qu'il vienne d'un appui ou d'un glissement du curseur (un glissement ne déclenche pas de « clic »).
+        // The whole card toggles the switch, not only the button. The setting is saved on every state change, whether it comes
+        // from a tap or from dragging the thumb (a drag triggers no "click").
         binding.activeCard.setOnClickListener { binding.activeSwitch.toggle() }
         binding.activeSwitch.setOnCheckedChangeListener { _, checked ->
-            if (checked != settings.interceptionEnabled.value) settings.setInterceptionEnabled(checked)
+            if (checked == settings.isInterceptionActive()) return@setOnCheckedChangeListener
+            if (checked) {
+                settings.setInterceptionEnabled(true)
+            } else {
+                // Turning off asks for how long: the switch stays on until a choice is made.
+                binding.activeSwitch.isChecked = true
+                showOffDialog()
+            }
         }
 
         setupRow(binding.rowPause, R.string.settings_pause_title, R.string.settings_pause_subtitle) { showPauseDialog() }
@@ -67,12 +77,21 @@ class SettingsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    combine(settings.interceptionEnabled, settings.pauseMinutes, settings.hideSystemApps) { enabled, pause, hide ->
+                    combine(settings.interceptionEnabled, settings.pauseMinutes, settings.hideSystemApps, settings.reenableAt) { enabled, pause, hide, _ ->
                         Triple(enabled, pause, hide)
                     }.collect { (enabled, pause, hide) ->
                         showEnabled(enabled)
                         binding.rowPause.value.text = formatPause(this@SettingsActivity, pause)
                         binding.rowList.value.text = getString(if (hide) R.string.list_no_system else R.string.list_all)
+                    }
+                }
+                // A timed deactivation ends while the screen is open: turn the switch back on at that moment.
+                launch {
+                    settings.reenableAt.collectLatest { at ->
+                        if (at > 0L) {
+                            delay((at - System.currentTimeMillis()).coerceAtLeast(0L) + 200L)
+                            settings.isInterceptionActive()
+                        }
                     }
                 }
                 launch { settings.debugMode.collect { binding.debugGroup.visibility = if (it) View.VISIBLE else View.GONE } }
@@ -147,7 +166,32 @@ class SettingsActivity : AppCompatActivity() {
             if (enabled) R.string.settings_active_title else R.string.settings_inactive_title,
             getString(R.string.app_name),
         )
-        binding.activeDescription.setText(if (enabled) R.string.settings_active_desc else R.string.settings_inactive_desc)
+        val resumeAt = settings.reenableAt.value
+        binding.activeDescription.text = when {
+            enabled -> getString(R.string.settings_active_desc)
+            resumeAt > 0L -> getString(R.string.settings_inactive_until, formatResumeTime(resumeAt))
+            else -> getString(R.string.settings_inactive_desc)
+        }
+    }
+
+    /** "3:30 PM" if it is today, otherwise the date as well. */
+    private fun formatResumeTime(millis: Long): String {
+        val sameDay = DateUtils.isToday(millis)
+        val flags = DateUtils.FORMAT_SHOW_TIME or if (sameDay) 0 else DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_ABBREV_ALL
+        return DateUtils.formatDateTime(this, millis, flags)
+    }
+
+    /** Asks for how long to turn the main switch off: 1 hour, 12 hours, 24 hours, or until the user turns it back on. */
+    private fun showOffDialog() {
+        val minutes = SettingsStore.OFF_CHOICES
+        val labels = (minutes.map { formatPause(this, it) } + getString(R.string.settings_off_until_back_on)).toTypedArray()
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.settings_off_title)
+            .setItems(labels) { _, which ->
+                if (which < minutes.size) settings.disableInterceptionFor(minutes[which]) else settings.setInterceptionEnabled(false)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     /** Pastille verte « Accordées » ou rouge « Non accordées » selon l'état du service d'accessibilité. */

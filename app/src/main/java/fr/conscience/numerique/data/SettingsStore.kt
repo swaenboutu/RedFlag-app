@@ -5,16 +5,39 @@ import androidx.core.content.edit
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-/** Réglages de l'app, stockés uniquement sur l'appareil (SharedPreferences, exclues des sauvegardes). */
-class SettingsStore(context: Context) {
+/**
+ * App settings, stored on the device only (SharedPreferences, excluded from backups).
+ * [now] can be replaced to test time.
+ */
+class SettingsStore(context: Context, private val now: () -> Long = System::currentTimeMillis) {
     private val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
 
     private val _interceptionEnabled = MutableStateFlow(prefs.getBoolean(KEY_ENABLED, true))
     private val _pauseMinutes = MutableStateFlow(prefs.getInt(KEY_PAUSE_MINUTES, DEFAULT_PAUSE_MINUTES))
     private val _hideSystemApps = MutableStateFlow(prefs.getBoolean(KEY_HIDE_SYSTEM_APPS, DEFAULT_HIDE_SYSTEM_APPS))
 
-    /** Interrupteur général : faux = plus aucune interruption, quelles que soient les apps signalées. */
+    private val _reenableAt = MutableStateFlow(prefs.getLong(KEY_REENABLE_AT, 0L))
+
+    /**
+     * Main switch: false = no interruption at all, whatever the flagged apps. When the switch was turned off for a while,
+     * [reenableAt] says when it comes back on by itself; [isInterceptionActive] is the one to ask whether to interrupt.
+     */
     val interceptionEnabled: StateFlow<Boolean> = _interceptionEnabled
+
+    /** When a timed deactivation ends (epoch milliseconds); 0 = none (switch on, or off until the user turns it back on). */
+    val reenableAt: StateFlow<Long> = _reenableAt
+
+    /**
+     * Whether flagged apps must be interrupted now: the switch is on, or a timed deactivation is over (the switch is then turned
+     * back on for good, so the screens catch up).
+     */
+    fun isInterceptionActive(): Boolean {
+        if (_interceptionEnabled.value) return true
+        val at = _reenableAt.value
+        if (at == 0L || now() < at) return false
+        setInterceptionEnabled(true)
+        return true
+    }
 
     /** Durée (en minutes) pendant laquelle « Ne plus me demander » suspend l'interruption d'une app. */
     val pauseMinutes: StateFlow<Int> = _pauseMinutes
@@ -63,9 +86,25 @@ class SettingsStore(context: Context) {
         _alwaysShowOnboarding.value = value
     }
 
+    /** Turns the main switch on, or off until the user turns it back on (any timed deactivation is forgotten). */
     fun setInterceptionEnabled(value: Boolean) {
-        prefs.edit { putBoolean(KEY_ENABLED, value) }
+        prefs.edit {
+            putBoolean(KEY_ENABLED, value)
+            putLong(KEY_REENABLE_AT, 0L)
+        }
+        _reenableAt.value = 0L
         _interceptionEnabled.value = value
+    }
+
+    /** Turns the main switch off for [minutes] minutes: it comes back on by itself afterwards. */
+    fun disableInterceptionFor(minutes: Int) {
+        val at = now() + minutes * 60_000L
+        prefs.edit {
+            putBoolean(KEY_ENABLED, false)
+            putLong(KEY_REENABLE_AT, at)
+        }
+        _reenableAt.value = at
+        _interceptionEnabled.value = false
     }
 
     fun setPauseMinutes(value: Int) {
@@ -97,7 +136,11 @@ class SettingsStore(context: Context) {
         /** Durées proposées, en minutes. */
         val PAUSE_CHOICES = listOf(15, 60, 180, 24 * 60)
 
+        /** Durations offered when turning the main switch off, in minutes (the dialog adds "until I turn it back on"). */
+        val OFF_CHOICES = listOf(60, 12 * 60, 24 * 60)
+
         private const val KEY_ENABLED = "interception_enabled"
+        private const val KEY_REENABLE_AT = "interception_reenable_at"
         private const val KEY_PAUSE_MINUTES = "pause_minutes"
         private const val KEY_HIDE_SYSTEM_APPS = "hide_system_apps"
         private const val KEY_ONBOARDING_DONE = "onboarding_done"

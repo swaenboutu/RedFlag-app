@@ -35,6 +35,59 @@ class SettingsStoreTest {
     }
 
     @Test
+    fun aTimedDeactivationEndsByItself() {
+        var time = 1_000_000L
+        val settings = SettingsStore(context) { time }
+
+        settings.disableInterceptionFor(60)
+        assertFalse(settings.isInterceptionActive())
+        assertEquals(1_000_000L + 60 * 60_000L, settings.reenableAt.value)
+
+        time += 59 * 60_000L
+        assertFalse("not over yet", settings.isInterceptionActive())
+
+        time += 2 * 60_000L
+        assertTrue("over: interruptions are back", settings.isInterceptionActive())
+        assertTrue("and the switch is on again", settings.interceptionEnabled.value)
+        assertEquals(0L, settings.reenableAt.value)
+    }
+
+    @Test
+    fun aDeactivationWithoutDurationNeverEnds() {
+        var time = 1_000_000L
+        val settings = SettingsStore(context) { time }
+
+        settings.setInterceptionEnabled(false)
+        time += 365L * 24 * 60 * 60_000L
+
+        assertFalse(settings.isInterceptionActive())
+        assertEquals(0L, settings.reenableAt.value)
+    }
+
+    @Test
+    fun turningTheSwitchBackOnForgetsTheTimer() {
+        var time = 1_000_000L
+        val settings = SettingsStore(context) { time }
+        settings.disableInterceptionFor(60)
+
+        settings.setInterceptionEnabled(true)
+
+        assertTrue(settings.isInterceptionActive())
+        assertEquals(0L, settings.reenableAt.value)
+    }
+
+    @Test
+    fun aTimedDeactivationIsRememberedAcrossLaunches() {
+        var time = 1_000_000L
+        SettingsStore(context) { time }.disableInterceptionFor(12 * 60)
+
+        val reopened = SettingsStore(context) { time }
+        assertFalse(reopened.isInterceptionActive())
+        time += 13 * 60 * 60_000L
+        assertTrue(reopened.isInterceptionActive())
+    }
+
+    @Test
     fun showingSystemAppsIsRememberedAcrossLaunches() {
         SettingsStore(context).setHideSystemApps(false)
 

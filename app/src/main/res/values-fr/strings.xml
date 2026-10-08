@@ -81,6 +81,9 @@
     <string name="settings_active_desc">Les apps signalées affichent une interruption à leur lancement.</string>
     <string name="settings_inactive_title">%1$s est désactivé</string>
     <string name="settings_inactive_desc">Aucune interruption n’est affichée tant que vous ne le réactivez pas.</string>
+    <string name="settings_inactive_until">Désactivé jusqu’à %1$s. Les apps signalées s’ouvrent sans interruption.</string>
+    <string name="settings_off_title">Désactiver pendant…</string>
+    <string name="settings_off_until_back_on">Jusqu’à ce que je le réactive</string>
     <string name="settings_active_switch">Activer les interruptions</string>
     <string name="settings_section_interruption">Interruption</string>
     <string name="settings_section_apps">Applications</string>
