@@ -88,6 +88,44 @@ class HomeAndStatsScreensTest {
     }
 
     @Test
+    fun changingTheFilterGoesBackToTheTopOfTheList() {
+        // With the system apps shown the list is long enough to scroll, whatever the device.
+        val hideBefore = settings.hideSystemApps.value
+        settings.setHideSystemApps(false)
+        try {
+            ActivityScenario.launch(MainActivity::class.java).use { scenario ->
+                scenario.awaitUntil { scenario.itemCount(R.id.appList) > 10 }
+                scenario.click(R.id.filterUnflagged)
+                scenario.awaitUntil { scenario.firstVisible() == 0 }
+
+                // Scrolled down in the unflagged apps, then back to "All": the flagged app comes first, so rows are inserted
+                // above the scroll position; the list must still start from the top.
+                scenario.onActivity {
+                    val list = it.findViewById<RecyclerView>(R.id.appList)
+                    list.scrollToPosition(list.adapter!!.itemCount - 1)
+                }
+                scenario.awaitUntil { scenario.firstVisible() > 0 }
+                assertTrue("the list is scrolled down", scenario.firstVisible() > 0)
+
+                scenario.click(R.id.filterAll)
+                scenario.awaitUntil { scenario.firstVisible() == 0 }
+                assertEquals("back at the top of the list", 0, scenario.firstVisible())
+            }
+        } finally {
+            settings.setHideSystemApps(hideBefore)
+        }
+    }
+
+    private fun ActivityScenario<MainActivity>.firstVisible(): Int {
+        var position = -1
+        onActivity {
+            val manager = it.findViewById<RecyclerView>(R.id.appList).layoutManager as androidx.recyclerview.widget.LinearLayoutManager
+            position = manager.findFirstVisibleItemPosition()
+        }
+        return position
+    }
+
+    @Test
     fun homeShowsTheNumberOfFlaggedAppsOnItsTab() {
         ActivityScenario.launch(MainActivity::class.java).use { scenario ->
             var label = ""

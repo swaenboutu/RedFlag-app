@@ -26,6 +26,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var resumedBefore = false
 
+    /** The filter the user just picked, until the list for it has been shown (then the list goes back to the top). */
+    private var pendingFilter: AppFilter? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // "Launch" = from the app icon, on a fresh screen: not a rotation, not a return from another screen of the app.
@@ -56,7 +59,11 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
-                    adapter.submitList(state.items)
+                    // After a filter change, go back to the top once the new list is in place: scrolling before would leave the
+                    // old position when rows are inserted above (for instance "Not flagged" -> "All" brings the flagged apps first).
+                    val toTop = pendingFilter == state.filter
+                    if (toTop) pendingFilter = null
+                    adapter.submitList(state.items) { if (toTop) binding.appList.scrollToPosition(0) }
                     binding.emptyState.visibility = if (state.loaded && state.items.isEmpty()) View.VISIBLE else View.GONE
                     binding.filterAll.isSelected = state.filter == AppFilter.ALL
                     binding.filterFlagged.isSelected = state.filter == AppFilter.FLAGGED
@@ -73,6 +80,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun changeFilter(filter: AppFilter) {
         if (viewModel.state.value.filter == filter) return
+        pendingFilter = filter
         viewModel.setFilter(filter)
         val list = binding.appList
         val shift = RELOAD_SHIFT_DP * resources.displayMetrics.density
