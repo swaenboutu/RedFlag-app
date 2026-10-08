@@ -51,6 +51,17 @@ d'accessibilité et demande un accord explicite, FAQ, site statique (`docs/`, EN
   - `res/raw-es/faq.xml` pour la FAQ, puis `node scripts/site.mjs sync-faq` et une page `docs/es/`
   - Ajouter la langue dans `res/xml/locales_config.xml`
   - Les pluriels espagnols ont une forme `many` en plus
+- [ ] **Recommandations de désinstallation** (idée, règles à travailler) : suggérer de désinstaller une app que l'utilisateur
+  refuse presque toujours d'ouvrir, d'après ses tentatives d'ouverture des derniers mois et les statistiques de blocage
+  - Données déjà là : `choice_events` (app, date, ouvert ou refusé, pause) ; tout reste sur le téléphone
+  - Règles à définir, par exemple : fenêtre glissante (3 derniers mois ?), nombre minimal de tentatives (10 ?), part de
+    refus ≥ 100 % ou un seuil acceptable (90 % ?), prise en compte ou non des pauses (« Ne plus me demander ») et du côté
+    récent (l'app est-elle encore refusée ces dernières semaines ?)
+  - Où l'afficher : une carte discrète dans « Vos applications » ou dans les statistiques d'une app, jamais une
+    notification ; formulation sans jugement ; possibilité de la refuser (« ne plus me le suggérer pour cette app »)
+  - Action : ouvrir la fiche de l'app dans les réglages Android (aucune permission) plutôt que lancer la désinstallation
+    directement (`REQUEST_DELETE_PACKAGES` serait un point de plus à justifier auprès de Google Play)
+  - À prévoir : texte FR/EN, tests des règles (fonction pure, testée avec des dates injectées), mention dans la FAQ
 
 ## Fait
 
