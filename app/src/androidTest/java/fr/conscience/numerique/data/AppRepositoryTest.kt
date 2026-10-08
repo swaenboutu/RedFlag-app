@@ -93,6 +93,21 @@ class AppRepositoryTest {
     }
 
     @Test
+    fun aNewCustomProblemIsAutomaticallyAFavorite() = run {
+        val ref = repository.addCustomProblem("Mon enjeu")!!
+
+        assertEquals(setOf(ref), repository.favorites.first())
+
+        // A refused duplicate adds nothing, not even a favorite.
+        assertNull(repository.addCustomProblem("mon ENJEU"))
+        assertEquals(setOf(ref), repository.favorites.first())
+
+        // It can still be removed from the favorites afterwards.
+        repository.setFavorite(ref, false)
+        assertTrue(repository.favorites.first().isEmpty())
+    }
+
+    @Test
     fun eachCustomProblemGetsItsOwnIdentifier() = run {
         val first = repository.addCustomProblem("Un")!!
         val second = repository.addCustomProblem("Deux")!!

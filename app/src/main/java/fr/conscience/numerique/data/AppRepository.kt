@@ -33,13 +33,16 @@ class AppRepository(private val db: AppDatabase) {
     suspend fun find(packageName: String): MonitoredAppWithProblems? = apps.find(packageName)
 
     /**
-     * Ajoute une problématique personnalisée à la liste, dans le thème [category] (null = « Personnalisé ») et lui donne son
-     * identifiant. Null si le nom existe déjà (casse ignorée).
+     * Adds a custom issue to the list, in the theme [category] (null = "Custom"), gives it its identifier and puts it in the
+     * favorites: someone who writes their own issue cares about it. Null if the name already exists (case ignored).
      */
     suspend fun addCustomProblem(label: String, category: String? = null): ProblemRef? {
         if (custom.listOnce().any { it.label.equals(label, ignoreCase = true) }) return null
         val ref = ProblemRef.newCustom()
-        custom.insert(CustomProblem(ref.id, label, category))
+        db.withTransaction {
+            custom.insert(CustomProblem(ref.id, label, category))
+            favoriteDao.insert(Favorite(ref.id))
+        }
         return ref
     }
 
