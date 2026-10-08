@@ -20,7 +20,7 @@ import fr.conscience.numerique.ui.common.screenViewModel
 import fr.conscience.numerique.ui.onboarding.OnboardingActivity
 import kotlinx.coroutines.launch
 
-/** « Vos applications » : recherche, filtres, et une carte avec les problématiques associées à chaque app. */
+/** "Your apps": search, filters, and a card with the issues linked to each app. */
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by screenViewModel { c, _, _ -> MainViewModel(c) }
     private lateinit var binding: ActivityMainBinding
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // « Lancement » = depuis l'icône de l'app, sur un écran neuf : pas une rotation, pas un retour depuis un autre écran de l'app.
+        // "Launch" = from the app icon, on a fresh screen: not a rotation, not a return from another screen of the app.
         val freshLaunch = savedInstanceState == null && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
         val settings = container.settings
         if (SettingsStore.shouldShowOnboarding(settings.onboardingDone, settings.alwaysShowOnboarding.value, freshLaunch)) {
@@ -49,9 +49,9 @@ class MainActivity : AppCompatActivity() {
             AccessibilityDisclosureDialog.show(this)
         }
         binding.search.doAfterTextChanged { viewModel.setQuery(it?.toString().orEmpty()) }
-        binding.filterAll.setOnClickListener { viewModel.setFilter(AppFilter.ALL) }
-        binding.filterFlagged.setOnClickListener { viewModel.setFilter(AppFilter.FLAGGED) }
-        binding.filterUnflagged.setOnClickListener { viewModel.setFilter(AppFilter.UNFLAGGED) }
+        binding.filterAll.setOnClickListener { changeFilter(AppFilter.ALL) }
+        binding.filterFlagged.setOnClickListener { changeFilter(AppFilter.FLAGGED) }
+        binding.filterUnflagged.setOnClickListener { changeFilter(AppFilter.UNFLAGGED) }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -67,13 +67,35 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Switches the filter and makes the change visible: the list restarts from the top and fades in. Without it, nothing seems to
+     * happen when the first rows are the same before and after (for instance "All" -> "Flagged" when the flagged apps come first).
+     */
+    private fun changeFilter(filter: AppFilter) {
+        if (viewModel.state.value.filter == filter) return
+        viewModel.setFilter(filter)
+        val list = binding.appList
+        val shift = RELOAD_SHIFT_DP * resources.displayMetrics.density
+        list.animate().cancel()
+        list.scrollToPosition(0)
+        list.alpha = RELOAD_START_ALPHA
+        list.translationY = shift
+        list.animate().alpha(1f).translationY(0f).setDuration(RELOAD_MS).start()
+    }
+
     override fun onResume() {
         super.onResume()
         BottomNav.select(binding.bottomBar.bottomNav, R.id.nav_apps)
         binding.serviceBanner.visibility = if (isFrictionServiceEnabled(this)) View.GONE else View.VISIBLE
-        // Une app a pu être installée ou désinstallée pendant que l'écran était en arrière-plan. Le premier affichage charge
-        // déjà la liste : on ne la recharge qu'aux retours suivants.
+        // An app may have been installed or removed while the screen was in the background. The first display already loads the
+        // list: only reload on later returns.
         if (resumedBefore) viewModel.reload()
         resumedBefore = true
+    }
+
+    private companion object {
+        const val RELOAD_START_ALPHA = 0.2f
+        const val RELOAD_SHIFT_DP = 16
+        const val RELOAD_MS = 260L
     }
 }
