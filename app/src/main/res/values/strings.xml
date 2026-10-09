@@ -89,6 +89,11 @@
     <string name="settings_off_title">Turn off for…</string>
     <string name="settings_off_until_back_on">Until I turn it back on</string>
     <string name="settings_active_switch">Turn interruptions on</string>
+    <string name="settings_section_display">Display</string>
+    <string name="settings_appearance_title">Appearance</string>
+    <string name="appearance_system">Follow the system</string>
+    <string name="appearance_light">Light</string>
+    <string name="appearance_dark">Dark</string>
     <string name="settings_section_interruption">Interruption</string>
     <string name="settings_section_apps">Apps</string>
     <string name="settings_section_help">Help</string>

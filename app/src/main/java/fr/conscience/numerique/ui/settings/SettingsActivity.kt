@@ -17,6 +17,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import fr.conscience.numerique.R
 import fr.conscience.numerique.container
+import fr.conscience.numerique.data.Appearance
 import fr.conscience.numerique.data.DebugTap
 import fr.conscience.numerique.data.DebugUnlock
 import fr.conscience.numerique.data.SettingsStore
@@ -43,7 +44,7 @@ class SettingsActivity : AppCompatActivity() {
         BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_settings)
 
         // Coins arrondis + effets tactiles contenus dans les cartes : `clipToOutline` en XML exige Android 12.
-        listOf(binding.activeCard, binding.cardInterruption, binding.cardApps, binding.cardHelp)
+        listOf(binding.activeCard, binding.cardDisplay, binding.cardInterruption, binding.cardApps, binding.cardHelp)
             .forEach { it.clipToOutline = true }
         binding.cardDebug.clipToOutline = true
 
@@ -61,6 +62,7 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
+        setupRow(binding.rowAppearance, R.string.settings_appearance_title) { showAppearanceDialog() }
         setupRow(binding.rowPause, R.string.settings_pause_title, R.string.settings_pause_subtitle) { showPauseDialog() }
         setupRow(binding.rowList, R.string.settings_list_title) { showListDialog() }
         setupRow(binding.rowPermissions, R.string.settings_permissions_title) {
@@ -94,6 +96,7 @@ class SettingsActivity : AppCompatActivity() {
                         }
                     }
                 }
+                launch { settings.appearance.collect { binding.rowAppearance.value.setText(appearanceLabel(it)) } }
                 launch { settings.debugMode.collect { binding.debugGroup.visibility = if (it) View.VISIBLE else View.GONE } }
                 launch { settings.alwaysShowOnboarding.collect { binding.rowOnboarding.toggle.isChecked = it } }
             }
@@ -212,6 +215,27 @@ class SettingsActivity : AppCompatActivity() {
             .setSingleChoiceItems(labels, choices.indexOf(settings.pauseMinutes.value)) { dialog, which ->
                 settings.setPauseMinutes(choices[which])
                 dialog.dismiss()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun appearanceLabel(appearance: Appearance): Int = when (appearance) {
+        Appearance.SYSTEM -> R.string.appearance_system
+        Appearance.LIGHT -> R.string.appearance_light
+        Appearance.DARK -> R.string.appearance_dark
+    }
+
+    private fun showAppearanceDialog() {
+        val choices = Appearance.entries
+        val labels = choices.map { getString(appearanceLabel(it)) }.toTypedArray()
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.settings_appearance_title)
+            .setSingleChoiceItems(labels, choices.indexOf(settings.appearance.value)) { dialog, which ->
+                dialog.dismiss()
+                // Applying recreates the open screens, so the choice is saved first.
+                settings.setAppearance(choices[which])
+                choices[which].apply()
             }
             .setNegativeButton(R.string.cancel, null)
             .show()

@@ -105,6 +105,15 @@ class SettingsStoreTest {
     }
 
     @Test
+    fun appearanceFollowsTheSystemByDefaultAndIsRemembered() {
+        assertEquals(Appearance.SYSTEM, SettingsStore(context).appearance.value)
+
+        SettingsStore(context).setAppearance(Appearance.DARK)
+
+        assertEquals(Appearance.DARK, SettingsStore(context).appearance.value)
+    }
+
+    @Test
     fun debugModeIsOffByDefault() {
         assertFalse(SettingsStore(context).debugMode.value)
     }

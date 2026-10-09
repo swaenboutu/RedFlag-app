@@ -12,6 +12,7 @@ class ConscienceApp : Application() {
     override fun onCreate() {
         super.onCreate()
         container = AppContainer(this)
+        container.settings.appearance.value.apply()
         // Les icônes des apps signalées sont prêtes avant qu'un écran ou une interruption en ait besoin.
         container.applicationScope.launch {
             container.icons.preload(container.repository.monitoredApps.first().map { it.app.packageName })

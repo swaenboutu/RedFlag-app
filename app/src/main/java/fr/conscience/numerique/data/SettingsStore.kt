@@ -16,6 +16,16 @@ class SettingsStore(context: Context, private val now: () -> Long = System::curr
     private val _pauseMinutes = MutableStateFlow(prefs.getInt(KEY_PAUSE_MINUTES, DEFAULT_PAUSE_MINUTES))
     private val _hideSystemApps = MutableStateFlow(prefs.getBoolean(KEY_HIDE_SYSTEM_APPS, DEFAULT_HIDE_SYSTEM_APPS))
 
+    private val _appearance = MutableStateFlow(Appearance.fromKey(prefs.getString(KEY_APPEARANCE, null)))
+
+    /** Light, dark, or follow the phone (default). Applied app-wide with [Appearance.apply]. */
+    val appearance: StateFlow<Appearance> = _appearance
+
+    fun setAppearance(value: Appearance) {
+        prefs.edit { putString(KEY_APPEARANCE, value.key) }
+        _appearance.value = value
+    }
+
     private val _reenableAt = MutableStateFlow(prefs.getLong(KEY_REENABLE_AT, 0L))
 
     /**
@@ -139,6 +149,7 @@ class SettingsStore(context: Context, private val now: () -> Long = System::curr
         /** Durations offered when turning the main switch off, in minutes (the dialog adds "until I turn it back on"). */
         val OFF_CHOICES = listOf(60, 12 * 60, 24 * 60)
 
+        private const val KEY_APPEARANCE = "appearance"
         private const val KEY_ENABLED = "interception_enabled"
         private const val KEY_REENABLE_AT = "interception_reenable_at"
         private const val KEY_PAUSE_MINUTES = "pause_minutes"

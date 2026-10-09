@@ -91,6 +91,20 @@
                     layout="@layout/item_setting_row" />
             </LinearLayout>
 
+            <!-- Display -->
+            <fr.conscience.numerique.ui.common.HeadingTextView
+                style="@style/Widget.Conscience.SettingsSection"
+                android:text="@string/settings_section_display" />
+
+            <LinearLayout
+                android:id="@+id/cardDisplay"
+                style="@style/Widget.Conscience.SettingsCard">
+
+                <include
+                    android:id="@+id/rowAppearance"
+                    layout="@layout/item_setting_row" />
+            </LinearLayout>
+
             <!-- Applications -->
             <fr.conscience.numerique.ui.common.HeadingTextView
                 style="@style/Widget.Conscience.SettingsSection"

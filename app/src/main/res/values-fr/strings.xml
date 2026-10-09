@@ -93,6 +93,11 @@
     <string name="settings_off_title">Désactiver pendant…</string>
     <string name="settings_off_until_back_on">Jusqu’à ce que je le réactive</string>
     <string name="settings_active_switch">Activer les interruptions</string>
+    <string name="settings_section_display">Affichage</string>
+    <string name="settings_appearance_title">Apparence</string>
+    <string name="appearance_system">Suivre le système</string>
+    <string name="appearance_light">Clair</string>
+    <string name="appearance_dark">Sombre</string>
     <string name="settings_section_interruption">Interruption</string>
     <string name="settings_section_apps">Applications</string>
     <string name="settings_section_help">Aide</string>
