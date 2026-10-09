@@ -5,27 +5,33 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingStart="20dp"
-    android:paddingTop="40dp"
+    android:paddingTop="32dp"
     android:paddingEnd="20dp"
     android:paddingBottom="20dp">
+
+    <include
+        android:id="@+id/topbar"
+        layout="@layout/view_onboarding_topbar" />
 
     <fr.conscience.numerique.ui.common.HeadingTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/bricolage_grotesque"
         android:includeFontPadding="false"
         android:text="@string/onboarding_problems_title"
         android:textColor="?attr/colorOnSurface"
-        android:textSize="28sp"
-        android:textStyle="bold" />
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:lineHeight="38dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="14dp"
         android:includeFontPadding="false"
         android:text="@string/onboarding_problems_body"
         android:textColor="?attr/colorOnSurfaceVariant"
-        android:textSize="14sp"
-        app:lineHeight="21dp" />
+        android:textSize="16sp"
+        app:lineHeight="24dp" />
 </LinearLayout>

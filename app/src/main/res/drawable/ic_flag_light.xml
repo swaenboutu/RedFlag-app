@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- The Red Flag glyph for the light screens of the app: navy pole, dark coral flag. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="28dp"
-    android:height="32dp"
+    android:width="20dp"
+    android:height="23dp"
     android:viewportWidth="71"
     android:viewportHeight="81">
-    <!-- The Red Flag glyph on its own: planted on the corner of the app icon on the interruption screen (colors follow light/dark). -->
     <path
         android:fillColor="@color/interruption_flag_pole"
-        android:pathData="M9.5,0h0a9.5,9.5 0 0 1 9.5,9.5v62a9.5,9.5 0 0 1 -9.5,9.5h-0a9.5,9.5 0 0 1 -9.5,-9.5v-62a9.5,9.5 0 0 1 9.5,-9.5z" />
+        android:pathData="M9.5,0h0a9.5,9.5 0 0 1 9.5,9.5v62a9.5,9.5 0 0 1 -9.5,9.5h0a9.5,9.5 0 0 1 -9.5,-9.5v-62a9.5,9.5 0 0 1 9.5,-9.5z" />
     <path
         android:fillColor="@color/interruption_flag_head"
         android:pathData="M39,0h23a9,9 0 0 1 9,9v29a9,9 0 0 1 -9,9h-23a9,9 0 0 1 -9,-9v-29a9,9 0 0 1 9,-9z" />

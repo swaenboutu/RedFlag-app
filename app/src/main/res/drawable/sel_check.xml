@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- La case est décalée du bord de la carte : un CompoundButton dessine son bouton sans tenir compte du padding. -->
+<!-- The box sits on the left of the label; the insets give it room from the card edge and from the text. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="true">
         <inset
             android:drawable="@drawable/ic_check_on"
-            android:insetRight="16dp" />
+            android:insetLeft="16dp"
+            android:insetRight="14dp" />
     </item>
     <item>
         <inset
             android:drawable="@drawable/ic_check_off"
-            android:insetRight="16dp" />
+            android:insetLeft="16dp"
+            android:insetRight="14dp" />
     </item>
 </selector>

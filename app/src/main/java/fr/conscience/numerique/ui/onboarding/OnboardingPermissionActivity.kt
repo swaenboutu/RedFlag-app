@@ -7,6 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import fr.conscience.numerique.R
 import fr.conscience.numerique.container
+import fr.conscience.numerique.ui.common.underline
 import fr.conscience.numerique.databinding.ActivityOnboardingPermissionBinding
 import fr.conscience.numerique.service.isFrictionServiceEnabled
 import fr.conscience.numerique.ui.apps.MainActivity
@@ -29,6 +30,8 @@ class OnboardingPermissionActivity : AppCompatActivity() {
         openedSettings = savedInstanceState?.getBoolean(KEY_OPENED_SETTINGS) ?: false
         binding = ActivityOnboardingPermissionBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.btnLater.underline()
+        binding.topbar.topbarStep.text = getString(R.string.onboarding_step, 4, 4)
 
         binding.body.text = getString(R.string.onboarding_permission_body, getString(R.string.app_name))
         binding.btnLater.setOnClickListener { finishOnboarding() }

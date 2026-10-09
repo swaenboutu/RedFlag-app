@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Top of the welcome tour screens: the logo on the left, "Step X of Y" on the right. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="23dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_flag_light" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/topbarStep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter_semibold"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textSize="15sp" />
+</LinearLayout>

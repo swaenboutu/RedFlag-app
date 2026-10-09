@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Interruption screen, dark version: dark navy background, cream text, light coral flag (same palette as the logo). -->
+    <color name="interruption_background">@color/logo_navy</color>
+    <color name="interruption_text">@color/logo_cream</color>
+    <color name="interruption_text_muted">#B7C1D2</color>
+    <color name="interruption_text_subtle">#AAB5C8</color>
+    <color name="interruption_outline">#5B6B84</color>
+    <color name="interruption_flag_pole">@color/logo_cream</color>
+    <color name="interruption_flag_head">@color/logo_coral</color>
+
+    <!--
+        Dark mode of the app (the screens other than the interruption one): navy page, slightly lighter navy cards, cream ink.
+        Values sampled from the dark design: page #0F1B2D, cards #1B2A40, lines #2C3E57.
+    -->
+    <color name="app_background">#0F1B2D</color>
+    <color name="surface_warm">#1B2A40</color>
+    <color name="surface_variant">#22344D</color>
+    <color name="dialog_surface">#1B2A40</color>
+    <color name="ink">@color/logo_cream</color>
+    <color name="ink_secondary">#B9C2CE</color>
+    <color name="line">#2C3E57</color>
+    <color name="outline">#7F8DA6</color>
+    <color name="secondary_container">#2C3E57</color>
+    <color name="primary_fill">@color/logo_cream</color>
+    <color name="on_primary_fill">@color/logo_navy</color>
+    <color name="filter_selected">@color/logo_cream</color>
+    <color name="on_filter_selected">@color/logo_navy</color>
+    <color name="check_fill">@color/logo_cream</color>
+    <color name="check_mark">@color/logo_navy</color>
+    <color name="checkbox_off">#8896AE</color>
+    <color name="logo_tile">#1B2A40</color>
+    <color name="brand_navy">#2C3E57</color>
+
+    <color name="warning_container">#3A2F1C</color>
+    <color name="on_warning_container">#FFD9A0</color>
+
+    <color name="chart_blocked">@color/logo_cream</color>
+    <color name="chart_bypassed">#1B2A40</color>
+    <color name="chart_snoozed">#4A5D77</color>
+    <color name="chart_ink">@color/logo_cream</color>
+    <color name="chart_grid">#24364E</color>
+
+    <color name="nav_indicator">#2C3E57</color>
+    <color name="nav_icon_active">@color/logo_cream</color>
+    <color name="nav_label_active">@color/logo_cream</color>
+
+    <!-- Emphasis surfaces (the "Red Flag is on" card, switches): lighter than the cards. -->
+    <color name="interstitial_background">#2C3E57</color>
+    <color name="interstitial_circle">#3A4D69</color>
+    <color name="interstitial_text">@color/logo_cream</color>
+    <color name="interstitial_text_muted">#B9C2CE</color>
+    <color name="interstitial_text_subtle">#A9B4C6</color>
+    <color name="interstitial_divider">#3A4D69</color>
+    <color name="interstitial_outline">#6B7A92</color>
+    <color name="interstitial_scroll_thumb">#6B7A92</color>
+</resources>

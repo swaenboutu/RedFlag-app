@@ -32,12 +32,18 @@
 
     <string name="onboarding_body">Avant d’ouvrir une application que vous avez signalée, une courte pause vous demande si vous le voulez vraiment. Choisissez les enjeux qui comptent pour vous et les applications concernées : tout reste sur votre téléphone.</string>
     <string name="onboarding_start">Commencer</string>
-    <string name="onboarding_problems_title">Ce qui compte pour vous</string>
+    <string name="onboarding_problems_title">Qu’est-ce qui compte pour vous ?</string>
     <string name="onboarding_problems_body">Sélectionnez les enjeux qui vous importent. Ils seront ajoutés à vos favoris, pour les retrouver facilement ensuite.</string>
     <string name="onboarding_continue">Continuer</string>
+    <plurals name="onboarding_continue_count">
+        <item quantity="one">Continuer · %d choisi</item>
+        <item quantity="other">Continuer · %d choisis</item>
+        <item quantity="many">Continuer · %d choisis</item>
+    </plurals>
+    <string name="onboarding_step">Étape %1$d sur %2$d</string>
     <string name="onboarding_next">Suivant</string>
-    <string name="onboarding_skip">Passer</string>
-    <string name="onboarding_apps_step">Enjeu %1$d sur %2$d</string>
+    <string name="onboarding_skip">Passer cette étape</string>
+    <string name="onboarding_apps_step">Étape 3 sur 4 · Enjeu %1$d sur %2$d</string>
     <string name="onboarding_apps_body">Sélectionnez les applications concernées par cet enjeu. Vous pourrez modifier ce choix à tout moment.</string>
     <string name="onboarding_permission_title">Vous y êtes presque</string>
     <string name="onboarding_permission_body">Pour vous prévenir avant l\'ouverture d\'une application signalée, %1$s a besoin du service d\'accessibilité d\'Android. Il détecte uniquement le nom de l\'application qui passe au premier plan : aucun contenu de l\'écran n\'est lu et aucune donnée ne quitte votre téléphone.\n\nDans les réglages qui s\'ouvrent, cherchez « %1$s » et activez-le.</string>
@@ -68,12 +74,14 @@
     <string name="stats_range_caption_day">14 derniers jours</string>
     <string name="stats_range_caption_month">12 derniers mois</string>
     <string name="stats_range_caption_year">5 dernières années</string>
-    <string name="stats_metric_attempts">Tentatives</string>
-    <string name="stats_metric_bypassed">Outrepassées</string>
-    <string name="stats_metric_snoozed">Mises en pause</string>
-    <string name="stats_legend_blocked">App fermée</string>
-    <string name="stats_legend_bypassed">Ouverte malgré tout</string>
-    <string name="stats_legend_snoozed">Interruption mise en pause</string>
+    <string name="stats_headline">%1$d fois sur %2$d, vous avez choisi de ne pas l’ouvrir.</string>
+    <string name="stats_headline_none">Aucune tentative sur cette période.</string>
+    <string name="stats_metric_closed">Fermée</string>
+    <string name="stats_metric_opened">Ouverte</string>
+    <string name="stats_metric_snoozed">Reportée</string>
+    <string name="stats_chart_title_day">Tentatives d’ouverture par jour</string>
+    <string name="stats_chart_title_month">Tentatives d’ouverture par mois</string>
+    <string name="stats_chart_title_year">Tentatives d’ouverture par an</string>
     <string name="stats_chart_empty">Aucune tentative sur cette période</string>
     <string name="stats_chart_description">%1$s : %2$d tentatives, %3$d outrepassées, %4$d mises en pause.</string>
     <string name="settings_title">Réglages</string>

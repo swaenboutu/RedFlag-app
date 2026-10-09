@@ -13,6 +13,7 @@ import fr.conscience.numerique.ui.apps.AppDetailArgs
 import fr.conscience.numerique.ui.apps.AppDetailViewModel
 import fr.conscience.numerique.ui.apps.DetailRow
 import fr.conscience.numerique.ui.common.screenViewModel
+import fr.conscience.numerique.ui.common.underline
 import kotlinx.coroutines.launch
 
 /**
@@ -27,6 +28,7 @@ class OnboardingAppDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityOnboardingAppDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.btnSkip.underline()
 
         val adapter = AppDetailAdapter(onThemeClick = viewModel::toggleSection, onToggle = viewModel::toggle)
         binding.list.adapter = adapter

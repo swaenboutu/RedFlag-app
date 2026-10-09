@@ -16,6 +16,8 @@ import fr.conscience.numerique.databinding.ItemOnboardingHeaderBinding
 import fr.conscience.numerique.ui.common.CARD_GAP_DP
 import fr.conscience.numerique.ui.common.applyCard
 import fr.conscience.numerique.ui.common.bindThemeCard
+import fr.conscience.numerique.ui.common.styledIssueLabel
+import fr.conscience.numerique.ui.common.themeIcon
 import fr.conscience.numerique.ui.common.checkedSubtitle
 
 class OnboardingProblemsAdapter(
@@ -43,7 +45,9 @@ class OnboardingProblemsAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val binding = (holder as Holder<*>).binding
         when (val row = getItem(position)) {
-            OnboardingRow.Header -> Unit
+            OnboardingRow.Header -> with(binding as ItemOnboardingHeaderBinding) {
+                topbar.topbarStep.text = root.context.getString(R.string.onboarding_step, 2, 4)
+            }
             is OnboardingRow.Theme -> bindTheme(binding as ItemManagerThemeBinding, row)
             is OnboardingRow.Choice -> bindChoice(binding as ItemDetailChoiceBinding, row)
         }
@@ -56,11 +60,12 @@ class OnboardingProblemsAdapter(
             expanded = row.expanded,
             hasContent = true,
             onClick = { onThemeClick(row.id) },
+            icon = themeIcon(row.id),
         )
     }
 
     private fun bindChoice(binding: ItemDetailChoiceBinding, row: OnboardingRow.Choice) = with(binding) {
-        choice.text = row.ref.displayLabel(root.context, row.override)
+        choice.text = styledIssueLabel(root.context, row.ref.displayLabel(root.context, row.override))
         choice.isChecked = row.checked
         choice.setOnClickListener {
             // La case se bascule seule au toucher : on la remet dans l'état réel (un choix refusé ne change rien en base).

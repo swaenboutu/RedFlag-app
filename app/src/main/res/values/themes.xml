@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Thème clair aux couleurs de la charte (bleu nuit, gris bleuté). -->
-    <style name="Theme.Conscience" parent="Theme.Material3.Light.NoActionBar">
-        <item name="colorPrimary">#1F2A5C</item>
-        <item name="colorOnPrimary">#FFFFFF</item>
-        <item name="colorSecondaryContainer">#E3E6F4</item>
-        <item name="colorOnSecondaryContainer">#1F2A5C</item>
+    <!-- Brand colors (cream, navy ink, coral accents), light or dark with the phone: every color goes through the tokens of colors.xml. -->
+    <style name="Theme.Conscience" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary_fill</item>
+        <item name="colorOnPrimary">@color/on_primary_fill</item>
+        <item name="colorSecondaryContainer">@color/secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/ink</item>
         <item name="android:colorBackground">@color/app_background</item>
         <!-- Explicites : avant Android 9/10 (sans affichage bord à bord), sinon fond noir et barres bleu nuit. -->
         <item name="android:windowBackground">@color/app_background</item>
         <item name="android:statusBarColor">@color/app_background</item>
-        <item name="android:navigationBarColor">@android:color/white</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
-        <item name="colorSurface">#FFFFFF</item>
-        <item name="colorOnSurface">#161B2E</item>
-        <item name="colorOnSurfaceVariant">#646B80</item>
-        <item name="colorOutlineVariant">#E2E4EC</item>
+        <item name="android:navigationBarColor">@color/surface_warm</item>
+        <item name="android:windowLightStatusBar">@bool/light_bars</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">@bool/light_bars</item>
+        <item name="colorSurface">@color/surface_warm</item>
+        <item name="colorOnSurface">@color/ink</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
+        <item name="colorSurfaceContainerLowest">@color/surface_warm</item>
+        <item name="colorSurfaceContainerLow">@color/surface_warm</item>
+        <item name="colorSurfaceContainer">@color/surface_warm</item>
+        <item name="colorSurfaceContainerHigh">@color/surface_warm</item>
+        <item name="colorSurfaceContainerHighest">@color/surface_warm</item>
+        <item name="colorOutline">@color/outline</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.Conscience.MaterialAlertDialog</item>
+        <item name="colorOnSurfaceVariant">@color/ink_secondary</item>
+        <item name="colorOutlineVariant">@color/line</item>
 
         <item name="android:fontFamily">@font/inter</item>
         <item name="fontFamily">@font/inter</item>
@@ -38,13 +46,20 @@
         <item name="textAppearanceLabelSmall">@style/TextAppearance.Conscience.LabelSmall</item>
     </style>
 
-    <!-- Écran d'interruption : toujours sombre. -->
+    <!-- Dialogs: our surface color instead of Material's default tint, rounded like the cards. -->
+    <style name="ThemeOverlay.Conscience.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorSurfaceContainerHigh">@color/dialog_surface</item>
+        <item name="colorSurface">@color/dialog_surface</item>
+        <item name="dialogCornerRadius">28dp</item>
+    </style>
+
+    <!-- Interruption screen: follows the phone's light/dark mode (colors in values and values-night). -->
     <style name="Theme.Conscience.Interstitial" parent="Theme.Conscience">
         <item name="android:windowBackground">@color/interruption_background</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+        <item name="android:windowLightStatusBar">@bool/interruption_light_bars</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">@bool/interruption_light_bars</item>
     </style>
 
     <!-- Écran Réglages -->
@@ -83,6 +98,18 @@
     </style>
 
     <!-- Filtres de la liste des applications -->
+    <style name="Widget.Conscience.SegmentItem" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:background">@drawable/bg_segment_item</item>
+        <item name="android:fontFamily">@font/inter_semibold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:minWidth">56dp</item>
+        <item name="android:paddingStart">14dp</item>
+        <item name="android:paddingEnd">14dp</item>
+        <item name="android:textColor">@color/segment_text</item>
+        <item name="android:textSize">16sp</item>
+    </style>
     <style name="Widget.Conscience.FilterChip" parent="">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">30dp</item>
@@ -95,16 +122,6 @@
     </style>
 
     <!-- Légende d'un graphique : une pastille colorée (drawableTint) et son libellé -->
-    <style name="Widget.Conscience.LegendItem" parent="">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:drawableStart">@drawable/legend_dot</item>
-        <item name="android:drawablePadding">8dp</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:minHeight">24dp</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:textSize">13sp</item>
-    </style>
 
     <!-- Barre de navigation du bas -->
     <style name="Widget.Conscience.NavIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">

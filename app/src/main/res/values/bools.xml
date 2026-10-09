@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Interruption screen: dark status/navigation bar icons on the light version (values-night: light icons). -->
+    <bool name="interruption_light_bars">true</bool>
+    <!-- Dark icons in the status and navigation bars on the light theme (values-night: light icons). -->
+    <bool name="light_bars">true</bool>
+</resources>

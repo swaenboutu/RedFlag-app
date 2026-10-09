@@ -11,6 +11,7 @@ import fr.conscience.numerique.databinding.ActivityOnboardingAppListBinding
 import fr.conscience.numerique.ui.apps.AppListAdapter
 import fr.conscience.numerique.ui.apps.MainViewModel
 import fr.conscience.numerique.ui.common.screenViewModel
+import fr.conscience.numerique.ui.common.underline
 import kotlinx.coroutines.launch
 
 /**
@@ -24,6 +25,7 @@ class OnboardingAppListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityOnboardingAppListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.btnSkip.underline()
 
         val adapter = AppListAdapter { item -> startActivity(OnboardingAppDetailActivity.intent(this, item.app.packageName, item.app.label)) }
         binding.appList.adapter = adapter

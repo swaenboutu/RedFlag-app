@@ -11,6 +11,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import fr.conscience.numerique.R
 import fr.conscience.numerique.databinding.ActivityOnboardingAppsBinding
 import fr.conscience.numerique.ui.common.screenViewModel
+import fr.conscience.numerique.ui.common.underline
 import kotlinx.coroutines.launch
 
 /** Welcome tour, step 3: one page per chosen issue, to tick the apps concerned. The issue title stays pinned above the list. */
@@ -21,6 +22,8 @@ class OnboardingAppsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityOnboardingAppsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.btnSkip.underline()
+        binding.btnSkipRemaining.underline()
 
         val adapter = OnboardingAppsAdapter(viewModel::toggle, viewModel::setQuery) { viewModel.query.value }
         binding.list.adapter = adapter

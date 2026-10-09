@@ -22,6 +22,7 @@ object AppStatsArgs {
 /** [allTimeAttempts] : toutes les tentatives de cette app depuis le début, quelle que soit l'échelle affichée. */
 data class AppStatsState(val range: StatsRange, val buckets: List<StatsBucket>, val allTimeAttempts: Int) {
     val attempts: Int get() = buckets.sumOf { it.attempts }
+    val blocked: Int get() = buckets.sumOf { it.blocked }
     val bypassed: Int get() = buckets.sumOf { it.bypassed }
     val snoozed: Int get() = buckets.sumOf { it.snoozed }
 }

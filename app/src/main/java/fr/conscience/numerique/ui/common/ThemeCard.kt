@@ -17,7 +17,13 @@ fun ItemManagerThemeBinding.bindThemeCard(
     expanded: Boolean,
     hasContent: Boolean,
     onClick: () -> Unit,
+    @androidx.annotation.DrawableRes icon: Int? = null,
 ) {
+    themeIcon.visibility = if (icon == null) View.GONE else View.VISIBLE
+    if (icon != null) {
+        themeIcon.setImageResource(icon)
+        themeIcon.imageTintList = ColorStateList.valueOf(MaterialColors.getColor(root, com.google.android.material.R.attr.colorOnSurface))
+    }
     themeTitle.text = title
     themeSubtitle.text = subtitle
 

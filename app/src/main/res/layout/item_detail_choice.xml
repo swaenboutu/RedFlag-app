@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Une problématique à cocher. La case est à droite : la mise en page est inversée (layoutDirection=rtl) et le texte
-    est ramené à gauche à la main, d'où left/right volontaires. À revoir si une langue de droite à gauche est ajoutée.
-    Le fond de carte est posé par l'adaptateur.
--->
+<!-- One issue to tick, the box on the left. The card background is set by the adapter. -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/choiceRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -26,15 +21,12 @@
         android:layout_height="wrap_content"
         android:button="@drawable/sel_check"
         android:fontFamily="@font/inter_medium"
-        android:gravity="left|center_vertical"
-        android:layoutDirection="rtl"
-        android:minHeight="56dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:textAlignment="gravity"
+        android:gravity="center_vertical"
+        android:minHeight="64dp"
+        android:paddingStart="0dp"
+        android:paddingEnd="16dp"
+        android:paddingVertical="10dp"
         android:textColor="?attr/colorOnSurface"
-        android:textDirection="locale"
-        android:textSize="15sp"
-        app:buttonTint="@null"
-        tools:ignore="RtlHardcoded" />
+        android:textSize="16sp"
+        app:buttonTint="@null" />
 </FrameLayout>

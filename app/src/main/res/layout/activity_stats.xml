@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:importantForAccessibility="no"
-            app:indicatorColor="@color/chart_snoozed"
+            app:indicatorColor="@color/ink"
             app:trackColor="@color/chart_grid"
             app:trackCornerRadius="4dp"
             app:trackStopIndicatorSize="0dp"

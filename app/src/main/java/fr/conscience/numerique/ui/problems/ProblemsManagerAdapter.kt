@@ -19,6 +19,7 @@ import fr.conscience.numerique.databinding.ItemManagerThemeBinding
 import fr.conscience.numerique.ui.common.CARD_GAP_DP
 import fr.conscience.numerique.ui.common.applyCard
 import fr.conscience.numerique.ui.common.bindThemeCard
+import fr.conscience.numerique.ui.common.themeIcon
 import fr.conscience.numerique.ui.common.iconOf
 import fr.conscience.numerique.ui.common.problemsSubtitle
 
@@ -65,6 +66,7 @@ class ProblemsManagerAdapter(
             expanded = row.expanded,
             hasContent = row.problemCount > 0,
             onClick = { onThemeClick(row) },
+            icon = themeIcon(row.id),
         )
     }
 

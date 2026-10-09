@@ -6,7 +6,7 @@
     android:viewportHeight="96">
     <!-- The Red Flag logo on its rounded tile (same drawing as the launcher icon). -->
     <path
-        android:fillColor="@color/logo_navy"
+        android:fillColor="@color/logo_tile"
         android:pathData="M21,0h54a21,21 0 0 1 21,21v54a21,21 0 0 1 -21,21h-54a21,21 0 0 1 -21,-21v-54a21,21 0 0 1 21,-21z" />
     <path
         android:fillColor="@color/logo_cream"

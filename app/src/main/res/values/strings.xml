@@ -33,9 +33,14 @@
     <string name="onboarding_problems_title">What matters to you?</string>
     <string name="onboarding_problems_body">Select the issues that matter to you. They will be added to your favorites, so you can find them easily later.</string>
     <string name="onboarding_continue">Continue</string>
+    <plurals name="onboarding_continue_count">
+        <item quantity="one">Continue · %d selected</item>
+        <item quantity="other">Continue · %d selected</item>
+    </plurals>
+    <string name="onboarding_step">Step %1$d of %2$d</string>
     <string name="onboarding_next">Next</string>
-    <string name="onboarding_skip">Skip</string>
-    <string name="onboarding_apps_step">Issue %1$d of %2$d</string>
+    <string name="onboarding_skip">Skip this step</string>
+    <string name="onboarding_apps_step">Step 3 of 4 · Issue %1$d of %2$d</string>
     <string name="onboarding_apps_body">Select the apps this issue applies to. You can change this at any time.</string>
     <string name="onboarding_permission_title">You\'re almost there</string>
     <string name="onboarding_permission_body">To warn you before you open an app you have flagged, %1$s needs Android\'s accessibility service. It only detects the name of the app coming to the foreground: no screen content is read and no data leaves your device.\n\nIn the settings that open, find “%1$s” and turn it on.</string>
@@ -65,12 +70,14 @@
     <string name="stats_range_caption_day">Last 14 days</string>
     <string name="stats_range_caption_month">Last 12 months</string>
     <string name="stats_range_caption_year">Last 5 years</string>
-    <string name="stats_metric_attempts">Attempts</string>
-    <string name="stats_metric_bypassed">Overridden</string>
-    <string name="stats_metric_snoozed">Snoozed</string>
-    <string name="stats_legend_blocked">Closed the app</string>
-    <string name="stats_legend_bypassed">Opened anyway</string>
-    <string name="stats_legend_snoozed">Snoozed the interruption</string>
+    <string name="stats_headline">%1$d times out of %2$d, you chose not to open it.</string>
+    <string name="stats_headline_none">No attempts in this period.</string>
+    <string name="stats_metric_closed">Closed</string>
+    <string name="stats_metric_opened">Opened</string>
+    <string name="stats_metric_snoozed">Postponed</string>
+    <string name="stats_chart_title_day">Opening attempts per day</string>
+    <string name="stats_chart_title_month">Opening attempts per month</string>
+    <string name="stats_chart_title_year">Opening attempts per year</string>
     <string name="stats_chart_empty">No attempts in this period</string>
     <string name="stats_chart_description">%1$s: %2$d attempts, %3$d overridden, %4$d snoozed.</string>
     <string name="settings_title">Settings</string>

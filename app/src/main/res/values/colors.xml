@@ -6,45 +6,73 @@
     <color name="logo_coral">#FF7A5C</color>
     <color name="ic_launcher_background">@color/logo_navy</color>
 
+    <!--
+        Semantic colors of the app. Light values here, dark values in values-night/colors.xml (the app follows the phone's mode).
+        ink = main text and icons; primary_fill = filled buttons; filter_selected = selected chip or segment.
+    -->
+    <color name="ink">@color/logo_navy</color>
+    <color name="outline">#6B7A92</color>
+    <color name="primary_fill">@color/logo_navy</color>
+    <color name="on_primary_fill">@color/logo_cream</color>
+    <color name="on_filter_selected">@color/logo_cream</color>
+    <color name="check_fill">@color/logo_navy</color>
+    <color name="check_mark">@color/logo_cream</color>
+    <color name="logo_tile">@color/logo_navy</color>
+    <color name="surface_variant">#F0EBDF</color>
+    <!-- Dialogs: same cream as the page in the light theme (the dark theme uses the card color, see values-night). -->
+    <color name="dialog_surface">@color/app_background</color>
+
     <color name="favorite_star">#E88A1A</color>
 
     <!-- Pastilles de problématiques et encarts d'avertissement -->
     <color name="warning_container">#FFF0D6</color>
     <color name="on_warning_container">#7A4A00</color>
-    <color name="checkbox_off">#B9BDCB</color>
-    <color name="filter_selected">#161B2E</color>
+    <color name="checkbox_off">#6B7A92</color>
+    <color name="filter_selected">@color/logo_navy</color>
 
-    <color name="brand_navy">#1F2A5C</color>
+    <color name="brand_navy">@color/logo_navy</color>
     <color name="status_ok">#1F9D6B</color>
     <color name="status_warning">#E0475B</color>
 
-    <!-- Graphiques des statistiques : fermée (bien), outrepassée, mise en pause. -->
-    <color name="chart_blocked">#1F9D6B</color>
-    <color name="chart_bypassed">#FFB547</color>
-    <color name="chart_snoozed">#1F2A5C</color>
-    <color name="chart_grid">#E2E4EC</color>
+    <!-- Statistics chart: closed = solid navy, opened = hatched, snoozed = light slate with an outline (told apart without color). -->
+    <color name="chart_blocked">@color/logo_navy</color>
+    <color name="chart_bypassed">@color/surface_warm</color>
+    <color name="chart_snoozed">#C9D2DE</color>
+    <color name="chart_ink">@color/logo_navy</color>
+    <color name="chart_grid">#E4DDCF</color>
 
     <!-- Barre de navigation -->
-    <color name="nav_indicator">#E3E6F4</color>
-    <color name="nav_icon_active">#1F2A5C</color>
-    <color name="nav_label_active">#161B2E</color>
-    <color name="nav_inactive">#646B80</color>
+    <color name="nav_indicator">#E9E3D6</color>
+    <color name="nav_icon_active">@color/logo_navy</color>
+    <color name="nav_label_active">@color/logo_navy</color>
+    <color name="nav_inactive">@color/ink_secondary</color>
 
-    <!-- Écran d'interruption -->
-    <color name="app_background">#F3F4F8</color>
-    <!-- Interruption screen: dark navy, cream text, coral accents (same palette as the logo). -->
-    <color name="interruption_background">@color/logo_navy</color>
-    <color name="interruption_text">@color/logo_cream</color>
-    <color name="interruption_text_muted">#B7C1D2</color>
-    <color name="interruption_text_subtle">#AAB5C8</color>
-    <color name="interruption_outline">#5B6B84</color>
-    <color name="interstitial_background">#1F2A5C</color>
-    <color name="interstitial_circle">#2B3873</color>
-    <color name="interstitial_accent">#FFB547</color>
-    <color name="interstitial_text">#FFFFFF</color>
-    <color name="interstitial_text_muted">#C9CFEA</color>
-    <color name="interstitial_text_subtle">#AEB6DD</color>
-    <color name="interstitial_divider">#34407A</color>
-    <color name="interstitial_outline">#5A67A8</color>
-    <color name="interstitial_scroll_thumb">#8E98C9</color>
+    <!-- Light theme of the app: cream page, navy ink, warm lines (same palette as the logo and the interruption screen). -->
+    <color name="app_background">@color/logo_cream</color>
+    <color name="ink_secondary">#44556E</color>
+    <color name="line">#E4DDCF</color>
+    <color name="secondary_container">#E9E3D6</color>
+    <color name="surface_warm">#FFFCF5</color>
+    <!--
+        Interruption screen, light version (the default): cream background, navy text, dark coral flag. The dark version is in
+        values-night (used when the phone is in dark mode). Secondary text is darkened (#33435A, about 9:1 on cream) for AAA contrast.
+        The roles swap with the theme: the main button is filled with the text color and uses the background color for its label.
+    -->
+    <color name="interruption_background">@color/logo_cream</color>
+    <color name="interruption_text">@color/logo_navy</color>
+    <color name="interruption_text_muted">#33435A</color>
+    <color name="interruption_text_subtle">#33435A</color>
+    <color name="interruption_outline">#33435A</color>
+    <color name="interruption_flag_pole">@color/logo_navy</color>
+    <color name="interruption_flag_head">#D9502F</color>
+    <!-- Dark navy surfaces inside the light theme (the "Red Flag is on" card, switches, app icon backing). -->
+    <color name="interstitial_background">@color/logo_navy</color>
+    <color name="interstitial_circle">#1C2B44</color>
+    <color name="interstitial_accent">@color/logo_coral</color>
+    <color name="interstitial_text">@color/logo_cream</color>
+    <color name="interstitial_text_muted">#B7C1D2</color>
+    <color name="interstitial_text_subtle">#A9B4C6</color>
+    <color name="interstitial_divider">#2A3A55</color>
+    <color name="interstitial_outline">#5B6B84</color>
+    <color name="interstitial_scroll_thumb">#8795AD</color>
 </resources>

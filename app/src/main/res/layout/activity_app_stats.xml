@@ -29,52 +29,128 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include
-                android:id="@+id/header"
-                layout="@layout/item_detail_header" />
-
-            <!-- Échelle du graphique : par jour, par mois, par an. -->
+            <!-- The app: its icon with the flag planted on the corner, its name, and the issues it is flagged for. -->
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/rangeDay"
-                    style="@style/Widget.Conscience.FilterChip"
-                    android:text="@string/stats_range_day" />
-
-                <TextView
-                    android:id="@+id/rangeMonth"
-                    style="@style/Widget.Conscience.FilterChip"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/stats_range_month" />
-
-                <TextView
-                    android:id="@+id/rangeYear"
-                    style="@style/Widget.Conscience.FilterChip"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/stats_range_year" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/rangeCaption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginEnd="20dp"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:textSize="13sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <!-- Les trois chiffres de la période affichée. -->
+                <FrameLayout
+                    android:layout_width="76dp"
+                    android:layout_height="72dp">
+
+                    <ImageView
+                        android:id="@+id/appIcon"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:layout_gravity="bottom|start"
+                        android:background="@drawable/bg_icon_18"
+                        android:importantForAccessibility="no" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="23dp"
+                        android:layout_gravity="top|end"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_flag_light" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <fr.conscience.numerique.ui.common.HeadingTextView
+                        android:id="@+id/appName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/bricolage_grotesque"
+                        android:includeFontPadding="false"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="32sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/appSubtitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="16sp"
+                        android:visibility="gone"
+                        app:lineHeight="22dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Scale of the chart: per day, per month, per year. -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_segment"
+                    android:orientation="horizontal"
+                    android:padding="4dp">
+
+                    <TextView
+                        android:id="@+id/rangeDay"
+                        style="@style/Widget.Conscience.SegmentItem"
+                        android:text="@string/stats_range_day" />
+
+                    <TextView
+                        android:id="@+id/rangeMonth"
+                        style="@style/Widget.Conscience.SegmentItem"
+                        android:text="@string/stats_range_month" />
+
+                    <TextView
+                        android:id="@+id/rangeYear"
+                        style="@style/Widget.Conscience.SegmentItem"
+                        android:text="@string/stats_range_year" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/rangeCaption"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <fr.conscience.numerique.ui.common.HeadingTextView
+                android:id="@+id/headline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="20dp"
+                android:fontFamily="@font/bricolage_grotesque"
+                android:includeFontPadding="false"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="26sp"
+                app:lineHeight="32dp" />
+
+            <!-- The three numbers of the period, which are also the legend of the chart. -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="12dp"
                 android:baselineAligned="false"
                 android:orientation="horizontal">
@@ -82,64 +158,71 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
+                    android:layout_marginHorizontal="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_card_white"
                     android:orientation="vertical"
                     android:padding="12dp">
 
                     <TextView
-                        android:id="@+id/metricAttempts"
+                        android:id="@+id/metricClosed"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/bricolage_grotesque"
                         android:includeFontPadding="false"
                         android:textColor="?attr/colorOnSurface"
-                        android:textSize="26sp"
+                        android:textSize="34sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/stats_metric_attempts"
+                        android:layout_marginTop="8dp"
+                        android:drawablePadding="6dp"
+                        android:drawableStart="@drawable/ic_legend_closed"
+                        android:gravity="center_vertical"
+                        android:maxLines="1"
+                        android:text="@string/stats_metric_closed"
                         android:textColor="?attr/colorOnSurfaceVariant"
-                        android:textSize="12sp" />
+                        android:textSize="13sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginEnd="3dp"
+                    android:layout_marginHorizontal="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_card_white"
                     android:orientation="vertical"
                     android:padding="12dp">
 
                     <TextView
-                        android:id="@+id/metricBypassed"
+                        android:id="@+id/metricOpened"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/bricolage_grotesque"
                         android:includeFontPadding="false"
                         android:textColor="?attr/colorOnSurface"
-                        android:textSize="26sp"
+                        android:textSize="34sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="@string/stats_metric_bypassed"
+                        android:layout_marginTop="8dp"
+                        android:drawablePadding="6dp"
+                        android:drawableStart="@drawable/ic_legend_opened"
+                        android:gravity="center_vertical"
+                        android:maxLines="1"
+                        android:text="@string/stats_metric_opened"
                         android:textColor="?attr/colorOnSurfaceVariant"
-                        android:textSize="12sp" />
+                        android:textSize="13sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
+                    android:layout_marginHorizontal="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_card_white"
                     android:orientation="vertical"
@@ -152,20 +235,23 @@
                         android:fontFamily="@font/bricolage_grotesque"
                         android:includeFontPadding="false"
                         android:textColor="?attr/colorOnSurface"
-                        android:textSize="26sp"
+                        android:textSize="34sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="8dp"
+                        android:drawablePadding="6dp"
+                        android:drawableStart="@drawable/ic_legend_snoozed"
+                        android:gravity="center_vertical"
+                        android:maxLines="1"
                         android:text="@string/stats_metric_snoozed"
                         android:textColor="?attr/colorOnSurfaceVariant"
-                        android:textSize="12sp" />
+                        android:textSize="13sp" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Le graphique et sa légende. -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -176,9 +262,18 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
+                <TextView
+                    android:id="@+id/chartTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_semibold"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="16sp" />
+
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="220dp">
+                    android:layout_height="240dp"
+                    android:layout_marginTop="12dp">
 
                     <fr.conscience.numerique.ui.stats.StackedBarChartView
                         android:id="@+id/chart"
@@ -192,31 +287,9 @@
                         android:layout_gravity="center"
                         android:text="@string/stats_chart_empty"
                         android:textColor="?attr/colorOnSurfaceVariant"
-                        android:textSize="13sp"
+                        android:textSize="14sp"
                         android:visibility="gone" />
                 </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/Widget.Conscience.LegendItem"
-                        android:drawableTint="@color/chart_blocked"
-                        android:text="@string/stats_legend_blocked" />
-
-                    <TextView
-                        style="@style/Widget.Conscience.LegendItem"
-                        android:drawableTint="@color/chart_bypassed"
-                        android:text="@string/stats_legend_bypassed" />
-
-                    <TextView
-                        style="@style/Widget.Conscience.LegendItem"
-                        android:drawableTint="@color/chart_snoozed"
-                        android:text="@string/stats_legend_snoozed" />
-                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

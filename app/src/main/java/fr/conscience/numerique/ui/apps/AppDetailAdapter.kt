@@ -19,6 +19,8 @@ import fr.conscience.numerique.databinding.ItemManagerThemeBinding
 import fr.conscience.numerique.ui.common.CARD_GAP_DP
 import fr.conscience.numerique.ui.common.applyCard
 import fr.conscience.numerique.ui.common.bindThemeCard
+import fr.conscience.numerique.ui.common.styledIssueLabel
+import fr.conscience.numerique.ui.common.themeIcon
 import fr.conscience.numerique.ui.common.checkedSubtitle
 import fr.conscience.numerique.ui.common.iconOf
 
@@ -73,6 +75,7 @@ class AppDetailAdapter(
             expanded = row.expanded,
             hasContent = row.problemCount > 0,
             onClick = { onThemeClick(row.id) },
+            icon = themeIcon(row.id),
         )
     }
 
@@ -84,7 +87,7 @@ class AppDetailAdapter(
 
     private fun bindChoice(binding: ItemDetailChoiceBinding, row: DetailRow.Choice) = with(binding) {
         val context = root.context
-        choice.text = row.ref.displayLabel(context, row.override)
+        choice.text = styledIssueLabel(context, row.ref.displayLabel(context, row.override))
         choice.isChecked = row.checked
         choice.setOnClickListener { onToggle(row.ref, row.checked) }
         choiceDivider.visibility = if (row.first) View.GONE else View.VISIBLE
