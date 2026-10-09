@@ -2,13 +2,6 @@
 
 À reprendre plus tard. Cochez au fur et à mesure.
 
-## À décider d'abord
-
-- [ ] **Identifiant de l'app** (`fr.conscience.numerique`, utilisé comme `applicationId` et comme package Kotlin) : il date
-  d'avant le nom « Red Flag » et ne pourra plus changer après la première publication sur Play. À choisir avant (par
-  exemple `app.redflag`, à adapter à un domaine ou un nom qu'on possède). Le renommer touche `app/build.gradle.kts`,
-  les dossiers `java/…`, le manifeste, `scripts/*` (service d'accessibilité, `pm clear`), le README et le schéma Room.
-
 ## Publication sur le Play Store
 
 Fait : AAB et APK release signés (`scripts/release.sh`), `targetSdk` 37, écran d'accueil qui explique le service
@@ -29,7 +22,7 @@ d'accessibilité et demande un accord explicite, FAQ, site statique (`docs/`, EN
   image de présentation 1024×500, captures (on peut reprendre celles de `docs/assets/img/`)
 - [ ] **Test fermé** : 12 testeurs pendant 14 jours avant la production (compte personnel récent), puis rapport
   pré-lancement
-- [ ] **Version 0.3.2** (`versionCode` 7) : release GitHub `v0.3.2` publiée (nouveau design, mode sombre) ; reste la fiche Play (la `v0.1.0` porte l'ancien nom)
+- [ ] **Version 0.4.0** (`versionCode` 8) : release GitHub `v0.4.0` publiée (nouveau design, mode sombre) ; reste la fiche Play (la `v0.1.0` porte l'ancien nom)
 - [ ] **Site** : reprendre la palette (crème, bleu nuit, corail) et les captures du nouveau design, clair et sombre
 
 ## Qualité
@@ -65,6 +58,7 @@ d'accessibilité et demande un accord explicite, FAQ, site statique (`docs/`, EN
 
 ## Fait
 
+- [x] Identifiant de l'app `app.redflag` (`applicationId` et package Kotlin, remplace `fr.conscience.numerique`) : à ne plus changer après la première publication sur Play
 - [x] Doublons factorisés (libellés, sections, icônes, `toRef()`, accès au conteneur) : revue de code, point 3
 - [x] ViewModels par fabrique (`screenViewModel`), testés sur base en mémoire ; accueil et statistiques testés : point 5
 - [x] Un seul identifiant par problématique, base en version 7 : point 6

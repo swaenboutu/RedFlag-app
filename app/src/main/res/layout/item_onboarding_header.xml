@@ -13,7 +13,7 @@
         android:id="@+id/topbar"
         layout="@layout/view_onboarding_topbar" />
 
-    <fr.conscience.numerique.ui.common.HeadingTextView
+    <app.redflag.ui.common.HeadingTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

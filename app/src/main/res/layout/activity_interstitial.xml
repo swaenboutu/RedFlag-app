@@ -37,7 +37,7 @@
             android:src="@drawable/ic_flag" />
     </FrameLayout>
 
-    <fr.conscience.numerique.ui.common.HeadingTextView
+    <app.redflag.ui.common.HeadingTextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
             app:lineHeight="28dp" />
     </ScrollView>
 
-    <fr.conscience.numerique.ui.common.HeadingTextView
+    <app.redflag.ui.common.HeadingTextView
         android:id="@+id/question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

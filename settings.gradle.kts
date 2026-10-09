@@ -14,6 +14,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ConscienceNumerique"
+rootProject.name = "RedFlag"
 include(":app")
 include(":fixtures")

@@ -6,7 +6,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <fr.conscience.numerique.ui.common.HeadingTextView
+    <app.redflag.ui.common.HeadingTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -62,7 +62,7 @@
             app:trackThickness="8dp" />
     </LinearLayout>
 
-    <fr.conscience.numerique.ui.common.HeadingTextView
+    <app.redflag.ui.common.HeadingTextView
         style="@style/Widget.Conscience.SettingsSection"
         android:text="@string/stats_apps_section" />
 

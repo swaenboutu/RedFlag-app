@@ -12,7 +12,7 @@ cd "$(dirname "$0")/.."
 export JAVA_HOME="${JAVA_HOME:-C:/Program Files/Android/Android Studio/jbr}"
 GRADLE=(./gradlew --console=plain -q)
 SRC=app/src
-PKG_DIR=java/fr/conscience/numerique
+PKG_DIR=java/app/redflag
 
 # Chemin d'une classe de test : $1 = nom (ex. FrictionGateTest) ; affiche "unit" ou "device" puis le nom complet.
 locate() {
@@ -63,8 +63,8 @@ pick_device() {
     fi
 }
 
-APP_ID=fr.conscience.numerique
-FIXTURE_ID=fr.conscience.numerique.fixture
+APP_ID=app.redflag
+FIXTURE_ID=app.redflag.fixture
 
 # Gradle désinstalle l'app à la fin des tests sur appareil : on la remet (en debug), et on réactive son service d'accessibilité
 # s'il l'était (les réglages « secure » ne sont modifiables que sur un émulateur ou un appareil de développement ; sinon, sans effet).
@@ -108,7 +108,7 @@ device_classes_for_changes() {
     files=$( { git diff --name-only HEAD; git diff --name-only '@{upstream}..HEAD' 2>/dev/null; git ls-files --others --exclude-standard; } | sort -u)
     local out=() uncovered=()
     local matched=0
-    add() { out+=("fr.conscience.numerique.$1"); matched=1; }
+    add() { out+=("app.redflag.$1"); matched=1; }
     while IFS= read -r f; do
         matched=0
         case "$f" in

@@ -29,7 +29,7 @@
             android:paddingStart="28dp"
             android:paddingEnd="28dp">
 
-            <fr.conscience.numerique.ui.common.HeadingTextView
+            <app.redflag.ui.common.HeadingTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/bricolage_grotesque"

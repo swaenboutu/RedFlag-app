@@ -25,7 +25,7 @@
             android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="13sp" />
 
-        <fr.conscience.numerique.ui.common.HeadingTextView
+        <app.redflag.ui.common.HeadingTextView
             android:id="@+id/problem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

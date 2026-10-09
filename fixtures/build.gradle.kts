@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "fr.conscience.numerique.fixture"
+    namespace = "app.redflag.fixture"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "fr.conscience.numerique.fixture"
+        applicationId = "app.redflag.fixture"
         minSdk = 26
         targetSdk = 37
         versionCode = 1

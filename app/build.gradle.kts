@@ -13,15 +13,15 @@ val keystoreProperties = Properties().apply {
 }
 
 android {
-    namespace = "fr.conscience.numerique"
+    namespace = "app.redflag"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "fr.conscience.numerique"
+        applicationId = "app.redflag"
         minSdk = 26
         targetSdk = 37
-        versionCode = 7
-        versionName = "0.3.2"
+        versionCode = 8
+        versionName = "0.4.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

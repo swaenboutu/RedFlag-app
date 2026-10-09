@@ -26,7 +26,7 @@
         android:paddingTop="4dp"
         android:paddingEnd="8dp">
 
-        <fr.conscience.numerique.ui.common.HeadingTextView
+        <app.redflag.ui.common.HeadingTextView
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
             app:tint="?attr/colorOnSurface" />
     </LinearLayout>
 
-    <fr.conscience.numerique.ui.common.HeadingTextView
+    <app.redflag.ui.common.HeadingTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="16dp"

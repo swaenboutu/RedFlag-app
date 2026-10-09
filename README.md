@@ -6,7 +6,7 @@ you of your values and asks whether you really want to continue. The goal is not
 Name: **Red Flag**, subtitle "Ethical app check" (store listing title: "Red Flag – Ethical app check"). Both are defined by
 `app_name` and `app_subtitle` in [brand.xml](app/src/main/res/values/brand.xml) and used everywhere (icon, screens, accessibility
 service); the title of this README and the website (`docs/`) have to be changed by hand. The technical identifier
-`fr.conscience.numerique` is the one from before the name was chosen: it cannot change after the first publication.
+`app.redflag` is the one from before the name was chosen: it cannot change after the first publication.
 
 Specifications: [Android](pitch-dev-android.md), [iOS](pitch-dev-ios.md), [design](pitch-designer.md) (in French).
 License: [GPL v3](LICENSE) (copyleft: any modified version that is distributed must remain under the GPL, with its source code open).
@@ -19,7 +19,7 @@ Kotlin, MVVM, Room (KSP), XML views + ViewBinding, Material 3. `minSdk 26`, `tar
 ## Structure
 
 ```
-app/src/main/java/fr/conscience/numerique/
+app/src/main/java/app/redflag/
 ├── data/      Room (entities, one DAO per table, database), repository, installed apps list, icon cache
 ├── service/   FrictionAccessibilityService (foreground app detection), FrictionGate
 ├── ui/        One folder per area: apps (list, app detail), problems (list and detail of the issues),

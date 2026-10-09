@@ -22,7 +22,7 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <fr.conscience.numerique.ui.common.HeadingTextView
+        <app.redflag.ui.common.HeadingTextView
             android:id="@+id/appName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
