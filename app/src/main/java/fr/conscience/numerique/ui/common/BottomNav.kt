@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.android.material.color.MaterialColors
 import com.google.android.material.navigation.NavigationBarView
 import fr.conscience.numerique.R
 import fr.conscience.numerique.ui.apps.MainActivity
@@ -47,18 +46,16 @@ object BottomNav {
 
     /**
      * Makes the menu reach the bottom edge of the screen. The screens pad their whole root with the system bars (fitsSystemWindows),
-     * which left a strip of page color under the menu, where the gesture handle is. Here the root keeps the top and side insets only,
-     * and the bottom inset becomes padding of the menu's own container, which has the menu's color.
+     * which left a strip of page color under the menu, where the gesture handle or the navigation buttons are. Here the root keeps
+     * the top and side insets only: the bottom inset is left to the menu itself (Material's navigation bar pads itself with it, and
+     * its background reaches the edge). Padding it again here would double the space under the menu.
      */
     private fun extendIntoGestureArea(activity: Activity, nav: View) {
-        val bar = nav.parent as? View ?: return
         val root = activity.findViewById<ViewGroup>(android.R.id.content).getChildAt(0) ?: return
         root.fitsSystemWindows = false
-        bar.setBackgroundColor(MaterialColors.getColor(bar, com.google.android.material.R.attr.colorSurface))
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
             view.setPadding(bars.left, bars.top, bars.right, 0)
-            bar.setPadding(0, 0, 0, bars.bottom)
             insets
         }
         ViewCompat.requestApplyInsets(root)
