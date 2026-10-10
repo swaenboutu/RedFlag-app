@@ -27,6 +27,22 @@
                 tab, and link several apps to it. If an issue is missing, you can add your own.
             </answer>
         </entry>
+        <entry id="enable_service">
+            <question>How do I turn on the accessibility service?</question>
+            <answer>
+                Red Flag only works once Android’s accessibility service is on. Only you can turn it on: the app cannot do it for you.
+
+                1. Tap “Agree and continue” on the last welcome screen, or tap “Turn on” in the banner at the top of the Apps tab (after a short explanation). Android’s accessibility settings open.
+
+                2. In the list of apps, find “Red Flag” (under “Downloaded apps” on most phones; on some, open “Installed apps” first).
+
+                3. Open it, turn on “Use Red Flag”, then confirm in the window Android shows.
+
+                Go back to Red Flag: the banner at the top of the Apps tab disappears once the service is on. You can turn it off at any time in the same place.
+
+                If Android says the setting is restricted, or that access was denied, you installed the app from a file (APK) rather than from the Play Store. Open Android’s Settings, go to Apps, then Red Flag, tap the ⋮ menu at the top right and choose “Allow restricted settings”. Then start again from step 1.
+            </answer>
+        </entry>
         <entry id="buttons">
             <question>What do the buttons on the interruption screen do?</question>
             <answer>

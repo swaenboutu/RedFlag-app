@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import app.redflag.R
 import app.redflag.container
+import app.redflag.ui.common.setHtml
 import app.redflag.ui.common.underline
 import app.redflag.databinding.ActivityOnboardingPermissionBinding
 import app.redflag.service.isFrictionServiceEnabled
@@ -33,7 +35,15 @@ class OnboardingPermissionActivity : AppCompatActivity() {
         binding.btnLater.underline()
         binding.topbar.topbarStep.text = getString(R.string.onboarding_step, 4, 4)
 
-        binding.body.text = getString(R.string.onboarding_permission_body, getString(R.string.app_name))
+        val appName = getString(R.string.app_name)
+        binding.body.setHtml(R.string.onboarding_permission_intro, appName)
+        binding.step1.setHtml(R.string.onboarding_permission_step1, getString(R.string.accessibility_consent_action))
+        binding.step2.setHtml(R.string.onboarding_permission_step2, appName)
+        binding.step3.setHtml(R.string.onboarding_permission_step3)
+        binding.sampleName.text = appName
+        binding.note1.setHtml(R.string.onboarding_permission_note1, appName)
+        binding.note2.setHtml(R.string.onboarding_permission_note2)
+        binding.note3.setHtml(R.string.onboarding_permission_note3)
         binding.btnLater.setOnClickListener { finishOnboarding() }
     }
 
@@ -55,6 +65,7 @@ class OnboardingPermissionActivity : AppCompatActivity() {
             binding.btnMain.setOnClickListener {
                 openedSettings = true
                 startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                Toast.makeText(this, getString(R.string.accessibility_find_app_toast, getString(R.string.app_name)), Toast.LENGTH_LONG).show()
             }
         }
     }

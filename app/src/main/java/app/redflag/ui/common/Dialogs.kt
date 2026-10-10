@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Filter
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
@@ -193,6 +194,7 @@ class AccessibilityDisclosureDialog : DialogFragment() {
             .setMessage(getString(R.string.onboarding_permission_body, getString(R.string.app_name)))
             .setPositiveButton(R.string.accessibility_consent_action) { _, _ ->
                 startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                Toast.makeText(context, getString(R.string.accessibility_find_app_toast, getString(R.string.app_name)), Toast.LENGTH_LONG).show()
             }
             .setNegativeButton(R.string.cancel, null)
             .create()

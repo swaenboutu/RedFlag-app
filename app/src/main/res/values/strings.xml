@@ -30,8 +30,8 @@
 
     <string name="onboarding_body">Before you open an app you have flagged, a short pause asks whether you really want to. Choose the issues that matter to you and the apps that raise them: everything stays on your phone.</string>
     <string name="onboarding_start">Get started</string>
-    <string name="onboarding_problems_title">What matters to you?</string>
-    <string name="onboarding_problems_body">Select the issues that matter to you. They will be added to your favorites, so you can find them easily later.</string>
+    <string name="onboarding_problems_title">What matters most to you?</string>
+    <string name="onboarding_problems_body">Select the few issues that matter most to you.</string>
     <string name="onboarding_continue">Continue</string>
     <plurals name="onboarding_continue_count">
         <item quantity="one">Continue · %d selected</item>
@@ -42,8 +42,19 @@
     <string name="onboarding_skip">Skip this step</string>
     <string name="onboarding_apps_step">Step 3 of 4 · Issue %1$d of %2$d</string>
     <string name="onboarding_apps_body">Select the apps this issue applies to. You can change this at any time.</string>
-    <string name="onboarding_permission_title">You\'re almost there</string>
+    <string name="onboarding_permission_title">One last permission</string>
+    <!-- The tags are real HTML (escaped): the texts go through HtmlCompat, see OnboardingPermissionActivity. -->
+    <string name="onboarding_permission_intro">To know when you open a flagged app, %1$s needs Android’s &lt;b&gt;accessibility service&lt;/b&gt;.</string>
+    <string name="onboarding_permission_step1">Tap “%1$s”: Android’s settings open.</string>
+    <string name="onboarding_permission_step2">In the list of apps, find &lt;b&gt;%1$s&lt;/b&gt;.</string>
+    <string name="onboarding_permission_step3">Open it and choose to &lt;b&gt;turn it on&lt;/b&gt;, then confirm.</string>
+    <string name="onboarding_permission_sample_state">Off</string>
+    <string name="onboarding_permission_note1">%1$s only looks at &lt;b&gt;which app is launched&lt;/b&gt;.</string>
+    <string name="onboarding_permission_note2">It does not read or collect anything you do on your phone, and nothing leaves it.</string>
+    <string name="onboarding_permission_note3">You can withdraw this permission at any time in Android’s settings.</string>
     <string name="onboarding_permission_body">To warn you before you open an app you have flagged, %1$s needs Android\'s accessibility service. It only detects the name of the app coming to the foreground: no screen content is read and no data leaves your device.\n\nIn the settings that open, find “%1$s” and turn it on.</string>
+    <!-- Shown over Android's accessibility settings, which open right after the consent. -->
+    <string name="accessibility_find_app_toast">Find the %1$s app and turn it on</string>
     <string name="accessibility_consent_action">Agree and continue</string>
     <string name="accessibility_disclosure_title">Accessibility service</string>
     <string name="onboarding_permission_enabled">All set: the service is on.</string>

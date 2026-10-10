@@ -22,6 +22,22 @@
                 aussi partir d’un enjeu, dans l’onglet Enjeux, et y associer plusieurs applications. S’il en manque un, vous pouvez ajouter le vôtre.
             </answer>
         </entry>
+        <entry id="enable_service">
+            <question>Comment activer le service d’accessibilité ?</question>
+            <answer>
+                Red Flag ne fonctionne que lorsque le service d’accessibilité d’Android est activé. Seul vous pouvez l’activer : l’application ne peut pas le faire à votre place.
+
+                1. Appuyez sur « Accepter et continuer » sur le dernier écran d’accueil, ou sur « Activer » dans le bandeau en haut de l’onglet Applications (après une courte explication). Les réglages d’accessibilité d’Android s’ouvrent.
+
+                2. Dans la liste des applications, cherchez « Red Flag » (sous « Applications téléchargées » sur la plupart des téléphones ; sur certains, ouvrez d’abord « Applications installées »).
+
+                3. Ouvrez-la, activez « Utiliser Red Flag », puis confirmez dans la fenêtre qu’Android affiche.
+
+                Revenez dans Red Flag : le bandeau en haut de l’onglet Applications disparaît dès que le service est activé. Vous pouvez le désactiver à tout moment au même endroit.
+
+                Si Android indique que le paramètre est restreint, ou que l’accès a été refusé, c’est que vous avez installé l’application à partir d’un fichier (APK) et non depuis le Play Store. Ouvrez les Réglages d’Android, allez dans Applications, puis Red Flag, touchez le menu ⋮ en haut à droite et choisissez « Autoriser les paramètres restreints ». Reprenez ensuite à l’étape 1.
+            </answer>
+        </entry>
         <entry id="buttons">
             <question>Que font les boutons de l’écran d’interruption ?</question>
             <answer>

@@ -22,7 +22,7 @@ d'accessibilité et demande un accord explicite, FAQ, site statique (`docs/`, EN
   image de présentation 1024×500, captures (on peut reprendre celles de `docs/assets/img/`)
 - [ ] **Test fermé** : 12 testeurs pendant 14 jours avant la production (compte personnel récent), puis rapport
   pré-lancement
-- [ ] **Version 0.4.0** (`versionCode` 8) : release GitHub `v0.4.0` publiée (nouveau design, mode sombre) ; reste la fiche Play (la `v0.1.0` porte l'ancien nom)
+- [ ] **Version 0.4.1** (`versionCode` 9) : release GitHub `v0.4.1` publiée (nouveau design, mode sombre) ; reste la fiche Play (la `v0.1.0` porte l'ancien nom)
 - [ ] **Site** : reprendre la palette (crème, bleu nuit, corail) et les captures du nouveau design, clair et sombre
 
 ## Qualité
