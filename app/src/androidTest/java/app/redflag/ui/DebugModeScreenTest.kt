@@ -44,8 +44,8 @@ class DebugModeScreenTest {
         return value
     }
 
-    private fun ActivityScenario<SettingsActivity>.tapVersion(times: Int) {
-        // The version is in the drawer of the home screen: the taps are given there, then the Settings are looked at.
+    /** The version is in the drawer of the home screen: the taps are given there, before the Settings are looked at. */
+    private fun tapVersion(times: Int) {
         ActivityScenario.launch(app.redflag.ui.home.HomeActivity::class.java).use { home ->
             repeat(times) { home.onActivity { it.findViewById<View>(R.id.drawerVersion).performClick() } }
         }
@@ -65,9 +65,9 @@ class DebugModeScreenTest {
 
     @Test
     fun sixTapsOnTheVersionAreNotEnough() {
+        tapVersion(DebugUnlock.TAPS_REQUIRED - 1)
+        Thread.sleep(300)
         ActivityScenario.launch(SettingsActivity::class.java).use { scenario ->
-            scenario.tapVersion(DebugUnlock.TAPS_REQUIRED - 1)
-            Thread.sleep(300)
 
             assertEquals(View.GONE, scenario.debugVisibility())
             assertFalse(settings.debugMode.value)
@@ -76,8 +76,8 @@ class DebugModeScreenTest {
 
     @Test
     fun sevenTapsShowTheDebugSectionAndItIsKept() {
+        tapVersion(DebugUnlock.TAPS_REQUIRED)
         ActivityScenario.launch(SettingsActivity::class.java).use { scenario ->
-            scenario.tapVersion(DebugUnlock.TAPS_REQUIRED)
             scenario.awaitVisibility(View.VISIBLE)
 
             assertEquals(View.VISIBLE, scenario.debugVisibility())
