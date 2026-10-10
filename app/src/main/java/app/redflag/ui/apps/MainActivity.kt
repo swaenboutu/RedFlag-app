@@ -1,8 +1,6 @@
 package app.redflag.ui.apps
 
-import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
@@ -10,15 +8,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import app.redflag.R
-import app.redflag.container
-import app.redflag.data.SettingsStore
 import app.redflag.databinding.ActivityMainBinding
 import app.redflag.service.isFrictionServiceEnabled
 import app.redflag.ui.common.AccessibilityDisclosureDialog
 import app.redflag.ui.common.AppDrawer
 import app.redflag.ui.common.BottomNav
 import app.redflag.ui.common.screenViewModel
-import app.redflag.ui.onboarding.OnboardingActivity
 import kotlinx.coroutines.launch
 
 /** "Your apps": search, filters, and a card with the issues linked to each app. */

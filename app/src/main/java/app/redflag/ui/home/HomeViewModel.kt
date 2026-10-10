@@ -31,7 +31,7 @@ data class HomeState(
     val startedAt: Long = 0L,
     val topApp: TopApp? = null,
     val topIssue: TopIssue? = null,
-    @StringRes val topIssueTheme: Int = R.string.category_custom,
+    @param:StringRes val topIssueTheme: Int = R.string.category_custom,
     val loaded: Boolean = false,
 )
 

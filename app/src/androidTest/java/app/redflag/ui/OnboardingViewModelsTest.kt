@@ -1,7 +1,6 @@
 package app.redflag.ui
 
 import app.redflag.data.ProblemCatalog
-import app.redflag.data.ProblemRef
 import app.redflag.data.toRef
 import app.redflag.ui.onboarding.AppsRow
 import app.redflag.ui.onboarding.OnboardingAppsViewModel

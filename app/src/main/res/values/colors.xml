@@ -73,12 +73,9 @@
     <color name="interruption_flag_pole">@color/logo_navy</color>
     <color name="interruption_flag_head">#D9502F</color>
     <!-- Dark navy surfaces inside the light theme (the "Red Flag is on" card, switches, app icon backing). -->
-    <color name="interstitial_background">@color/logo_navy</color>
     <color name="interstitial_circle">#1C2B44</color>
     <color name="interstitial_accent">@color/logo_coral</color>
     <color name="interstitial_text">@color/logo_cream</color>
-    <color name="interstitial_text_muted">#B7C1D2</color>
-    <color name="interstitial_text_subtle">#A9B4C6</color>
     <color name="interstitial_divider">#2A3A55</color>
     <color name="interstitial_outline">#5B6B84</color>
     <color name="interstitial_scroll_thumb">#8795AD</color>

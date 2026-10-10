@@ -1,7 +1,6 @@
 package app.redflag.ui.common
 
 import android.content.Intent
-import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -34,7 +33,7 @@ object AppDrawer {
         val drawer = DrawerLayout(activity)
         drawer.addView(root, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
         val panel = ViewDrawerBinding.inflate(activity.layoutInflater, drawer, false)
-        (panel.root.layoutParams as DrawerLayout.LayoutParams).gravity = Gravity.START
+        (panel.root.layoutParams as DrawerLayout.LayoutParams).gravity = GravityCompat.START
         drawer.addView(panel.root)
         content.addView(drawer, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
 

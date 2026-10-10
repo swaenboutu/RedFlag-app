@@ -159,8 +159,6 @@ class SettingsStore(context: Context, private val now: () -> Long = System::curr
         /** Durées proposées, en minutes. */
         val PAUSE_CHOICES = listOf(15, 60, 180, 24 * 60)
 
-        /** Durations offered when turning the main switch off, in minutes (the dialog adds "until I turn it back on"). */
-        val OFF_CHOICES = listOf(60, 12 * 60, 24 * 60)
 
         private const val KEY_APPEARANCE = "appearance"
         private const val KEY_STARTED_AT = "started_at"

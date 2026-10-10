@@ -8,13 +8,12 @@ import app.redflag.R
  * Problématique prédéfinie : [key] est stable et stockée en base, [label] (le titre) et [description] (une petite phrase
  * d'explication, facultative) sont traduits par les ressources.
  */
-data class PredefinedProblem(val key: String, @StringRes val label: Int, @StringRes val description: Int? = null)
+data class PredefinedProblem(val key: String, @param:StringRes val label: Int, @param:StringRes val description: Int? = null)
 
 data class ProblemCategory(
     /** Stable, stockée en base pour rattacher une problématique personnalisée à ce thème. */
     val key: String,
-    val emoji: String,
-    @StringRes val title: Int,
+    @param:StringRes val title: Int,
     val problems: List<PredefinedProblem>,
 ) {
     /** Les problématiques du catalogue de ce thème, sous forme de références. */
@@ -27,7 +26,7 @@ data class ThemeContent(val category: ProblemCategory, val refs: List<ProblemRef
 object ProblemCatalog {
     val categories: List<ProblemCategory> = listOf(
         ProblemCategory(
-            "mental", "🧠", R.string.category_mental,
+            "mental", R.string.category_mental,
             listOf(
                 PredefinedProblem("addictive_design", R.string.problem_addictive_design, R.string.problem_addictive_design_description),
                 PredefinedProblem("social_comparison", R.string.problem_social_comparison),
@@ -36,7 +35,7 @@ object ProblemCatalog {
             ),
         ),
         ProblemCategory(
-            "social", "👥", R.string.category_social,
+            "social", R.string.category_social,
             listOf(
                 PredefinedProblem("sexism", R.string.problem_sexism),
                 PredefinedProblem("racism", R.string.problem_racism),
@@ -45,7 +44,7 @@ object ProblemCatalog {
             ),
         ),
         ProblemCategory(
-            "environment", "🌍", R.string.category_environment,
+            "environment", R.string.category_environment,
             listOf(
                 PredefinedProblem("carbon_footprint", R.string.problem_carbon_footprint),
                 PredefinedProblem("planned_obsolescence", R.string.problem_planned_obsolescence),
@@ -53,7 +52,7 @@ object ProblemCatalog {
             ),
         ),
         ProblemCategory(
-            "exploitation", "💼", R.string.category_exploitation,
+            "exploitation", R.string.category_exploitation,
             listOf(
                 PredefinedProblem("worker_exploitation", R.string.problem_worker_exploitation, R.string.problem_worker_exploitation_description),
                 PredefinedProblem("child_labor", R.string.problem_child_labor),
@@ -61,7 +60,7 @@ object ProblemCatalog {
             ),
         ),
         ProblemCategory(
-            "privacy", "🔐", R.string.category_privacy,
+            "privacy", R.string.category_privacy,
             listOf(
                 PredefinedProblem("excessive_data", R.string.problem_excessive_data),
                 PredefinedProblem("data_resale", R.string.problem_data_resale),
@@ -69,7 +68,7 @@ object ProblemCatalog {
             ),
         ),
         ProblemCategory(
-            "economic", "💰", R.string.category_economic,
+            "economic", R.string.category_economic,
             listOf(
                 PredefinedProblem("predatory_monetization", R.string.problem_predatory_monetization, R.string.problem_predatory_monetization_description),
                 PredefinedProblem("monopoly", R.string.problem_monopoly),
@@ -77,7 +76,7 @@ object ProblemCatalog {
             ),
         ),
         ProblemCategory(
-            "political", "🏛️", R.string.category_political,
+            "political", R.string.category_political,
             listOf(
                 PredefinedProblem("misinformation", R.string.problem_misinformation),
                 PredefinedProblem("polarization", R.string.problem_polarization),

@@ -1,8 +1,6 @@
 package app.redflag.ui.settings
 
 import android.app.ActivityManager
-import android.content.Context
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.provider.Settings

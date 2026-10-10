@@ -52,11 +52,8 @@
     <color name="nav_label_active">@color/logo_cream</color>
 
     <!-- Emphasis surfaces (the "Red Flag is on" card, switches): lighter than the cards. -->
-    <color name="interstitial_background">#2C3E57</color>
     <color name="interstitial_circle">#3A4D69</color>
     <color name="interstitial_text">@color/logo_cream</color>
-    <color name="interstitial_text_muted">#B9C2CE</color>
-    <color name="interstitial_text_subtle">#A9B4C6</color>
     <color name="interstitial_divider">#3A4D69</color>
     <color name="interstitial_outline">#6B7A92</color>
     <color name="interstitial_scroll_thumb">#6B7A92</color>

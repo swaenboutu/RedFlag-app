@@ -32,7 +32,7 @@ data class AppsStep(
     val total: Int,
     val ref: ProblemRef,
     val label: String,
-    @StringRes val themeTitle: Int,
+    @param:StringRes val themeTitle: Int,
     val body: String,
 )
 

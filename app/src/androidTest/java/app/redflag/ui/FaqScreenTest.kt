@@ -11,7 +11,6 @@ import app.redflag.R
 import app.redflag.container
 import app.redflag.data.loadFaq
 import app.redflag.ui.settings.FaqActivity
-import app.redflag.ui.settings.SettingsActivity
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue

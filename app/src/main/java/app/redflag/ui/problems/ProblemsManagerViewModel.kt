@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 sealed interface ManagerRow {
     /** [id] est la ressource du titre : unique par thème (favoris compris). */
     data class Theme(
-        @StringRes val id: Int,
+        @param:StringRes val id: Int,
         val problemCount: Int,
         val appCount: Int,
         val expanded: Boolean,
