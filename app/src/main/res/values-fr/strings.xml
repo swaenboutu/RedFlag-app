@@ -162,12 +162,6 @@
     <string name="stats_chart_empty">Aucune tentative sur cette période</string>
     <string name="stats_chart_description">%1$s : %2$d tentatives, %3$d outrepassées, %4$d mises en pause.</string>
     <string name="settings_title">Réglages</string>
-    <string name="settings_active_title">%1$s est actif</string>
-    <string name="settings_active_desc">Les apps signalées affichent une interruption à leur lancement.</string>
-    <string name="settings_inactive_title">%1$s est désactivé</string>
-    <string name="settings_inactive_desc">Aucune interruption n’est affichée tant que vous ne le réactivez pas.</string>
-    <string name="settings_inactive_until">Désactivé jusqu’à %1$s. Les apps signalées s’ouvrent sans interruption.</string>
-    <string name="settings_active_switch">Activer les interruptions</string>
     <string name="settings_section_display">Affichage</string>
     <string name="settings_appearance_title">Apparence</string>
     <string name="appearance_system">Suivre le système</string>

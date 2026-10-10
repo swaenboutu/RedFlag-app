@@ -151,12 +151,6 @@
     <string name="stats_chart_empty">No attempts in this period</string>
     <string name="stats_chart_description">%1$s: %2$d attempts, %3$d overridden, %4$d snoozed.</string>
     <string name="settings_title">Settings</string>
-    <string name="settings_active_title">%1$s is on</string>
-    <string name="settings_active_desc">Flagged apps show an interruption when they open.</string>
-    <string name="settings_inactive_title">%1$s is off</string>
-    <string name="settings_inactive_desc">No interruption is shown until you turn it back on.</string>
-    <string name="settings_inactive_until">Off until %1$s. Flagged apps open without an interruption.</string>
-    <string name="settings_active_switch">Turn interruptions on</string>
     <string name="settings_section_display">Display</string>
     <string name="settings_appearance_title">Appearance</string>
     <string name="appearance_system">Follow the system</string>

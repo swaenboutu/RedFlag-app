@@ -30,53 +30,6 @@
                 android:textSize="28sp"
                 android:textStyle="bold" />
 
-            <!-- Interrupteur général -->
-            <LinearLayout
-                android:id="@+id/activeCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="12dp"
-                android:background="@drawable/bg_card_navy"
-                android:foreground="?attr/selectableItemBackground"
-                android:gravity="center_vertical"
-                android:minHeight="80dp"
-                android:orientation="horizontal"
-                android:padding="16dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/activeTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/inter_semibold"
-                        android:textColor="@color/interstitial_text"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/activeDescription"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="@color/interstitial_text_muted"
-                        android:textSize="12.5sp" />
-                </LinearLayout>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/activeSwitch"
-                    style="@style/Widget.Conscience.Switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:contentDescription="@string/settings_active_switch" />
-            </LinearLayout>
-
             <!-- Interruption -->
             <app.redflag.ui.common.HeadingTextView
                 style="@style/Widget.Conscience.SettingsSection"

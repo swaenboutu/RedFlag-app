@@ -26,14 +26,10 @@ import app.redflag.service.isFrictionServiceEnabled
 import app.redflag.ui.common.AccessibilityDisclosureDialog
 import app.redflag.ui.common.BottomNav
 import app.redflag.ui.common.formatPause
-import app.redflag.ui.common.formatResumeTime
-import app.redflag.ui.home.PauseSheet
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
-/** Settings: main switch, pause duration, apps list, permissions, help. */
+/** Settings: appearance, "Don't ask again" duration, apps list, permissions, help. (The pause of the interruption is on the home screen.) */
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
     private val settings get() = container.settings
@@ -45,23 +41,9 @@ class SettingsActivity : AppCompatActivity() {
         BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_settings)
 
         // Coins arrondis + effets tactiles contenus dans les cartes : `clipToOutline` en XML exige Android 12.
-        listOf(binding.activeCard, binding.cardDisplay, binding.cardInterruption, binding.cardApps, binding.cardHelp)
+        listOf(binding.cardDisplay, binding.cardInterruption, binding.cardApps, binding.cardHelp)
             .forEach { it.clipToOutline = true }
         binding.cardDebug.clipToOutline = true
-
-        // The whole card toggles the switch, not only the button. The setting is saved on every state change, whether it comes
-        // from a tap or from dragging the thumb (a drag triggers no "click").
-        binding.activeCard.setOnClickListener { binding.activeSwitch.toggle() }
-        binding.activeSwitch.setOnCheckedChangeListener { _, checked ->
-            if (checked == settings.isInterceptionActive()) return@setOnCheckedChangeListener
-            if (checked) {
-                settings.setInterceptionEnabled(true)
-            } else {
-                // Turning off asks for how long: the switch stays on until a choice is made.
-                binding.activeSwitch.isChecked = true
-                showOffDialog()
-            }
-        }
 
         setupRow(binding.rowAppearance, R.string.settings_appearance_title) { showAppearanceDialog() }
         setupRow(binding.rowPause, R.string.settings_pause_title, R.string.settings_pause_subtitle) { showPauseDialog() }
@@ -80,21 +62,9 @@ class SettingsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    combine(settings.interceptionEnabled, settings.pauseMinutes, settings.hideSystemApps, settings.reenableAt) { enabled, pause, hide, _ ->
-                        Triple(enabled, pause, hide)
-                    }.collect { (enabled, pause, hide) ->
-                        showEnabled(enabled)
+                    combine(settings.pauseMinutes, settings.hideSystemApps) { pause, hide -> pause to hide }.collect { (pause, hide) ->
                         binding.rowPause.value.text = formatPause(this@SettingsActivity, pause)
                         binding.rowList.value.text = getString(if (hide) R.string.list_no_system else R.string.list_all)
-                    }
-                }
-                // A timed deactivation ends while the screen is open: turn the switch back on at that moment.
-                launch {
-                    settings.reenableAt.collectLatest { at ->
-                        if (at > 0L) {
-                            delay((at - System.currentTimeMillis()).coerceAtLeast(0L) + 200L)
-                            settings.isInterceptionActive()
-                        }
                     }
                 }
                 launch { settings.appearance.collect { binding.rowAppearance.value.setText(appearanceLabel(it)) } }
@@ -163,23 +133,6 @@ class SettingsActivity : AppCompatActivity() {
             .setNegativeButton(R.string.cancel, null)
             .show()
     }
-
-    private fun showEnabled(enabled: Boolean) {
-        binding.activeSwitch.isChecked = enabled
-        binding.activeTitle.text = getString(
-            if (enabled) R.string.settings_active_title else R.string.settings_inactive_title,
-            getString(R.string.app_name),
-        )
-        val resumeAt = settings.reenableAt.value
-        binding.activeDescription.text = when {
-            enabled -> getString(R.string.settings_active_desc)
-            resumeAt > 0L -> getString(R.string.settings_inactive_until, formatResumeTime(this, resumeAt))
-            else -> getString(R.string.settings_inactive_desc)
-        }
-    }
-
-    /** Asks for how long to turn the main switch off: the same pause sheet as on the home screen. */
-    private fun showOffDialog() = PauseSheet.show(this)
 
     /** Pastille verte « Accordées » ou rouge « Non accordées » selon l'état du service d'accessibilité. */
     private fun showPermissionStatus() = with(binding.rowPermissions) {
