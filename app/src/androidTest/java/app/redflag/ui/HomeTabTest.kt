@@ -41,14 +41,14 @@ class HomeTabTest {
                 assertNotNull("the menu is there", nav)
                 assertEquals("Home is the first entry", R.id.nav_home, nav.menu.getItem(0).itemId)
                 assertTrue("and it is the selected one", nav.menu.findItem(R.id.nav_home).isChecked)
-                assertEquals(5, nav.menu.size())
+                assertEquals(4, nav.menu.size())
             }
         }
     }
 
     @Test
     fun theOtherScreensOfTheMenuStillOpenFromTheHomeEntry() {
-        val ids = listOf(R.id.nav_apps, R.id.nav_problems, R.id.nav_stats, R.id.nav_settings)
+        val ids = listOf(R.id.nav_apps, R.id.nav_problems, R.id.nav_stats)
         ActivityScenario.launch(HomeActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
                 val nav = activity.findViewById<NavigationBarView>(R.id.bottomNav)

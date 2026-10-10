@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import app.redflag.R
 import app.redflag.databinding.ActivityStatsBinding
+import app.redflag.ui.common.AppDrawer
 import app.redflag.ui.common.BottomNav
 import app.redflag.ui.common.screenViewModel
 import kotlinx.coroutines.launch
@@ -22,6 +23,7 @@ class StatsActivity : AppCompatActivity() {
         binding = ActivityStatsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_stats)
+        AppDrawer.setup(this, binding.menuButton)
 
         // Coins arrondis de la carte : `clipToOutline` en XML exige Android 12.
         binding.summaryCard.clipToOutline = true

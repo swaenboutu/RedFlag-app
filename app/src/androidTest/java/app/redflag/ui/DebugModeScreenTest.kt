@@ -22,15 +22,19 @@ class DebugModeScreenTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
     private val settings get() = context.container.settings
     private var debugBefore = false
+    private var onboardingBefore = false
 
     @Before
     fun setUp() {
         debugBefore = settings.debugMode.value
+        onboardingBefore = settings.onboardingDone
+        settings.onboardingDone = true // the home screen (with the drawer) must not send to the welcome tour
         settings.disableDebugMode()
     }
 
     @After
     fun tearDown() {
+        settings.onboardingDone = onboardingBefore
         if (debugBefore) settings.enableDebugMode() else settings.disableDebugMode()
     }
 
@@ -41,7 +45,10 @@ class DebugModeScreenTest {
     }
 
     private fun ActivityScenario<SettingsActivity>.tapVersion(times: Int) {
-        repeat(times) { onActivity { it.findViewById<View>(R.id.rowVersion).performClick() } }
+        // The version is in the drawer of the home screen: the taps are given there, then the Settings are looked at.
+        ActivityScenario.launch(app.redflag.ui.home.HomeActivity::class.java).use { home ->
+            repeat(times) { home.onActivity { it.findViewById<View>(R.id.drawerVersion).performClick() } }
+        }
     }
 
     private fun ActivityScenario<SettingsActivity>.awaitVisibility(expected: Int) {

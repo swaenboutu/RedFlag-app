@@ -130,6 +130,21 @@
     <string name="pause_option_forever">Jusqu’à ce que je la réactive</string>
     <string name="pause_option_forever_hint">Aucune interruption tant que vous ne l’avez pas réactivée depuis l’accueil.</string>
     <string name="pause_confirm">Mettre en pause</string>
+    <string name="menu_open">Ouvrir le menu</string>
+    <string name="menu_close">Fermer le menu</string>
+    <string name="back">Retour</string>
+    <string name="drawer_faq">Comment ça marche</string>
+    <string name="drawer_about">À propos</string>
+    <string name="drawer_about_hint">Code source, licence</string>
+    <string name="drawer_version">Version %1$s</string>
+    <string name="about_intro">Red Flag ajoute un moment de réflexion avant d’ouvrir les apps que vous avez signalées. C’est un logiciel libre, et tout reste sur votre téléphone.</string>
+    <string name="about_license_title">Licence</string>
+    <string name="about_license_text">Red Flag est publié sous licence GNU General Public License, version 3 (GPL v3) : vous pouvez l’utiliser, l’étudier, le partager et l’améliorer.</string>
+    <string name="about_license_link">Lire la licence</string>
+    <string name="about_source_title">Code source</string>
+    <string name="about_source_text">Le code est ouvert : chacun peut le vérifier, signaler un problème ou y contribuer.</string>
+    <string name="about_source_link">Ouvrir le dépôt</string>
+    <string name="about_no_browser">Aucune app ne peut ouvrir ce lien.</string>
     <string name="nav_home">Accueil</string>
     <string name="nav_apps">Apps</string>
     <string name="nav_problems">Enjeux</string>
@@ -169,7 +184,6 @@
     <string name="appearance_dark">Sombre</string>
     <string name="settings_section_interruption">Interruption</string>
     <string name="settings_section_apps">Applications</string>
-    <string name="settings_section_help">Aide</string>
     <string name="settings_pause_title">Durée de la pause</string>
     <string name="settings_pause_subtitle">Lien « Ne plus me demander »</string>
     <string name="settings_list_title">Liste affichée</string>
@@ -179,7 +193,6 @@
     <string name="permissions_granted">Accordées</string>
     <string name="permissions_missing">Non accordées</string>
     <string name="settings_help_title">Comment ça marche</string>
-    <string name="settings_version">Version</string>
     <string name="settings_section_debug">Debug</string>
     <plurals name="settings_debug_steps">
         <item quantity="one">Encore %d appui pour activer le mode debug</item>

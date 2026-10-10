@@ -7,7 +7,6 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -17,14 +16,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import app.redflag.R
 import app.redflag.container
 import app.redflag.data.Appearance
-import app.redflag.data.DebugTap
-import app.redflag.data.DebugUnlock
 import app.redflag.data.SettingsStore
 import app.redflag.databinding.ActivitySettingsBinding
 import app.redflag.databinding.ItemSettingRowBinding
 import app.redflag.service.isFrictionServiceEnabled
 import app.redflag.ui.common.AccessibilityDisclosureDialog
-import app.redflag.ui.common.BottomNav
 import app.redflag.ui.common.formatPause
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -38,10 +34,10 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_settings)
+        binding.back.setOnClickListener { finish() }
 
         // Coins arrondis + effets tactiles contenus dans les cartes : `clipToOutline` en XML exige Android 12.
-        listOf(binding.cardDisplay, binding.cardInterruption, binding.cardApps, binding.cardHelp)
+        listOf(binding.cardDisplay, binding.cardInterruption, binding.cardApps)
             .forEach { it.clipToOutline = true }
         binding.cardDebug.clipToOutline = true
 
@@ -51,12 +47,6 @@ class SettingsActivity : AppCompatActivity() {
         setupRow(binding.rowPermissions, R.string.settings_permissions_title) {
             AccessibilityDisclosureDialog.show(this)
         }
-        setupRow(binding.rowHelp, R.string.settings_help_title) { startActivity(Intent(this, FaqActivity::class.java)) }
-        // Sept appuis sur le numéro de version activent le mode debug, comme pour le mode développeur d'Android.
-        setupRow(binding.rowVersion, R.string.settings_version) { onVersionTapped() }
-        binding.rowVersion.value.text = versionName()
-        binding.rowVersion.chevron.visibility = View.GONE
-
         setupDebug()
 
         lifecycleScope.launch {
@@ -76,7 +66,6 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        BottomNav.select(binding.bottomBar.bottomNav, R.id.nav_settings)
         showPermissionStatus()
     }
 
@@ -91,25 +80,7 @@ class SettingsActivity : AppCompatActivity() {
         if (clickable) row.root.setOnClickListener { onClick() } else row.root.background = null
     }
 
-    private val debugUnlock = DebugUnlock()
-
-    private fun onVersionTapped() {
-        val message = when (val tap = debugUnlock.tap(alreadyEnabled = settings.debugMode.value)) {
-            DebugTap.Nothing -> return
-            is DebugTap.Remaining -> resources.getQuantityString(R.plurals.settings_debug_steps, tap.taps, tap.taps)
-            DebugTap.Unlocked -> {
-                settings.enableDebugMode()
-                getString(R.string.settings_debug_enabled)
-            }
-            DebugTap.AlreadyEnabled -> getString(R.string.settings_debug_already)
-        }
-        debugToast?.cancel()
-        debugToast = Toast.makeText(this, message, Toast.LENGTH_SHORT).also { it.show() }
-    }
-
-    private var debugToast: Toast? = null
-
-    /** Section « Debug » : cachée tant que le mode debug n'est pas activé (voir [onVersionTapped]) ; elle l'est ensuite, pour de bon. */
+    /** Section « Debug » : cachée tant que le mode debug n'est pas activé (voir le tiroir, `AppDrawer`) ; elle l'est ensuite, pour de bon. */
     private fun setupDebug() {
         with(binding.rowOnboarding) {
             title.setText(R.string.settings_debug_onboarding_title)
@@ -188,11 +159,5 @@ class SettingsActivity : AppCompatActivity() {
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
-    }
-
-    private fun versionName(): String = try {
-        packageManager.getPackageInfo(packageName, 0).versionName.orEmpty()
-    } catch (_: Exception) {
-        ""
     }
 }

@@ -15,6 +15,7 @@ import app.redflag.data.SettingsStore
 import app.redflag.databinding.ActivityMainBinding
 import app.redflag.service.isFrictionServiceEnabled
 import app.redflag.ui.common.AccessibilityDisclosureDialog
+import app.redflag.ui.common.AppDrawer
 import app.redflag.ui.common.BottomNav
 import app.redflag.ui.common.screenViewModel
 import app.redflag.ui.onboarding.OnboardingActivity
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         binding.appList.adapter = adapter
 
         BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_apps)
+        AppDrawer.setup(this, binding.menuButton)
         binding.enableService.setOnClickListener {
             AccessibilityDisclosureDialog.show(this)
         }

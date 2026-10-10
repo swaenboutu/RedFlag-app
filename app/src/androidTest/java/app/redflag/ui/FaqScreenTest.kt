@@ -8,6 +8,7 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import app.redflag.R
+import app.redflag.container
 import app.redflag.data.loadFaq
 import app.redflag.ui.settings.FaqActivity
 import app.redflag.ui.settings.SettingsActivity
@@ -18,7 +19,7 @@ import org.junit.Assume.assumeTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** L'écran de la FAQ, affiché pour de bon, et son accès depuis les Réglages (qui n'ouvre plus de fenêtre de dialogue). */
+/** L'écran de la FAQ, affiché pour de bon, et son accès depuis le tiroir. */
 @RunWith(AndroidJUnit4::class)
 class FaqScreenTest {
     private val instrumentation: Instrumentation = InstrumentationRegistry.getInstrumentation()
@@ -128,20 +129,24 @@ class FaqScreenTest {
     }
 
     @Test
-    fun theHelpRowOfTheSettingsOpensTheFaqScreen() {
+    fun theDrawerOpensTheFaqScreen() {
+        val settings = instrumentation.targetContext.container.settings
+        val onboardingBefore = settings.onboardingDone
+        settings.onboardingDone = true // the home screen must not send to the welcome tour
         val monitor = instrumentation.addMonitor(FaqActivity::class.java.name, null, false)
         try {
-            ActivityScenario.launch(SettingsActivity::class.java).use { scenario ->
-                scenario.onActivity { it.findViewById<View>(R.id.rowHelp).performClick() }
+            ActivityScenario.launch(app.redflag.ui.home.HomeActivity::class.java).use { scenario ->
+                scenario.onActivity { it.findViewById<View>(R.id.drawerFaq).performClick() }
 
                 val opened = monitor.waitForActivityWithTimeout(5_000)
 
-                assertNotNull("la ligne « Comment ça marche » ouvre l'écran de la FAQ", opened)
+                assertNotNull("the drawer entry opens the FAQ screen", opened)
                 assertTrue(opened is FaqActivity)
                 instrumentation.runOnMainSync { opened.finish() }
             }
         } finally {
             instrumentation.removeMonitor(monitor)
+            settings.onboardingDone = onboardingBefore
         }
     }
 }

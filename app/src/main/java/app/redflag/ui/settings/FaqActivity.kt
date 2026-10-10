@@ -5,10 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import app.redflag.R
 import app.redflag.data.loadFaq
 import app.redflag.databinding.ActivityFaqBinding
-import app.redflag.ui.common.BottomNav
 import app.redflag.ui.common.screenViewModel
 import kotlinx.coroutines.launch
 
@@ -24,8 +22,7 @@ class FaqActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityFaqBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        // Écran ouvert depuis les Réglages : toucher cet onglet referme la FAQ et ramène à la liste des réglages.
-        BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_settings, isTabRoot = false)
+        binding.back.setOnClickListener { finish() }
 
         val adapter = FaqAdapter(
             onThemeClick = { viewModel.toggleTheme(it.id) },
@@ -38,10 +35,5 @@ class FaqActivity : AppCompatActivity() {
                 viewModel.open.collect { adapter.submitList(faqRows(faq, it.themes, it.questions)) }
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        BottomNav.select(binding.bottomBar.bottomNav, R.id.nav_settings)
     }
 }

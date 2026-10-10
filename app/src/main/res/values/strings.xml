@@ -120,6 +120,21 @@
     <string name="pause_option_forever">Until I turn it back on</string>
     <string name="pause_option_forever_hint">No interruption until you turn it back on from Home.</string>
     <string name="pause_confirm">Pause</string>
+    <string name="menu_open">Open the menu</string>
+    <string name="menu_close">Close the menu</string>
+    <string name="back">Back</string>
+    <string name="drawer_faq">How it works</string>
+    <string name="drawer_about">About</string>
+    <string name="drawer_about_hint">Source code, license</string>
+    <string name="drawer_version">Version %1$s</string>
+    <string name="about_intro">Red Flag adds a moment of reflection before you open the apps you flagged. It is free software and keeps everything on your phone.</string>
+    <string name="about_license_title">License</string>
+    <string name="about_license_text">Red Flag is released under the GNU General Public License, version 3 (GPL v3): you can use it, study it, share it and improve it.</string>
+    <string name="about_license_link">Read the license</string>
+    <string name="about_source_title">Source code</string>
+    <string name="about_source_text">The code is open: anyone can check it, report a problem or contribute.</string>
+    <string name="about_source_link">Open the repository</string>
+    <string name="about_no_browser">No app can open this link.</string>
     <string name="nav_home">Home</string>
     <string name="nav_apps">Apps</string>
     <string name="nav_problems">Issues</string>
@@ -158,7 +173,6 @@
     <string name="appearance_dark">Dark</string>
     <string name="settings_section_interruption">Interruption</string>
     <string name="settings_section_apps">Apps</string>
-    <string name="settings_section_help">Help</string>
     <string name="settings_pause_title">Pause duration</string>
     <string name="settings_pause_subtitle">“Don’t ask again” link</string>
     <string name="settings_list_title">Displayed list</string>
@@ -168,7 +182,6 @@
     <string name="permissions_granted">Granted</string>
     <string name="permissions_missing">Not granted</string>
     <string name="settings_help_title">How it works</string>
-    <string name="settings_version">Version</string>
     <string name="settings_section_debug">Debug</string>
     <plurals name="settings_debug_steps">
         <item quantity="one">%d tap left to turn on debug mode</item>

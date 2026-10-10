@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import app.redflag.R
 import app.redflag.databinding.ActivityProblemsManagerBinding
+import app.redflag.ui.common.AppDrawer
 import app.redflag.ui.common.BottomNav
 import app.redflag.ui.common.NewProblemDialog
 import app.redflag.ui.common.screenViewModel
@@ -30,6 +31,7 @@ class ProblemsManagerActivity : AppCompatActivity() {
         binding.list.adapter = adapter
         binding.newProblem.setOnClickListener { addProblem() }
         BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_problems)
+        AppDrawer.setup(this, binding.menuButton)
 
         // Le dialogue de saisie survit à la rotation : on écoute son résultat dès la création de l'écran.
         NewProblemDialog.listen(this) { label, category ->

@@ -11,11 +11,10 @@ import app.redflag.R
 import app.redflag.ui.apps.MainActivity
 import app.redflag.ui.home.HomeActivity
 import app.redflag.ui.problems.ProblemsManagerActivity
-import app.redflag.ui.settings.SettingsActivity
 import app.redflag.ui.stats.StatsActivity
 
 /**
- * Barre de navigation commune : Accueil, Applications, Problématiques, Statistiques, Réglages.
+ * Barre de navigation commune : Accueil, Applications, Problématiques, Statistiques (les Réglages sont dans le tiroir).
  *
  * Les onglets ne s'empilent pas : la pile est toujours « Accueil » (la racine), éventuellement suivie de l'onglet
  * affiché. Changer d'onglet, ou toucher celui d'un écran de détail, ne crée donc jamais de pile de six écrans.
@@ -69,7 +68,6 @@ object BottomNav {
             R.id.nav_apps -> MainActivity::class.java
             R.id.nav_problems -> ProblemsManagerActivity::class.java
             R.id.nav_stats -> StatsActivity::class.java
-            R.id.nav_settings -> SettingsActivity::class.java
             else -> null
         }
         if (target == null) {

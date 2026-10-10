@@ -19,6 +19,7 @@ import app.redflag.data.SettingsStore
 import app.redflag.databinding.ActivityHomeBinding
 import app.redflag.service.isFrictionServiceEnabled
 import app.redflag.ui.common.AccessibilityDisclosureDialog
+import app.redflag.ui.common.AppDrawer
 import app.redflag.ui.common.BottomNav
 import app.redflag.ui.common.dp
 import app.redflag.ui.common.formatResumeTime
@@ -53,6 +54,7 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_home)
+        AppDrawer.setup(this, binding.menuButton)
         binding.activateText.underline()
 
         binding.btnPause.setOnClickListener { PauseSheet.show(this) }

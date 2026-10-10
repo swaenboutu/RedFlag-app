@@ -14,6 +14,7 @@ d'accessibilité et demande un accord explicite, FAQ, site statique (`docs/`, EN
   - Remplacer l'adresse provisoire `example@email.com` : `node scripts/site.mjs set-email <adresse>`
   - Relire la politique de confidentialité (section « Vie privée » du site) ; elle doit avoir sa propre adresse
     (page ou ancre stable) à donner à la Play Console
+- [ ] **Politique de confidentialité dans l'app** : ajouter son lien dans « À propos » (tiroir) une fois qu'elle est hébergée sur le site
 - [ ] **Déclaration d'usage du service d'accessibilité** dans la Play Console, avec une vidéo de démonstration
   (activation du service, interruption, « Non, fermer l'application »)
 - [ ] **Formulaire « Sécurité des données »** (réponse : aucune donnée collectée ni partagée), classification du contenu,
