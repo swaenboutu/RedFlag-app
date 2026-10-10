@@ -103,6 +103,24 @@ class OnboardingViewModelsTest {
         assertTrue(env.repository.monitoredApps.first().isEmpty())
     }
 
+    @Test
+    fun theTourHandlesAtMostThreeIssuesAndTheLastPageOffersToFinishLater() = runBlocking {
+        refs.take(5).forEach { env.repository.setFavorite(it, true) }
+        val vm = env.viewModel { OnboardingAppsViewModel(env.container, env.context) }
+
+        assertEquals("only the first three are handled", 3, vm.stepCount.await { it != null })
+        val first = vm.bottom.await { it.chosenTotal == 5 }
+        assertFalse("not the last page yet", first.finishLater)
+        assertEquals("the other two wait in the Issues tab", 2, first.remaining)
+
+        vm.skip { }
+        vm.rows.await { (it.firstOrNull() as? AppsRow.Header)?.step?.position == 2 }
+        vm.skip { }
+        vm.rows.await { (it.firstOrNull() as? AppsRow.Header)?.step?.position == 3 }
+
+        assertTrue("last page with issues left: finish later", vm.bottom.await { it.finishLater }.finishLater)
+    }
+
     private fun withTimeoutPoll(condition: () -> Boolean) {
         val deadline = System.currentTimeMillis() + 5_000
         while (!condition() && System.currentTimeMillis() < deadline) Thread.sleep(50)

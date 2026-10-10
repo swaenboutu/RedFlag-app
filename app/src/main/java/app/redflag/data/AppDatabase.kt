@@ -14,7 +14,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         Favorite::class,
         ChoiceEvent::class,
     ],
-    version = 7,
+    version = 8,
     exportSchema = true,
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -113,5 +113,12 @@ val MIGRATION_6_7 = object : Migration(6, 7) {
         )
         db.execSQL("DROP TABLE `favorites`")
         db.execSQL("ALTER TABLE `favorites_new` RENAME TO `favorites`")
+    }
+}
+
+/** v8 : explication facultative d'une problématique personnalisée (celles du catalogue ont la leur dans les ressources). */
+val MIGRATION_7_8 = object : Migration(7, 8) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE `custom_problems` ADD COLUMN `description` TEXT")
     }
 }

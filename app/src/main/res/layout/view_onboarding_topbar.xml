@@ -12,6 +12,20 @@
         android:importantForAccessibility="no"
         android:src="@drawable/ic_flag_light" />
 
+    <!-- Only the first screen shows the name of the app next to the logo. -->
+    <TextView
+        android:id="@+id/topbarName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:fontFamily="@font/bricolage_grotesque"
+        android:includeFontPadding="false"
+        android:text="@string/app_name"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
     <Space
         android:layout_width="0dp"
         android:layout_height="0dp"

@@ -12,7 +12,7 @@ import app.redflag.ui.common.setHtml
 import app.redflag.ui.common.underline
 import app.redflag.databinding.ActivityOnboardingPermissionBinding
 import app.redflag.service.isFrictionServiceEnabled
-import app.redflag.ui.apps.MainActivity
+import app.redflag.ui.home.HomeActivity
 
 /**
  * Au retour des réglages d'Android ([openedSettings]), l'accueil est terminé dès que le service est activé : on arrive
@@ -79,7 +79,7 @@ class OnboardingPermissionActivity : AppCompatActivity() {
     private fun finishOnboarding() {
         container.settings.onboardingDone = true
         startActivity(
-            Intent(this, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK),
+            Intent(this, HomeActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK),
         )
     }
 

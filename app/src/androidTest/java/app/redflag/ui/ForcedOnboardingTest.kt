@@ -7,7 +7,7 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import app.redflag.container
-import app.redflag.ui.apps.MainActivity
+import app.redflag.ui.home.HomeActivity
 import app.redflag.ui.onboarding.OnboardingActivity
 import org.junit.After
 import org.junit.Assert.assertFalse
@@ -47,13 +47,13 @@ class ForcedOnboardingTest {
 
     private fun launcherIntent() = Intent(Intent.ACTION_MAIN)
         .addCategory(Intent.CATEGORY_LAUNCHER)
-        .setComponent(ComponentName(context, MainActivity::class.java))
+        .setComponent(ComponentName(context, HomeActivity::class.java))
 
     /** Lance l'app et dit si l'écran d'accueil s'est ouvert. */
     private fun onboardingOpensFor(intent: Intent): Boolean {
         val monitor = instrumentation.addMonitor(OnboardingActivity::class.java.name, null, false)
         try {
-            ActivityScenario.launch<MainActivity>(intent).use {
+            ActivityScenario.launch<HomeActivity>(intent).use {
                 val opened = monitor.waitForActivityWithTimeout(2_000)
                 opened?.let { activity -> instrumentation.runOnMainSync { activity.finish() } }
                 return opened != null
@@ -84,7 +84,7 @@ class ForcedOnboardingTest {
         settings.setAlwaysShowOnboarding(true)
 
         // Les onglets rouvrent l'écran principal par un intent sans catégorie « lanceur » : pas d'accueil.
-        val fromTabs = Intent(context, MainActivity::class.java)
+        val fromTabs = Intent(context, HomeActivity::class.java)
         assertFalse(onboardingOpensFor(fromTabs))
     }
 }

@@ -46,7 +46,8 @@ class EditProblemDialogTest {
 
     @Test
     fun aLongCatalogLabelIsShownInFullOnSeveralLines() {
-        val label = context.getString(R.string.problem_worker_exploitation)
+        // A catalog title renamed by the user can be long: it must stay readable (the catalog titles themselves are short now).
+        val label = "Worker exploitation in warehouses, delivery services and content moderation farms"
         assertTrue("l'intitulé de ce test est bien long", label.length > 60)
 
         ActivityScenario.launch(FaqActivity::class.java).use { scenario ->

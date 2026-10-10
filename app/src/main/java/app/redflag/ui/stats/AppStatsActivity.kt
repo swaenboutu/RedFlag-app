@@ -105,8 +105,7 @@ class AppStatsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val overrides = container.repository.labelOverrides.first()
             val labels = container.repository.find(packageName)?.problems.orEmpty().mapNotNull { it.displayLabel(this@AppStatsActivity, overrides) }
-            // Short names: what comes before the parenthesis ("Addictive design (dark patterns...)" -> "Addictive design").
-            binding.appSubtitle.text = labels.joinToString(" · ") { it.substringBefore(" (") }
+            binding.appSubtitle.text = labels.joinToString(" · ")
             binding.appSubtitle.visibility = if (labels.isEmpty()) View.GONE else View.VISIBLE
         }
     }

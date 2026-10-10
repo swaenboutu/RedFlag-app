@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.provider.Settings
-import android.text.format.DateUtils
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +26,8 @@ import app.redflag.service.isFrictionServiceEnabled
 import app.redflag.ui.common.AccessibilityDisclosureDialog
 import app.redflag.ui.common.BottomNav
 import app.redflag.ui.common.formatPause
+import app.redflag.ui.common.formatResumeTime
+import app.redflag.ui.home.PauseSheet
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -172,30 +173,13 @@ class SettingsActivity : AppCompatActivity() {
         val resumeAt = settings.reenableAt.value
         binding.activeDescription.text = when {
             enabled -> getString(R.string.settings_active_desc)
-            resumeAt > 0L -> getString(R.string.settings_inactive_until, formatResumeTime(resumeAt))
+            resumeAt > 0L -> getString(R.string.settings_inactive_until, formatResumeTime(this, resumeAt))
             else -> getString(R.string.settings_inactive_desc)
         }
     }
 
-    /** "3:30 PM" if it is today, otherwise the date as well. */
-    private fun formatResumeTime(millis: Long): String {
-        val sameDay = DateUtils.isToday(millis)
-        val flags = DateUtils.FORMAT_SHOW_TIME or if (sameDay) 0 else DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_ABBREV_ALL
-        return DateUtils.formatDateTime(this, millis, flags)
-    }
-
-    /** Asks for how long to turn the main switch off: 1 hour, 12 hours, 24 hours, or until the user turns it back on. */
-    private fun showOffDialog() {
-        val minutes = SettingsStore.OFF_CHOICES
-        val labels = (minutes.map { formatPause(this, it) } + getString(R.string.settings_off_until_back_on)).toTypedArray()
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.settings_off_title)
-            .setItems(labels) { _, which ->
-                if (which < minutes.size) settings.disableInterceptionFor(minutes[which]) else settings.setInterceptionEnabled(false)
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
-    }
+    /** Asks for how long to turn the main switch off: the same pause sheet as on the home screen. */
+    private fun showOffDialog() = PauseSheet.show(this)
 
     /** Pastille verte « Accordées » ou rouge « Non accordées » selon l'état du service d'accessibilité. */
     private fun showPermissionStatus() = with(binding.rowPermissions) {

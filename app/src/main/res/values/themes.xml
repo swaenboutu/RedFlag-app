@@ -23,6 +23,7 @@
         <item name="colorSurfaceContainerHighest">@color/surface_warm</item>
         <item name="colorOutline">@color/outline</item>
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.Conscience.MaterialAlertDialog</item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Conscience.BottomSheetDialog</item>
         <item name="colorOnSurfaceVariant">@color/ink_secondary</item>
         <item name="colorOutlineVariant">@color/line</item>
 
@@ -51,6 +52,15 @@
         <item name="colorSurfaceContainerHigh">@color/dialog_surface</item>
         <item name="colorSurface">@color/dialog_surface</item>
         <item name="dialogCornerRadius">28dp</item>
+    </style>
+
+    <!-- Bottom sheets (pause): the card color of the app instead of Material's tint. -->
+    <style name="ThemeOverlay.Conscience.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.Conscience.BottomSheet</item>
+        <item name="elevationOverlayEnabled">false</item>
+    </style>
+    <style name="Widget.Conscience.BottomSheet" parent="Widget.Material3.BottomSheet">
+        <item name="backgroundTint">@color/surface_warm</item>
     </style>
 
     <!-- Interruption screen: follows the phone's light/dark mode (colors in values and values-night). -->
@@ -133,7 +143,7 @@
         <item name="android:textSize">12sp</item>
     </style>
     <style name="TextAppearance.Conscience.NavInactive" parent="TextAppearance.Material3.LabelMedium">
-        <item name="android:fontFamily">@font/inter_medium</item>
+        <item name="android:fontFamily">@font/inter</item>
         <item name="android:textSize">12sp</item>
     </style>
 </resources>

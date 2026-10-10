@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The flag of the logo, drawn for the state card of the home screen (pole and head follow the card colors). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="23dp"
+    android:viewportWidth="20"
+    android:viewportHeight="23">
+    <path
+        android:fillColor="@color/state_card_text"
+        android:pathData="M2,0 h1.5 a1.5,1.5 0 0 1 1.5,1.5 v20 a1.5,1.5 0 0 1 -1.5,1.5 h-1.5 a1.5,1.5 0 0 1 -1.5,-1.5 v-20 a1.5,1.5 0 0 1 1.5,-1.5 z" />
+    <path
+        android:fillColor="@color/state_card_flag"
+        android:pathData="M8,1.5 h9 a2,2 0 0 1 2,2 v6 a2,2 0 0 1 -2,2 h-9 z" />
+</vector>

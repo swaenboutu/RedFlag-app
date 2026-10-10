@@ -30,7 +30,15 @@
     <string name="cancel">Annuler</string>
     <string name="add">Ajouter</string>
 
-    <string name="onboarding_body">Avant d’ouvrir une application que vous avez signalée, une courte pause vous demande si vous le voulez vraiment. Choisissez les enjeux qui comptent pour vous et les applications concernées : tout reste sur votre téléphone.</string>
+    <string name="onboarding_welcome_title">Une seconde pour choisir en conscience</string>
+    <string name="onboarding_welcome_flag_title">Signalez</string>
+    <string name="onboarding_welcome_flag_body">les apps dont vous désapprouvez le fonctionnement ou les valeurs.</string>
+    <string name="onboarding_welcome_pause_title">Faites une pause</string>
+    <string name="onboarding_welcome_pause_body">À l’ouverture, %1$s vous rappelle pourquoi vous avez signalé l’application et vous demande si c’est vraiment important.</string>
+    <string name="onboarding_welcome_decide_title">Décidez</string>
+    <string name="onboarding_welcome_decide_body">Rien n’est bloqué : c’est vous qui choisissez d’ouvrir l’app ou non.</string>
+    <string name="onboarding_welcome_private_title">Tout reste sur votre téléphone</string>
+    <string name="onboarding_welcome_private_body">%1$s ne récupère aucune donnée personnelle. Pas de compte, pas de publicité, rien n’est envoyé ailleurs. Le code est ouvert : chacun peut le vérifier.</string>
     <string name="onboarding_start">Commencer</string>
     <string name="onboarding_problems_title">Qu’est-ce qui compte le plus pour vous ?</string>
     <string name="onboarding_problems_body">Sélectionnez les quelques enjeux qui comptent le plus pour vous.</string>
@@ -42,9 +50,22 @@
     </plurals>
     <string name="onboarding_step">Étape %1$d sur %2$d</string>
     <string name="onboarding_next">Suivant</string>
+    <plurals name="onboarding_next_count">
+        <item quantity="one">Suivant · %d app</item>
+        <item quantity="other">Suivant · %d apps</item>
+        <item quantity="many">Suivant · %d apps</item>
+    </plurals>
+    <string name="onboarding_issue_progress">Enjeu %1$d sur %2$d</string>
+    <string name="onboarding_no_app">Aucune app pour cet enjeu</string>
+    <string name="onboarding_finish_later">Terminer plus tard</string>
+    <!-- Escaped HTML, see OnboardingAppsActivity. %1$d: issues chosen, %2$d: those left for later. -->
+    <plurals name="onboarding_apps_more">
+        <item quantity="one">Vous avez choisi %1$d enjeux. Le dernier vous attend dans l’onglet &lt;b&gt;Enjeux&lt;/b&gt;.</item>
+        <item quantity="other">Vous avez choisi %1$d enjeux. Les %2$d autres vous attendent dans l’onglet &lt;b&gt;Enjeux&lt;/b&gt;.</item>
+        <item quantity="many">Vous avez choisi %1$d enjeux. Les %2$d autres vous attendent dans l’onglet &lt;b&gt;Enjeux&lt;/b&gt;.</item>
+    </plurals>
     <string name="onboarding_skip">Passer cette étape</string>
-    <string name="onboarding_apps_step">Étape 3 sur 4 · Enjeu %1$d sur %2$d</string>
-    <string name="onboarding_apps_body">Sélectionnez les applications concernées par cet enjeu. Vous pourrez modifier ce choix à tout moment.</string>
+    <string name="onboarding_apps_body">Cochez les apps concernées selon vous.</string>
     <string name="onboarding_permission_title">Une dernière autorisation</string>
     <!-- The tags are real HTML (escaped): the texts go through HtmlCompat, see OnboardingPermissionActivity. -->
     <string name="onboarding_permission_intro">Pour savoir quand vous ouvrez une app signalée, %1$s a besoin du &lt;b&gt;service d\'accessibilité&lt;/b&gt; d\'Android.</string>
@@ -62,10 +83,55 @@
     <string name="accessibility_disclosure_title">Service d\'accessibilité</string>
     <string name="onboarding_permission_enabled">Tout est prêt : le service est activé.</string>
     <string name="onboarding_finish">Terminer</string>
-    <string name="onboarding_skip_remaining">Passer les enjeux restants</string>
     <string name="onboarding_app_list_title">Quelles applications vous concernent ?</string>
     <string name="onboarding_app_list_body">Touchez une application pour choisir les enjeux qu’elle soulève. Vous pourrez modifier ce choix à tout moment.</string>
-    <string name="nav_apps">Applications</string>
+    <string name="home_label">Interruption</string>
+    <string name="home_on">Activée</string>
+    <plurals name="home_watching">
+        <item quantity="one">%1$s veille sur %2$d app signalée.</item>
+        <item quantity="other">%1$s veille sur %2$d apps signalées.</item>
+        <item quantity="many">%1$s veille sur %2$d apps signalées.</item>
+    </plurals>
+    <string name="home_watching_none">Aucune app n’est encore signalée.</string>
+    <string name="home_pause_action">Mettre en pause</string>
+    <string name="home_paused">En pause</string>
+    <string name="home_paused_until">Jusqu’à %1$s. %2$s ne vous interrompra pas d’ici là.</string>
+    <string name="home_paused_forever">%1$s ne vous interrompra pas tant que vous ne l’aurez pas réactivé.</string>
+    <string name="home_resume">Réactiver maintenant</string>
+    <string name="home_inactive">Inactive</string>
+    <string name="home_inactive_text">Le service d’accessibilité d’Android est désactivé : %1$s ne peut pas vous interrompre.</string>
+    <string name="home_inactive_action">Activer le service d’accessibilité</string>
+    <!-- The number is shown on its own, in large type, next to this label. -->
+    <plurals name="home_avoided_label" tools:ignore="ImpliedQuantity">
+        <item quantity="one">lancement évité</item>
+        <item quantity="other">lancements évités</item>
+        <item quantity="many">lancements évités</item>
+    </plurals>
+    <string name="home_avoided_since">depuis l’activation, le %1$s</string>
+    <string name="home_top_app_title">L’app la plus souvent interrompue</string>
+    <plurals name="home_top_app_count">
+        <item quantity="one">%d interruption</item>
+        <item quantity="other">%d interruptions</item>
+        <item quantity="many">%d interruptions</item>
+    </plurals>
+    <string name="home_empty_name">Aucune pour l’instant</string>
+    <string name="home_top_app_empty">Les apps signalées que vous ouvrez apparaîtront ici.</string>
+    <string name="home_top_issue_empty">Signalez une app pour la voir ici.</string>
+    <string name="home_top_issue_title">L’enjeu le plus présent</string>
+    <plurals name="home_top_issue_apps">
+        <item quantity="one">%1$d app sur %2$d</item>
+        <item quantity="other">%1$d apps sur %2$d</item>
+        <item quantity="many">%1$d apps sur %2$d</item>
+    </plurals>
+    <string name="pause_title">Mettre en pause</string>
+    <string name="pause_subtitle">Pendant la pause, %1$s ne vous interrompra pas.</string>
+    <string name="pause_option_morning">Jusqu’à demain matin</string>
+    <string name="pause_option_morning_hint">Reprise à 8 h</string>
+    <string name="pause_option_forever">Jusqu’à ce que je la réactive</string>
+    <string name="pause_option_forever_hint">Aucune interruption tant que vous ne l’avez pas réactivée depuis l’accueil.</string>
+    <string name="pause_confirm">Mettre en pause</string>
+    <string name="nav_home">Accueil</string>
+    <string name="nav_apps">Apps</string>
     <string name="nav_problems">Enjeux</string>
     <string name="nav_stats">Stats</string>
     <string name="nav_settings">Réglages</string>
@@ -101,8 +167,6 @@
     <string name="settings_inactive_title">%1$s est désactivé</string>
     <string name="settings_inactive_desc">Aucune interruption n’est affichée tant que vous ne le réactivez pas.</string>
     <string name="settings_inactive_until">Désactivé jusqu’à %1$s. Les apps signalées s’ouvrent sans interruption.</string>
-    <string name="settings_off_title">Désactiver pendant…</string>
-    <string name="settings_off_until_back_on">Jusqu’à ce que je le réactive</string>
     <string name="settings_active_switch">Activer les interruptions</string>
     <string name="settings_section_display">Affichage</string>
     <string name="settings_appearance_title">Apparence</string>
@@ -165,6 +229,11 @@
         <item quantity="other">%d enjeux</item>
         <item quantity="many">%d enjeux</item>
     </plurals>
+    <plurals name="theme_selected_of">
+        <item quantity="one">%1$d choisi sur %2$d</item>
+        <item quantity="other">%1$d choisis sur %2$d</item>
+        <item quantity="many">%1$d choisis sur %2$d</item>
+    </plurals>
     <plurals name="theme_checked">
         <item quantity="one">%d cochée</item>
         <item quantity="other">%d cochées</item>
@@ -220,9 +289,11 @@
     <string name="category_favorites">Vos favoris</string>
     <string name="category_custom">Personnalisé</string>
 
-    <string name="problem_addictive_design">Conception addictive (dark patterns, scroll infini, notifications manipulatrices)</string>
+    <string name="problem_addictive_design">Conception addictive</string>
+    <string name="problem_addictive_design_description">Dark patterns, scroll infini, notifications manipulatrices</string>
     <string name="problem_social_comparison">Anxiété sociale &amp; comparaison</string>
-    <string name="problem_fomo">FOMO (Fear Of Missing Out)</string>
+    <string name="problem_fomo">FOMO</string>
+    <string name="problem_fomo_description">Fear Of Missing Out</string>
     <string name="problem_sleep_impact">Impact négatif sur le sommeil</string>
     <string name="problem_sexism">Sexisme / représentations stéréotypées</string>
     <string name="problem_racism">Racisme / discrimination</string>
@@ -231,13 +302,15 @@
     <string name="problem_carbon_footprint">Empreinte carbone élevée des serveurs</string>
     <string name="problem_planned_obsolescence">Obsolescence programmée encouragée</string>
     <string name="problem_overconsumption">Surconsommation encouragée</string>
-    <string name="problem_worker_exploitation">Exploitation des travailleurs (entrepôts, livreurs, modérateurs de contenu…)</string>
+    <string name="problem_worker_exploitation">Exploitation des travailleurs</string>
+    <string name="problem_worker_exploitation_description">Entrepôts, livreurs, modérateurs de contenu…</string>
     <string name="problem_child_labor">Travail des enfants dans la chaîne d’approvisionnement</string>
     <string name="problem_subcontractor_conditions">Conditions de travail des sous-traitants</string>
     <string name="problem_excessive_data">Collecte excessive de données personnelles</string>
     <string name="problem_data_resale">Revente de données à des tiers</string>
     <string name="problem_surveillance">Surveillance &amp; tracking</string>
-    <string name="problem_predatory_monetization">Monétisation prédatrice (loot boxes, achats in-app ciblant les enfants)</string>
+    <string name="problem_predatory_monetization">Monétisation prédatrice</string>
+    <string name="problem_predatory_monetization_description">Loot boxes, achats in-app ciblant les enfants</string>
     <string name="problem_monopoly">Monopole &amp; écrasement de la concurrence</string>
     <string name="problem_tax_evasion">Évasion fiscale</string>
     <string name="problem_misinformation">Désinformation / fake news</string>

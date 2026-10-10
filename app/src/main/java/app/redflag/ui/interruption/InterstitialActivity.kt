@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import app.redflag.R
 import app.redflag.container
-import app.redflag.data.displayLabel
+import app.redflag.data.displayLabelWithDescription
 import app.redflag.databinding.ActivityInterstitialBinding
 import app.redflag.ui.common.formatPause
 import app.redflag.ui.common.iconOf
@@ -99,7 +99,7 @@ class InterstitialActivity : AppCompatActivity() {
             val monitored = container.repository.find(pkg)
             val overrides = container.repository.labelOverrides.first()
             val appName = monitored?.app?.appName ?: pkg
-            val labels = monitored?.problems.orEmpty().mapNotNull { it.displayLabel(this@InterstitialActivity, overrides) }
+            val labels = monitored?.problems.orEmpty().mapNotNull { it.displayLabelWithDescription(this@InterstitialActivity, overrides) }
 
             binding.appIcon.setImageDrawable(iconOf(pkg))
             binding.subtitle.text = subtitleFor(appName)

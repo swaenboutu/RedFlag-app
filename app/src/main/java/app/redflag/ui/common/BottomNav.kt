@@ -9,14 +9,15 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.navigation.NavigationBarView
 import app.redflag.R
 import app.redflag.ui.apps.MainActivity
+import app.redflag.ui.home.HomeActivity
 import app.redflag.ui.problems.ProblemsManagerActivity
 import app.redflag.ui.settings.SettingsActivity
 import app.redflag.ui.stats.StatsActivity
 
 /**
- * Barre de navigation commune : Applications, Problématiques, Statistiques, Réglages.
+ * Barre de navigation commune : Accueil, Applications, Problématiques, Statistiques, Réglages.
  *
- * Les onglets ne s'empilent pas : la pile est toujours « Applications » (la racine), éventuellement suivie de l'onglet
+ * Les onglets ne s'empilent pas : la pile est toujours « Accueil » (la racine), éventuellement suivie de l'onglet
  * affiché. Changer d'onglet, ou toucher celui d'un écran de détail, ne crée donc jamais de pile de six écrans.
  */
 object BottomNav {
@@ -62,16 +63,17 @@ object BottomNav {
     }
 
     private fun open(activity: Activity, tab: Int) {
-        val root = Intent(activity, MainActivity::class.java)
+        val root = Intent(activity, HomeActivity::class.java)
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_NO_ANIMATION)
         val target = when (tab) {
+            R.id.nav_apps -> MainActivity::class.java
             R.id.nav_problems -> ProblemsManagerActivity::class.java
             R.id.nav_stats -> StatsActivity::class.java
             R.id.nav_settings -> SettingsActivity::class.java
             else -> null
         }
         if (target == null) {
-            // « Applications » : retour à l'écran racine, les écrans au-dessus sont fermés.
+            // « Accueil » : retour à l'écran racine, les écrans au-dessus sont fermés.
             activity.startActivity(root)
         } else {
             // La racine d'abord (elle ferme tout ce qui était au-dessus), puis l'onglet demandé : la pile est [racine, onglet].

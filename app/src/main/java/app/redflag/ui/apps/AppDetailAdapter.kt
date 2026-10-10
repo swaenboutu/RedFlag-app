@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import app.redflag.R
 import app.redflag.data.ProblemRef
+import app.redflag.data.displayDescription
 import app.redflag.data.displayLabel
 import app.redflag.databinding.ItemDetailChoiceBinding
 import app.redflag.databinding.ItemDetailHeaderBinding
@@ -87,7 +88,7 @@ class AppDetailAdapter(
 
     private fun bindChoice(binding: ItemDetailChoiceBinding, row: DetailRow.Choice) = with(binding) {
         val context = root.context
-        choice.text = styledIssueLabel(context, row.ref.displayLabel(context, row.override))
+        choice.text = styledIssueLabel(context, row.ref.displayLabel(context, row.override), row.ref.displayDescription(context))
         choice.isChecked = row.checked
         choice.setOnClickListener { onToggle(row.ref, row.checked) }
         choiceDivider.visibility = if (row.first) View.GONE else View.VISIBLE

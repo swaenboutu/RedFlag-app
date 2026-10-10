@@ -36,11 +36,11 @@ class AppRepository(private val db: AppDatabase) {
      * Adds a custom issue to the list, in the theme [category] (null = "Custom"), gives it its identifier and puts it in the
      * favorites: someone who writes their own issue cares about it. Null if the name already exists (case ignored).
      */
-    suspend fun addCustomProblem(label: String, category: String? = null): ProblemRef? {
+    suspend fun addCustomProblem(label: String, category: String? = null, description: String? = null): ProblemRef? {
         if (custom.listOnce().any { it.label.equals(label, ignoreCase = true) }) return null
         val ref = ProblemRef.newCustom()
         db.withTransaction {
-            custom.insert(CustomProblem(ref.id, label, category))
+            custom.insert(CustomProblem(ref.id, label, category, description))
             favoriteDao.insert(Favorite(ref.id))
         }
         return ref

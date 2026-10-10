@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import app.redflag.R
 import app.redflag.data.ProblemRef
+import app.redflag.data.displayDescription
 import app.redflag.data.displayLabel
 import app.redflag.databinding.ItemDetailChoiceBinding
 import app.redflag.databinding.ItemManagerThemeBinding
@@ -18,7 +19,7 @@ import app.redflag.ui.common.applyCard
 import app.redflag.ui.common.bindThemeCard
 import app.redflag.ui.common.styledIssueLabel
 import app.redflag.ui.common.themeIcon
-import app.redflag.ui.common.checkedSubtitle
+import app.redflag.ui.common.selectedOfSubtitle
 
 class OnboardingProblemsAdapter(
     private val onThemeClick: (Int) -> Unit,
@@ -56,16 +57,17 @@ class OnboardingProblemsAdapter(
     private fun bindTheme(binding: ItemManagerThemeBinding, row: OnboardingRow.Theme) = with(binding) {
         bindThemeCard(
             title = root.context.getString(row.id),
-            subtitle = checkedSubtitle(root.context, row.problemCount, row.checkedCount),
+            subtitle = selectedOfSubtitle(root.context, row.problemCount, row.checkedCount),
             expanded = row.expanded,
             hasContent = true,
             onClick = { onThemeClick(row.id) },
             icon = themeIcon(row.id),
+            outlined = true,
         )
     }
 
     private fun bindChoice(binding: ItemDetailChoiceBinding, row: OnboardingRow.Choice) = with(binding) {
-        choice.text = styledIssueLabel(root.context, row.ref.displayLabel(root.context, row.override))
+        choice.text = styledIssueLabel(root.context, row.ref.displayLabel(root.context, row.override), row.ref.displayDescription(root.context))
         choice.isChecked = row.checked
         choice.setOnClickListener {
             // La case se bascule seule au toucher : on la remet dans l'état réel (un choix refusé ne change rien en base).
@@ -73,7 +75,7 @@ class OnboardingProblemsAdapter(
             onToggle(row.ref, row.checked)
         }
         choiceDivider.visibility = if (row.first) View.GONE else View.VISIBLE
-        root.applyCard(roundTop = false, roundBottom = row.last, gapAfterDp = if (row.last) CARD_GAP_DP else 0)
+        root.applyCard(roundTop = false, roundBottom = row.last, gapAfterDp = if (row.last) CARD_GAP_DP else 0, outlined = true)
     }
 
     private object Diff : DiffUtil.ItemCallback<OnboardingRow>() {

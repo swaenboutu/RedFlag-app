@@ -1,6 +1,7 @@
 package app.redflag.ui.common
 
 import android.content.Context
+import android.text.format.DateUtils
 import app.redflag.R
 
 /** « 15 minutes », « 1 heure », « 24 heures » : dans la langue courante, avec le bon pluriel. */
@@ -11,3 +12,10 @@ fun formatPause(context: Context, minutes: Int): String =
     } else {
         context.resources.getQuantityString(R.plurals.duration_minutes, minutes, minutes)
     }
+
+/** "3:30 PM" when [millis] is today, otherwise the date as well: when a pause ends. */
+fun formatResumeTime(context: Context, millis: Long): String {
+    val sameDay = DateUtils.isToday(millis)
+    val flags = DateUtils.FORMAT_SHOW_TIME or if (sameDay) 0 else DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_ABBREV_ALL
+    return DateUtils.formatDateTime(context, millis, flags)
+}

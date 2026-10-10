@@ -22,6 +22,19 @@ class ProblemCatalogTest {
     }
 
     @Test
+    fun onlySomeCatalogIssuesHaveAnExplanation() {
+        val withDescription = all.filter { it.description != null }.map { it.key }.toSet()
+
+        assertEquals(setOf("addictive_design", "fomo", "worker_exploitation", "predatory_monetization"), withDescription)
+    }
+
+    @Test
+    fun aCustomIssueHasNoExplanationUntilOneIsWritten() {
+        assertNull(CustomProblem("custom:1", "mon souci").description)
+        assertEquals("pourquoi", CustomProblem("custom:2", "mon souci", description = "pourquoi").description)
+    }
+
+    @Test
     fun findResolvesKnownKeysOnly() {
         assertNotNull(ProblemCatalog.find("sexism"))
         assertNull(ProblemCatalog.find("unknown"))

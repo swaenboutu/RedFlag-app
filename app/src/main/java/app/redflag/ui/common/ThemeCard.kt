@@ -18,6 +18,7 @@ fun ItemManagerThemeBinding.bindThemeCard(
     hasContent: Boolean,
     onClick: () -> Unit,
     @androidx.annotation.DrawableRes icon: Int? = null,
+    outlined: Boolean = false,
 ) {
     themeIcon.visibility = if (icon == null) View.GONE else View.VISIBLE
     if (icon != null) {
@@ -39,7 +40,7 @@ fun ItemManagerThemeBinding.bindThemeCard(
     themeDivider.visibility = if (open) View.VISIBLE else View.GONE
     root.isClickable = hasContent
     root.setOnClickListener { if (hasContent) onClick() }
-    root.applyCard(roundTop = true, roundBottom = !open, gapAfterDp = if (open) 0 else CARD_GAP_DP)
+    root.applyCard(roundTop = true, roundBottom = !open, gapAfterDp = if (open) 0 else CARD_GAP_DP, outlined = outlined)
 }
 
 /** « 4 problématiques » : le début de tous les sous-titres de thème. */
@@ -52,3 +53,8 @@ fun checkedSubtitle(context: Context, problemCount: Int, checkedCount: Int): Str
     if (checkedCount == 0) return problems
     return "$problems, ${context.resources.getQuantityString(R.plurals.theme_checked, checkedCount, checkedCount)}"
 }
+
+/** "4 issues", or "2 selected of 4" once something is selected (welcome tour). */
+fun selectedOfSubtitle(context: Context, problemCount: Int, selectedCount: Int): String =
+    if (selectedCount == 0) problemsSubtitle(context, problemCount)
+    else context.resources.getQuantityString(R.plurals.theme_selected_of, selectedCount, selectedCount, problemCount)

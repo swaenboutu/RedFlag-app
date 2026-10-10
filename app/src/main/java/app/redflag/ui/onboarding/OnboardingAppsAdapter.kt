@@ -1,5 +1,6 @@
 package app.redflag.ui.onboarding
 
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +43,7 @@ class OnboardingAppsAdapter(
         val binding = (holder as Holder<*>).binding
         when (val row = getItem(position)) {
             is AppsRow.Header -> with(binding as ItemOnboardingAppsHeaderBinding) {
+                description.text = row.step.body
                 // The text only changes when the step has changed (search reset), never while typing.
                 if (search.text.toString() != currentQuery()) search.setText(currentQuery())
             }
@@ -51,10 +53,11 @@ class OnboardingAppsAdapter(
                 icon.setImageDrawable(row.app.icon)
                 choice.text = row.app.label
                 choice.isChecked = row.checked
+                choice.setTypeface(Typeface.DEFAULT, if (row.checked) Typeface.BOLD else Typeface.NORMAL)
                 choice.setOnClickListener { onToggle(row.app.packageName) }
                 divider.visibility = if (row.first) View.GONE else View.VISIBLE
                 // Une seule carte blanche pour toute la liste : arrondie en haut sur la première ligne, en bas sur la dernière.
-                root.applyCard(roundTop = row.first, roundBottom = row.last, gapAfterDp = 0)
+                root.applyCard(roundTop = row.first, roundBottom = row.last, gapAfterDp = 0, outlined = true)
             }
         }
     }

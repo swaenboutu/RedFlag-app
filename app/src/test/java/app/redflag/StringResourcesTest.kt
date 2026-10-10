@@ -105,8 +105,16 @@ class StringResourcesTest {
 
     @Test
     fun `chaque problematique du catalogue a un libelle dans les deux langues`() {
-        val catalogKeys = fr.strings.keys.filter { it.startsWith("problem_") }
+        val catalogKeys = fr.strings.keys.filter { it.startsWith("problem_") && !it.endsWith("_description") }
         assertEquals("23 problématiques", 23, catalogKeys.size)
-        assertEquals(catalogKeys.toSet(), en.strings.keys.filter { it.startsWith("problem_") }.toSet())
+        assertEquals(catalogKeys.toSet(), en.strings.keys.filter { it.startsWith("problem_") && !it.endsWith("_description") }.toSet())
+    }
+
+    @Test
+    fun `les explications des problematiques existent dans les deux langues et se rattachent a un libelle`() {
+        val descriptions = fr.strings.keys.filter { it.endsWith("_description") && it.startsWith("problem_") }
+        assertEquals("4 explications", 4, descriptions.size)
+        assertEquals(descriptions.toSet(), en.strings.keys.filter { it.endsWith("_description") && it.startsWith("problem_") }.toSet())
+        assertTrue(descriptions.all { it.removeSuffix("_description") in fr.strings })
     }
 }

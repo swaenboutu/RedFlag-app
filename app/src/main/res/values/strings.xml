@@ -28,7 +28,15 @@
     <string name="cancel">Cancel</string>
     <string name="add">Add</string>
 
-    <string name="onboarding_body">Before you open an app you have flagged, a short pause asks whether you really want to. Choose the issues that matter to you and the apps that raise them: everything stays on your phone.</string>
+    <string name="onboarding_welcome_title">One second to choose consciously</string>
+    <string name="onboarding_welcome_flag_title">Flag</string>
+    <string name="onboarding_welcome_flag_body">the apps whose behavior or values you disapprove of.</string>
+    <string name="onboarding_welcome_pause_title">Take a pause</string>
+    <string name="onboarding_welcome_pause_body">When you open one, %1$s reminds you why you flagged it and asks whether it is really important.</string>
+    <string name="onboarding_welcome_decide_title">Decide</string>
+    <string name="onboarding_welcome_decide_body">Nothing is blocked: you choose whether to open the app or not.</string>
+    <string name="onboarding_welcome_private_title">Everything stays on your phone</string>
+    <string name="onboarding_welcome_private_body">%1$s collects no personal data. No account, no ads, nothing is sent elsewhere. The code is open: anyone can check it.</string>
     <string name="onboarding_start">Get started</string>
     <string name="onboarding_problems_title">What matters most to you?</string>
     <string name="onboarding_problems_body">Select the few issues that matter most to you.</string>
@@ -39,9 +47,20 @@
     </plurals>
     <string name="onboarding_step">Step %1$d of %2$d</string>
     <string name="onboarding_next">Next</string>
+    <plurals name="onboarding_next_count">
+        <item quantity="one">Next · %d app</item>
+        <item quantity="other">Next · %d apps</item>
+    </plurals>
+    <string name="onboarding_issue_progress">Issue %1$d of %2$d</string>
+    <string name="onboarding_no_app">No app for this issue</string>
+    <string name="onboarding_finish_later">Finish later</string>
+    <!-- Escaped HTML, see OnboardingAppsActivity. %1$d: issues chosen, %2$d: those left for later. -->
+    <plurals name="onboarding_apps_more">
+        <item quantity="one">You chose %1$d issues. The last one is waiting for you in the &lt;b&gt;Issues&lt;/b&gt; tab.</item>
+        <item quantity="other">You chose %1$d issues. The other %2$d are waiting for you in the &lt;b&gt;Issues&lt;/b&gt; tab.</item>
+    </plurals>
     <string name="onboarding_skip">Skip this step</string>
-    <string name="onboarding_apps_step">Step 3 of 4 · Issue %1$d of %2$d</string>
-    <string name="onboarding_apps_body">Select the apps this issue applies to. You can change this at any time.</string>
+    <string name="onboarding_apps_body">Tick the apps you think this issue applies to.</string>
     <string name="onboarding_permission_title">One last permission</string>
     <!-- The tags are real HTML (escaped): the texts go through HtmlCompat, see OnboardingPermissionActivity. -->
     <string name="onboarding_permission_intro">To know when you open a flagged app, %1$s needs Android’s &lt;b&gt;accessibility service&lt;/b&gt;.</string>
@@ -59,9 +78,49 @@
     <string name="accessibility_disclosure_title">Accessibility service</string>
     <string name="onboarding_permission_enabled">All set: the service is on.</string>
     <string name="onboarding_finish">Finish</string>
-    <string name="onboarding_skip_remaining">Skip the remaining issues</string>
     <string name="onboarding_app_list_title">Which apps concern you?</string>
     <string name="onboarding_app_list_body">Tap an app to choose the issues it raises. You can change this at any time.</string>
+    <string name="home_label">Interruption</string>
+    <string name="home_on">On</string>
+    <plurals name="home_watching">
+        <item quantity="one">%1$s is watching over %2$d flagged app.</item>
+        <item quantity="other">%1$s is watching over %2$d flagged apps.</item>
+    </plurals>
+    <string name="home_watching_none">No app is flagged yet.</string>
+    <string name="home_pause_action">Pause</string>
+    <string name="home_paused">Paused</string>
+    <string name="home_paused_until">Until %1$s. %2$s will not interrupt you until then.</string>
+    <string name="home_paused_forever">%1$s will not interrupt you until you turn it back on.</string>
+    <string name="home_resume">Resume now</string>
+    <string name="home_inactive">Inactive</string>
+    <string name="home_inactive_text">Android’s accessibility service is off: %1$s cannot interrupt you.</string>
+    <string name="home_inactive_action">Turn on the accessibility service</string>
+    <plurals name="home_avoided_label">
+        <item quantity="one">launch avoided</item>
+        <item quantity="other">launches avoided</item>
+    </plurals>
+    <string name="home_avoided_since">since activation, on %1$s</string>
+    <string name="home_top_app_title">Most interrupted app</string>
+    <plurals name="home_top_app_count">
+        <item quantity="one">%d interruption</item>
+        <item quantity="other">%d interruptions</item>
+    </plurals>
+    <string name="home_empty_name">None yet</string>
+    <string name="home_top_app_empty">Flagged apps you open will show up here.</string>
+    <string name="home_top_issue_empty">Flag an app to see it here.</string>
+    <string name="home_top_issue_title">Most present issue</string>
+    <plurals name="home_top_issue_apps">
+        <item quantity="one">%1$d app of %2$d</item>
+        <item quantity="other">%1$d apps of %2$d</item>
+    </plurals>
+    <string name="pause_title">Pause</string>
+    <string name="pause_subtitle">While paused, %1$s will not interrupt you.</string>
+    <string name="pause_option_morning">Until tomorrow morning</string>
+    <string name="pause_option_morning_hint">Resumes at 8 am</string>
+    <string name="pause_option_forever">Until I turn it back on</string>
+    <string name="pause_option_forever_hint">No interruption until you turn it back on from Home.</string>
+    <string name="pause_confirm">Pause</string>
+    <string name="nav_home">Home</string>
     <string name="nav_apps">Apps</string>
     <string name="nav_problems">Issues</string>
     <string name="nav_stats">Stats</string>
@@ -97,8 +156,6 @@
     <string name="settings_inactive_title">%1$s is off</string>
     <string name="settings_inactive_desc">No interruption is shown until you turn it back on.</string>
     <string name="settings_inactive_until">Off until %1$s. Flagged apps open without an interruption.</string>
-    <string name="settings_off_title">Turn off for…</string>
-    <string name="settings_off_until_back_on">Until I turn it back on</string>
     <string name="settings_active_switch">Turn interruptions on</string>
     <string name="settings_section_display">Display</string>
     <string name="settings_appearance_title">Appearance</string>
@@ -156,6 +213,10 @@
         <item quantity="one">%d issue</item>
         <item quantity="other">%d issues</item>
     </plurals>
+    <plurals name="theme_selected_of">
+        <item quantity="one">%1$d selected of %2$d</item>
+        <item quantity="other">%1$d selected of %2$d</item>
+    </plurals>
     <plurals name="theme_checked">
         <item quantity="one">%d checked</item>
         <item quantity="other">%d checked</item>
@@ -208,9 +269,11 @@
     <string name="category_favorites">Your favorites</string>
     <string name="category_custom">Custom</string>
 
-    <string name="problem_addictive_design">Addictive design (dark patterns, infinite scroll, manipulative notifications)</string>
+    <string name="problem_addictive_design">Addictive design</string>
+    <string name="problem_addictive_design_description">Dark patterns, infinite scroll, manipulative notifications</string>
     <string name="problem_social_comparison">Social anxiety &amp; comparison</string>
-    <string name="problem_fomo">FOMO (Fear Of Missing Out)</string>
+    <string name="problem_fomo">FOMO</string>
+    <string name="problem_fomo_description">Fear Of Missing Out</string>
     <string name="problem_sleep_impact">Negative impact on sleep</string>
     <string name="problem_sexism">Sexism / stereotyped representations</string>
     <string name="problem_racism">Racism / discrimination</string>
@@ -219,13 +282,15 @@
     <string name="problem_carbon_footprint">High carbon footprint from servers</string>
     <string name="problem_planned_obsolescence">Encouraged planned obsolescence</string>
     <string name="problem_overconsumption">Encouraged overconsumption</string>
-    <string name="problem_worker_exploitation">Worker exploitation (warehouses, delivery workers, content moderators…)</string>
+    <string name="problem_worker_exploitation">Worker exploitation</string>
+    <string name="problem_worker_exploitation_description">Warehouses, delivery workers, content moderators…</string>
     <string name="problem_child_labor">Child labor in the supply chain</string>
     <string name="problem_subcontractor_conditions">Subcontractor working conditions</string>
     <string name="problem_excessive_data">Excessive personal data collection</string>
     <string name="problem_data_resale">Selling data to third parties</string>
     <string name="problem_surveillance">Surveillance &amp; tracking</string>
-    <string name="problem_predatory_monetization">Predatory monetization (loot boxes, in-app purchases targeting children)</string>
+    <string name="problem_predatory_monetization">Predatory monetization</string>
+    <string name="problem_predatory_monetization_description">Loot boxes, in-app purchases targeting children</string>
     <string name="problem_monopoly">Monopoly &amp; competition crushing</string>
     <string name="problem_tax_evasion">Tax evasion</string>
     <string name="problem_misinformation">Misinformation / fake news</string>

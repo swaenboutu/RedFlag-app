@@ -107,14 +107,27 @@ class SettingsStore(context: Context, private val now: () -> Long = System::curr
     }
 
     /** Turns the main switch off for [minutes] minutes: it comes back on by itself afterwards. */
-    fun disableInterceptionFor(minutes: Int) {
-        val at = now() + minutes * 60_000L
+    fun disableInterceptionFor(minutes: Int) = disableInterceptionUntil(now() + minutes * 60_000L)
+
+    /** Turns the main switch off until [at] (epoch milliseconds): it comes back on by itself at that moment. */
+    fun disableInterceptionUntil(at: Long) {
         prefs.edit {
             putBoolean(KEY_ENABLED, false)
             putLong(KEY_REENABLE_AT, at)
         }
         _reenableAt.value = at
         _interceptionEnabled.value = false
+    }
+
+    /**
+     * When the user started (epoch milliseconds): kept once decided, and erased with everything else by a reset of the app. The first
+     * time, [fallback] is used: the date of the first recorded choice if there is one, otherwise now.
+     */
+    fun startedAt(fallback: Long): Long {
+        val saved = prefs.getLong(KEY_STARTED_AT, 0L)
+        if (saved != 0L) return saved
+        prefs.edit { putLong(KEY_STARTED_AT, fallback) }
+        return fallback
     }
 
     fun setPauseMinutes(value: Int) {
@@ -150,6 +163,7 @@ class SettingsStore(context: Context, private val now: () -> Long = System::curr
         val OFF_CHOICES = listOf(60, 12 * 60, 24 * 60)
 
         private const val KEY_APPEARANCE = "appearance"
+        private const val KEY_STARTED_AT = "started_at"
         private const val KEY_ENABLED = "interception_enabled"
         private const val KEY_REENABLE_AT = "interception_reenable_at"
         private const val KEY_PAUSE_MINUTES = "pause_minutes"

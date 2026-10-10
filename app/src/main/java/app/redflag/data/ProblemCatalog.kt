@@ -4,8 +4,11 @@ import android.content.Context
 import androidx.annotation.StringRes
 import app.redflag.R
 
-/** Problématique prédéfinie : [key] est stable et stockée en base, [label] est traduit par les ressources. */
-data class PredefinedProblem(val key: String, @StringRes val label: Int)
+/**
+ * Problématique prédéfinie : [key] est stable et stockée en base, [label] (le titre) et [description] (une petite phrase
+ * d'explication, facultative) sont traduits par les ressources.
+ */
+data class PredefinedProblem(val key: String, @StringRes val label: Int, @StringRes val description: Int? = null)
 
 data class ProblemCategory(
     /** Stable, stockée en base pour rattacher une problématique personnalisée à ce thème. */
@@ -26,9 +29,9 @@ object ProblemCatalog {
         ProblemCategory(
             "mental", "🧠", R.string.category_mental,
             listOf(
-                PredefinedProblem("addictive_design", R.string.problem_addictive_design),
+                PredefinedProblem("addictive_design", R.string.problem_addictive_design, R.string.problem_addictive_design_description),
                 PredefinedProblem("social_comparison", R.string.problem_social_comparison),
-                PredefinedProblem("fomo", R.string.problem_fomo),
+                PredefinedProblem("fomo", R.string.problem_fomo, R.string.problem_fomo_description),
                 PredefinedProblem("sleep_impact", R.string.problem_sleep_impact),
             ),
         ),
@@ -52,7 +55,7 @@ object ProblemCatalog {
         ProblemCategory(
             "exploitation", "💼", R.string.category_exploitation,
             listOf(
-                PredefinedProblem("worker_exploitation", R.string.problem_worker_exploitation),
+                PredefinedProblem("worker_exploitation", R.string.problem_worker_exploitation, R.string.problem_worker_exploitation_description),
                 PredefinedProblem("child_labor", R.string.problem_child_labor),
                 PredefinedProblem("subcontractor_conditions", R.string.problem_subcontractor_conditions),
             ),
@@ -68,7 +71,7 @@ object ProblemCatalog {
         ProblemCategory(
             "economic", "💰", R.string.category_economic,
             listOf(
-                PredefinedProblem("predatory_monetization", R.string.problem_predatory_monetization),
+                PredefinedProblem("predatory_monetization", R.string.problem_predatory_monetization, R.string.problem_predatory_monetization_description),
                 PredefinedProblem("monopoly", R.string.problem_monopoly),
                 PredefinedProblem("tax_evasion", R.string.problem_tax_evasion),
             ),
@@ -118,3 +121,17 @@ fun ProblemRef.displayLabel(context: Context, override: String?): String =
 /** Texte à afficher : catalogue (surcharge ou traduction) ou nom de la personnalisée. [overrides] : voir `AppRepository.labelOverrides`. */
 fun Problem.displayLabel(context: Context, overrides: Map<String, String>): String? =
     ProblemCatalog.find(problemId)?.displayLabel(context, overrides) ?: overrides[problemId]
+
+/** L'explication d'une entrée du catalogue, ou null si elle n'en a pas. */
+fun PredefinedProblem.displayDescription(context: Context): String? = description?.let(context::getString)
+
+/** L'explication d'une référence du catalogue ; null pour une personnalisée ou une entrée sans explication. */
+fun ProblemRef.displayDescription(context: Context): String? =
+    catalogKey?.let(ProblemCatalog::find)?.displayDescription(context)
+
+/** Le titre d'une problématique suivi de son explication entre parenthèses, quand elle en a une (écran d'interruption). */
+fun Problem.displayLabelWithDescription(context: Context, overrides: Map<String, String>): String? {
+    val label = displayLabel(context, overrides) ?: return null
+    val description = toRef().displayDescription(context) ?: return label
+    return "$label ($description)"
+}

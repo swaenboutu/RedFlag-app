@@ -44,9 +44,15 @@ data class Problem(
  * Liste des problématiques personnalisées connues, indépendamment des apps auxquelles elles sont associées.
  * [id] : identifiant stable (`custom:…`), qui ne change jamais ; [label] : le nom affiché, que l'utilisateur peut modifier.
  * [category] : clé du thème du catalogue où la ranger ; null = thème « Personnalisé ».
+ * [description] : petite phrase d'explication, facultative (comme celles du catalogue) ; null = aucune.
  */
 @Entity(tableName = "custom_problems")
-data class CustomProblem(@PrimaryKey val id: String, val label: String, val category: String? = null)
+data class CustomProblem(
+    @PrimaryKey val id: String,
+    val label: String,
+    val category: String? = null,
+    val description: String? = null,
+)
 
 /** Intitulé choisi par l'utilisateur pour une problématique du catalogue ; remplace la traduction, dans toutes les langues. */
 @Entity(tableName = "catalog_overrides")

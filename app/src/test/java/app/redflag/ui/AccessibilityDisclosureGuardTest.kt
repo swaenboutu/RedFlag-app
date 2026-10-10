@@ -32,6 +32,9 @@ class AccessibilityDisclosureGuardTest {
         val main = File("src/main/java/app/redflag/ui/apps/MainActivity.kt").readText()
         val settings = File("src/main/java/app/redflag/ui/settings/SettingsActivity.kt").readText()
 
+        val home = File("src/main/java/app/redflag/ui/home/HomeActivity.kt").readText()
+
+        assertTrue("HomeActivity", "AccessibilityDisclosureDialog.show" in home)
         assertTrue("MainActivity", "AccessibilityDisclosureDialog.show" in main)
         assertTrue("SettingsActivity", "AccessibilityDisclosureDialog.show" in settings)
     }

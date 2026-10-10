@@ -31,14 +31,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // "Launch" = from the app icon, on a fresh screen: not a rotation, not a return from another screen of the app.
-        val freshLaunch = savedInstanceState == null && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
-        val settings = container.settings
-        if (SettingsStore.shouldShowOnboarding(settings.onboardingDone, settings.alwaysShowOnboarding.value, freshLaunch)) {
-            startActivity(Intent(this, OnboardingActivity::class.java))
-            finish()
-            return
-        }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

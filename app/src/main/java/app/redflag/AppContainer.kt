@@ -13,6 +13,7 @@ import app.redflag.data.MIGRATION_3_4
 import app.redflag.data.MIGRATION_4_5
 import app.redflag.data.MIGRATION_5_6
 import app.redflag.data.MIGRATION_6_7
+import app.redflag.data.MIGRATION_7_8
 import app.redflag.data.SettingsStore
 import app.redflag.service.FrictionGate
 import kotlinx.coroutines.CoroutineScope
@@ -53,5 +54,5 @@ class AppContainer(context: Context, database: AppDatabase = openDatabase(contex
 
 private fun openDatabase(context: Context): AppDatabase =
     Room.databaseBuilder(context, AppDatabase::class.java, "conscience.db")
-        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
+        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
         .build()

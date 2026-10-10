@@ -12,7 +12,7 @@ import app.redflag.container
 import app.redflag.data.ProblemCatalog
 import app.redflag.data.ProblemRef
 import app.redflag.ui.apps.AppDetailActivity
-import app.redflag.ui.apps.MainActivity
+import app.redflag.ui.home.HomeActivity
 import app.redflag.ui.onboarding.OnboardingAppDetailActivity
 import app.redflag.ui.onboarding.OnboardingAppListActivity
 import app.redflag.ui.onboarding.OnboardingAppsActivity
@@ -226,15 +226,41 @@ class OnboardingSkipTest {
     }
 
     @Test
-    fun theAppsStepCanBeSkippedWholeAndGoesToThePermissions() = runBlocking {
+    fun withMoreThanThreeIssuesTheLastPageOffersToFinishLater() = runBlocking {
+        refs.forEach { repository.setFavorite(it, false) }
+        refs.take(4).forEach { repository.setFavorite(it, true) }
+
+        ActivityScenario.launch(OnboardingAppsActivity::class.java).use { scenario ->
+            scenario.await { scenario.visibility(R.id.btnSkip) == View.VISIBLE }
+            assertEquals("the first pages have no explanation", View.GONE, scenario.visibility(R.id.moreInfo))
+
+            // Only three issues are handled: after two pages, the third is the last one.
+            repeat(2) {
+                scenario.onActivity { it.findViewById<View>(R.id.btnSkip).performClick() }
+                Thread.sleep(300)
+            }
+            scenario.await { scenario.visibility(R.id.moreInfo) == View.VISIBLE }
+            assertEquals("the link disappears on the last page", View.GONE, scenario.visibility(R.id.btnSkip))
+            assertTrue("\"Finish later\" is always active", scenario.isEnabled(R.id.btnNext))
+
+            assertTrue(scenario.tapOpens<OnboardingAppsActivity, OnboardingPermissionActivity>(R.id.btnNext))
+        }
+    }
+
+    @Test
+    fun withThreeIssuesOrFewerTheLastPageKeepsTheNormalButton() = runBlocking {
         refs.forEach { repository.setFavorite(it, false) }
         refs.take(3).forEach { repository.setFavorite(it, true) }
 
         ActivityScenario.launch(OnboardingAppsActivity::class.java).use { scenario ->
-            scenario.await { scenario.visibility(R.id.btnSkipRemaining) == View.VISIBLE }
-            assertEquals("plusieurs problématiques : on peut passer le reste", View.VISIBLE, scenario.visibility(R.id.btnSkipRemaining))
-
-            assertTrue(scenario.tapOpens<OnboardingAppsActivity, OnboardingPermissionActivity>(R.id.btnSkipRemaining))
+            scenario.await { scenario.visibility(R.id.btnSkip) == View.VISIBLE }
+            repeat(2) {
+                scenario.onActivity { it.findViewById<View>(R.id.btnSkip).performClick() }
+                Thread.sleep(300)
+            }
+            Thread.sleep(300)
+            assertEquals("nothing is left for later", View.GONE, scenario.visibility(R.id.moreInfo))
+            assertEquals(View.VISIBLE, scenario.visibility(R.id.btnSkip))
         }
     }
 
@@ -259,7 +285,7 @@ class OnboardingSkipTest {
                 // Le bouton « Passer » n'existe que si le service d'accessibilité est désactivé : sinon, le test est ignoré.
                 assumeTrue(scenario.visibility(R.id.btnLater) == View.VISIBLE)
 
-                assertTrue(scenario.tapOpens<OnboardingPermissionActivity, MainActivity>(R.id.btnLater))
+                assertTrue(scenario.tapOpens<OnboardingPermissionActivity, HomeActivity>(R.id.btnLater))
                 assertTrue("l'accueil est marqué comme terminé", context.container.settings.onboardingDone)
             }
         } finally {

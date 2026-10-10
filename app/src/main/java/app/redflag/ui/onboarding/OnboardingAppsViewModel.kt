@@ -1,12 +1,15 @@
 package app.redflag.ui.onboarding
 
 import android.content.Context
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.redflag.AppContainer
+import app.redflag.R
 import app.redflag.data.InstalledApp
 import app.redflag.data.ProblemCatalog
 import app.redflag.data.ProblemRef
+import app.redflag.data.displayDescription
 import app.redflag.data.displayLabel
 import app.redflag.data.matches
 import app.redflag.util.alphabetical
@@ -20,8 +23,24 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-/** Une étape : la problématique [ref] (libellé [label]) est la [position]e sur [total]. */
-data class AppsStep(val position: Int, val total: Int, val ref: ProblemRef, val label: String)
+/**
+ * Une étape : la problématique [ref] (libellé [label]) est la [position]e sur [total]. [themeTitle] : titre de son thème ;
+ * [body] : son explication (si elle en a une), suivie de la consigne.
+ */
+data class AppsStep(
+    val position: Int,
+    val total: Int,
+    val ref: ProblemRef,
+    val label: String,
+    @StringRes val themeTitle: Int,
+    val body: String,
+)
+
+/**
+ * Le bas de l'écran : [finishLater] (dernière page alors que d'autres enjeux ont été choisis) remplace « Suivant » par « Terminer plus tard » ;
+ * [chosenTotal] enjeux choisis, dont [remaining] ne sont pas traités ici ; [selectedCount] apps cochées ; [canSave] : « Suivant » est actif.
+ */
+data class AppsBottom(val finishLater: Boolean, val selectedCount: Int, val canSave: Boolean, val chosenTotal: Int, val remaining: Int)
 
 sealed interface AppsRow {
     /** Aucune app ne correspond à la recherche. */
@@ -43,6 +62,7 @@ class OnboardingAppsViewModel(private val container: AppContainer, private val c
     private val apps = MutableStateFlow<List<InstalledApp>>(emptyList())
     private val selected = MutableStateFlow<Set<String>>(emptySet())
     private val _query = MutableStateFlow("")
+    private val chosenTotal = MutableStateFlow(0)
 
     /** Texte de recherche ; remis à zéro à chaque changement d'étape. */
     val query: StateFlow<String> = _query
@@ -74,13 +94,31 @@ class OnboardingAppsViewModel(private val container: AppContainer, private val c
         selected.isNotEmpty() || initial.isNotEmpty()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
+    /** What the bottom of the screen shows (see [AppsBottom]). */
+    val bottom: StateFlow<AppsBottom> = combine(steps, index, selected, canSave, chosenTotal) { steps, index, selected, canSave, total ->
+        val handled = steps?.size ?: 0
+        val last = handled > 0 && index == handled - 1
+        AppsBottom(
+            finishLater = last && total > handled,
+            selectedCount = selected.size,
+            canSave = canSave,
+            chosenTotal = total,
+            remaining = (total - handled).coerceAtLeast(0),
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppsBottom(false, 0, false, 0, 0))
+
     init {
         viewModelScope.launch {
             val favorites = repository.favorites.first()
             val overrides = repository.labelOverrides.first()
             val chosen = ProblemCatalog.allRefs.filter { it in favorites }
-            steps.value = chosen.mapIndexed { i, ref ->
-                AppsStep(i + 1, chosen.size, ref, ref.displayLabel(context, overrides[ref.id]))
+            chosenTotal.value = chosen.size
+            // However many issues were chosen, the tour handles the first few: the others wait in the Issues tab.
+            val handled = chosen.take(MAX_ISSUES)
+            val instruction = context.getString(R.string.onboarding_apps_body)
+            steps.value = handled.mapIndexed { i, ref ->
+                val category = ProblemCatalog.categories.first { c -> c.problems.any { it.key == ref.catalogKey } }
+                AppsStep(i + 1, handled.size, ref, ref.displayLabel(context, overrides[ref.id]), category.title, bodyOf(ref.displayDescription(context), instruction))
             }
             // La sélection de départ est chargée avant d'afficher les apps : un clic ne peut pas être écrasé par ce chargement.
             steps.value?.firstOrNull()?.let { loadSelection(it.ref) }
@@ -96,6 +134,12 @@ class OnboardingAppsViewModel(private val container: AppContainer, private val c
             .toSet()
         initiallyLinked.value = linked
         selected.value = linked
+    }
+
+    private fun bodyOf(description: String?, instruction: String): String {
+        if (description.isNullOrBlank()) return instruction
+        val lead = if (description.last() in ".…") description else "$description."
+        return "$lead $instruction"
     }
 
     fun setQuery(text: String) {
@@ -147,3 +191,6 @@ class OnboardingAppsViewModel(private val container: AppContainer, private val c
         return true
     }
 }
+
+/** The welcome tour handles at most this many issues (the first chosen ones). */
+const val MAX_ISSUES = 3
