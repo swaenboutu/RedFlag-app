@@ -11,7 +11,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:clipToPadding="false"
-        android:paddingBottom="16dp">
+        android:paddingBottom="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,7 +24,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingStart="28dp"
-                android:paddingTop="32dp"
+                android:paddingTop="20dp"
                 android:paddingEnd="28dp">
 
                 <ImageView
@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="12dp"
             android:background="@drawable/bg_state_active"
             android:visibility="gone">
@@ -59,10 +59,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingStart="24dp"
-                android:paddingTop="20dp"
-                android:paddingEnd="24dp"
-                android:paddingBottom="24dp">
+                android:paddingStart="20dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -104,9 +104,9 @@
                     </LinearLayout>
 
                     <FrameLayout
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
-                        android:layout_marginStart="12dp"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="8dp"
                         android:background="@drawable/bg_circle_active">
 
                         <ImageView
@@ -122,8 +122,8 @@
                     android:id="@+id/btnPause"
                     style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="14dp"
                     android:fontFamily="@font/inter_semibold"
                     android:textStyle="bold"
                     android:text="@string/home_pause_action"
@@ -143,7 +143,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="12dp"
             android:background="@drawable/bg_state_paused"
             android:visibility="gone">
@@ -152,10 +152,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingStart="24dp"
-                android:paddingTop="20dp"
-                android:paddingEnd="24dp"
-                android:paddingBottom="24dp">
+                android:paddingStart="20dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -197,9 +197,9 @@
                     </LinearLayout>
 
                     <FrameLayout
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
-                        android:layout_marginStart="12dp"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="8dp"
                         android:background="@drawable/bg_circle_paused">
 
                         <ImageView
@@ -214,8 +214,8 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnResume"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="14dp"
                     android:fontFamily="@font/inter_semibold"
                     android:textStyle="bold"
                     android:text="@string/home_resume"
@@ -229,7 +229,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="12dp"
             android:background="@drawable/bg_state_inactive"
             android:visibility="gone">
@@ -238,9 +238,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingStart="24dp"
+                android:paddingStart="20dp"
                 android:paddingTop="16dp"
-                android:paddingEnd="24dp"
+                android:paddingEnd="20dp"
                 android:paddingBottom="8dp">
 
                 <LinearLayout
@@ -283,9 +283,9 @@
                     </LinearLayout>
 
                     <FrameLayout
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
-                        android:layout_marginStart="12dp"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="8dp"
                         android:background="@drawable/bg_circle_inactive">
 
                         <ImageView
@@ -333,12 +333,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="12dp"
             android:background="@drawable/bg_note_card"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="20dp">
+            android:padding="14dp">
 
             <TextView
                 android:id="@+id/avoidedValue"
@@ -382,18 +382,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="12dp"
             android:background="@drawable/bg_note_card"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:padding="12dp">
 
             <ImageView
                 android:id="@+id/topAppIcon"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
                 android:background="@drawable/bg_icon_12"
                 android:importantForAccessibility="no" />
 
@@ -445,21 +445,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="12dp"
             android:background="@drawable/bg_note_card"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:padding="12dp">
 
             <ImageView
                 android:id="@+id/topIssueIcon"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
                 android:background="@drawable/bg_app_icon_tile"
                 android:importantForAccessibility="no"
-                android:padding="14dp"
+                android:padding="11dp"
                 app:tint="?attr/colorOnSurface" />
 
             <LinearLayout

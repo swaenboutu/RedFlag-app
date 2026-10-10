@@ -10,13 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:fontFamily="@font/bricolage_grotesque"
         android:includeFontPadding="false"
         android:text="@string/stats_title"
         android:textColor="?attr/colorOnSurface"
-        android:textSize="28sp"
+        android:textSize="26sp"
         android:textStyle="bold" />
 
     <!-- Apps avec une interruption, sur l'ensemble des apps installées. -->
@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="12dp"
         android:background="@drawable/bg_card_white"
         android:orientation="vertical"

@@ -46,7 +46,7 @@
             android:gravity="left|center_vertical"
             android:layoutDirection="rtl"
             android:maxLines="1"
-            android:minHeight="64dp"
+            android:minHeight="56dp"
             android:paddingLeft="12dp"
             android:paddingRight="16dp"
             android:textAlignment="gravity"

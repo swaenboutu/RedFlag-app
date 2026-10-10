@@ -22,7 +22,7 @@
         android:button="@drawable/sel_check"
         android:fontFamily="@font/inter_medium"
         android:gravity="center_vertical"
-        android:minHeight="64dp"
+        android:minHeight="56dp"
         android:paddingStart="0dp"
         android:paddingEnd="16dp"
         android:paddingVertical="10dp"
