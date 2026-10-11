@@ -1,11 +1,15 @@
 package app.redflag.ui.problems
 
 import android.content.Context
+import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.redflag.AppContainer
+import app.redflag.R
+import app.redflag.data.ProblemCatalog
 import app.redflag.data.ProblemRef
+import app.redflag.data.displayDescription
 import app.redflag.data.matches
 import app.redflag.ui.common.displayedLabels
 import app.redflag.ui.common.isLabelTaken
@@ -30,6 +34,10 @@ data class DetailState(
     val override: String?,
     val linkedApps: List<LinkedApp>,
     val favorite: Boolean,
+    /** The title of the theme of the issue (the catalog theme, the one a custom issue was put in, or "My issues"). */
+    @param:StringRes val themeTitle: Int,
+    /** The explanation of the issue, when it has one. */
+    val description: String?,
 )
 
 class ProblemDetailViewModel(container: AppContainer, private val context: Context, private val handle: SavedStateHandle) :
@@ -38,12 +46,21 @@ class ProblemDetailViewModel(container: AppContainer, private val context: Conte
     private val ref = ProblemRef(checkNotNull(handle[DetailArgs.PROBLEM_ID]))
 
     val state: StateFlow<DetailState?> =
-        combine(repository.monitoredApps, repository.labelOverrides, repository.favorites) { apps, overrides, favorites ->
+        combine(repository.monitoredApps, repository.labelOverrides, repository.favorites, repository.customProblems) { apps, overrides, favorites, customs ->
             val linked = apps
                 .filter { app -> app.problems.any { it.matches(ref) } }
                 .map { LinkedApp(it.app.packageName, it.app.appName) }
                 .sortedWith(compareBy(alphabetical()) { it.appName })
-            DetailState(ref, overrides[ref.id], linked, ref in favorites)
+            val custom = customs.firstOrNull { it.id == ref.id }
+            val catalogTheme = ProblemCatalog.categories.firstOrNull { c -> c.problems.any { it.key == ref.id } }
+            DetailState(
+                ref = ref,
+                override = overrides[ref.id],
+                linkedApps = linked,
+                favorite = ref in favorites,
+                themeTitle = (catalogTheme ?: custom?.category?.let(ProblemCatalog::findCategory))?.title ?: R.string.category_custom,
+                description = if (custom != null) custom.description else ref.displayDescription(context),
+            )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
     /**

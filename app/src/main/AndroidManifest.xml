@@ -74,11 +74,6 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.apps.AppPickerActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
-
-        <activity
             android:name=".ui.problems.ProblemsManagerActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />

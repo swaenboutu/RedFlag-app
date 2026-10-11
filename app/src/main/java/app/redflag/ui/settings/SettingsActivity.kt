@@ -40,7 +40,7 @@ class SettingsActivity : AppCompatActivity() {
         binding.cardDebug.clipToOutline = true
 
         setupRow(binding.rowAppearance, R.string.settings_appearance_title) { showAppearanceDialog() }
-        setupRow(binding.rowPause, R.string.settings_pause_title, R.string.settings_pause_subtitle) { showPauseDialog() }
+        setupRow(binding.rowPause, R.string.settings_pause_title, R.string.settings_pause_subtitle) { SnoozeSheet.show(this) }
         setupRow(binding.rowList, R.string.settings_list_title) { showListDialog() }
         setupRow(binding.rowPermissions, R.string.settings_permissions_title) {
             AccessibilityDisclosureDialog.show(this)
@@ -111,19 +111,6 @@ class SettingsActivity : AppCompatActivity() {
         dot.backgroundTintList = ColorStateList.valueOf(
             ContextCompat.getColor(this@SettingsActivity, if (granted) R.color.status_ok else R.color.status_warning),
         )
-    }
-
-    private fun showPauseDialog() {
-        val choices = SettingsStore.PAUSE_CHOICES
-        val labels = choices.map { formatPause(this, it) }.toTypedArray()
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.settings_pause_title)
-            .setSingleChoiceItems(labels, choices.indexOf(settings.pauseMinutes.value)) { dialog, which ->
-                settings.setPauseMinutes(choices[which])
-                dialog.dismiss()
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
     }
 
     private fun appearanceLabel(appearance: Appearance): Int = when (appearance) {

@@ -6,13 +6,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.text.InputType
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.ArrayAdapter
 import android.widget.EditText
-import android.widget.Filter
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.core.os.bundleOf
@@ -20,29 +17,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import app.redflag.R
-import app.redflag.data.ProblemCatalog
-import app.redflag.databinding.DialogNewProblemBinding
 import app.redflag.util.MAX_CATALOG_LENGTH
 import app.redflag.util.MAX_CUSTOM_LENGTH
 import app.redflag.util.normalizeCustomProblem
-
-/**
- * Menu déroulant qui montre toujours tous ses choix. Un menu de saisie ordinaire filtre ses lignes d'après le texte du champ :
- * après une rotation, le thème restauré (« Données ») ne laisserait plus que lui dans la liste.
- */
-private class AllItemsAdapter(context: Context, private val items: List<String>) :
-    ArrayAdapter<String>(context, R.layout.item_dropdown, items) {
-    private val keepAll = object : Filter() {
-        override fun performFiltering(constraint: CharSequence?) = FilterResults().apply {
-            values = items
-            count = items.size
-        }
-
-        override fun publishResults(constraint: CharSequence?, results: FilterResults?) = notifyDataSetChanged()
-    }
-
-    override fun getFilter(): Filter = keepAll
-}
 
 /** Champ de saisie avec les marges habituelles d'un dialogue (sans passer par `setView(view, l, t, r, b)`, API réservée). */
 fun Context.dialogInput(input: EditText): View {
@@ -54,59 +31,7 @@ fun Context.dialogInput(input: EditText): View {
 }
 
 /**
- * Dialogue « Nouvelle problématique » : saisie libre, dans la langue de son choix, et thème où la ranger.
- *
- * C'est un DialogFragment : il survit à la rotation de l'écran (le texte déjà tapé et le thème choisi sont conservés).
- * Le résultat arrive par [REQUEST_KEY] : à écouter avec [listen].
- */
-class NewProblemDialog : DialogFragment() {
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val context = requireContext()
-        val binding = DialogNewProblemBinding.inflate(LayoutInflater.from(context))
-
-        // Première entrée = pas de thème (« Personnalisé »), puis les thèmes du catalogue dans leur ordre habituel.
-        val names = listOf(context.getString(R.string.category_custom)) +
-            ProblemCatalog.categories.map { context.getString(it.title) }
-        val keys = listOf<String?>(null) + ProblemCatalog.categories.map { it.key }
-        binding.problemTheme.setAdapter(AllItemsAdapter(context, names))
-        // Le thème choisi se lit dans le champ (restauré tout seul après une rotation), pas dans une variable perdue avec elle.
-        binding.problemTheme.setText(names[0], false)
-
-        return MaterialAlertDialogBuilder(context)
-            .setTitle(R.string.dialog_new_problem_title)
-            .setView(binding.root)
-            .setPositiveButton(R.string.add) { _, _ ->
-                val label = normalizeCustomProblem(binding.problemLabel.text.toString(), MAX_CUSTOM_LENGTH) ?: return@setPositiveButton
-                val category = keys[names.indexOf(binding.problemTheme.text.toString()).coerceAtLeast(0)]
-                parentFragmentManager.setFragmentResult(REQUEST_KEY, bundleOf(LABEL to label, CATEGORY to category))
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .create()
-    }
-
-    companion object {
-        private const val REQUEST_KEY = "new_problem"
-        private const val LABEL = "label"
-        private const val CATEGORY = "category"
-        private const val TAG = "new_problem_dialog"
-
-        fun show(activity: FragmentActivity) {
-            if (activity.supportFragmentManager.findFragmentByTag(TAG) == null) {
-                NewProblemDialog().show(activity.supportFragmentManager, TAG)
-            }
-        }
-
-        /** [onSubmit] reçoit le texte et la clé du thème choisi ; null = « Personnalisé ». À appeler dans onCreate. */
-        fun listen(activity: FragmentActivity, onSubmit: (label: String, category: String?) -> Unit) {
-            activity.supportFragmentManager.setFragmentResultListener(REQUEST_KEY, activity) { _, result ->
-                onSubmit(checkNotNull(result.getString(LABEL)), result.getString(CATEGORY))
-            }
-        }
-    }
-}
-
-/**
- * Dialogue « Modifier la problématique » : survit à la rotation comme [NewProblemDialog].
+ * Dialogue « Modifier la problématique » : survit à la rotation comme les fenêtres du bas.
  * Le résultat est soit un nouveau texte, soit la demande de rétablir l'intitulé d'origine ([reset]).
  */
 class EditProblemDialog : DialogFragment() {

@@ -219,13 +219,35 @@
         <item quantity="many">%d heures</item>
     </plurals>
 
-    <string name="problems_title">Vos enjeux</string>
-    <string name="problems_manage_hint">Touchez un thème pour l’ouvrir ou le refermer.</string>
-    <string name="action_new_problem">+  Nouvel enjeu</string>
+    <string name="problems_title">Enjeux</string>
+    <plurals name="problems_hint">
+        <item quantity="one">%d enjeu, classé par thématique. Touchez un enjeu pour y associer des apps.</item>
+        <item quantity="other">%d enjeux, classés par thématique. Touchez un enjeu pour y associer des apps.</item>
+        <item quantity="many">%d enjeux, classés par thématique. Touchez un enjeu pour y associer des apps.</item>
+    </plurals>
+    <string name="action_create_issue">Créer un enjeu</string>
+    <string name="new_issue_name_label">Nom de l’enjeu</string>
+    <string name="new_issue_name_hint">Ex. : Publicité ciblée</string>
+    <string name="new_issue_favorite_note">Il sera ajouté à vos favoris.</string>
+    <string name="new_issue_theme_label">Thématique</string>
+    <string name="new_issue_optional">(facultatif)</string>
+    <string name="theme_none">Aucune thématique</string>
+    <string name="new_issue_theme_hint">Sans thématique, l’enjeu apparaîtra dans « %1$s ».</string>
+    <string name="new_issue_create">Créer l’enjeu</string>
+    <string name="detail_linked_apps_count">Apps associées · %1$d</string>
+    <string name="detail_link_apps">Associer des applications</string>
+    <string name="sheet_apps_title">Associer des applications</string>
+    <string name="sheet_apps_subtitle">à l’enjeu « %1$s »</string>
+    <string name="sheet_apps_confirm">Valider</string>
+    <plurals name="sheet_apps_confirm_count">
+        <item quantity="one">Valider · %d app</item>
+        <item quantity="other">Valider · %d apps</item>
+        <item quantity="many">Valider · %d apps</item>
+    </plurals>
+    <string name="search_app_hint">Rechercher une app</string>
     <string name="dialog_new_problem_title">Nouvel enjeu</string>
-    <string name="dialog_new_problem_theme">Thème</string>
     <string name="custom_empty">Aucun enjeu pour l’instant</string>
-    <string name="apps_none">Aucune application</string>
+    <string name="apps_none">aucune app</string>
     <plurals name="faq_questions">
         <item quantity="one">%d question</item>
         <item quantity="other">%d questions</item>
@@ -255,20 +277,21 @@
     <string name="action_back">Retour</string>
     <string name="action_edit">Modifier</string>
     <string name="action_link">Lier</string>
-    <string name="action_link_apps">Lier à des applications</string>
     <string name="action_unlink">Dissocier</string>
     <string name="action_delete_problem">Supprimer cet enjeu</string>
     <string name="action_reset_label">Rétablir l\'original</string>
     <string name="action_favorite_add">Ajouter aux favoris</string>
     <string name="action_favorite_remove">Retirer des favoris</string>
     <string name="dialog_edit_title">Modifier l’enjeu</string>
-    <string name="detail_linked_apps">Applications liées</string>
     <string name="detail_no_apps">Aucune application n\'est encore liée à cet enjeu.</string>
-    <string name="picker_apps_title">Choisir des applications</string>
-    <string name="picker_apps_search">Rechercher une application</string>
     <string name="dialog_delete_title">Supprimer cet enjeu ?</string>
     <string name="dialog_delete_message">« %1$s » sera retirée de %2$s.</string>
     <string name="error_already_exists">Cet enjeu existe déjà.</string>
+    <plurals name="apps_count_short">
+        <item quantity="one">%d app</item>
+        <item quantity="other">%d apps</item>
+        <item quantity="many">%d apps</item>
+    </plurals>
     <plurals name="apps_count">
         <item quantity="one">%d application</item>
         <item quantity="other">%d applications</item>
@@ -294,7 +317,7 @@
     <string name="category_political">Éthique politique</string>
     <string name="category_linked">Associées à cette app</string>
     <string name="category_favorites">Vos favoris</string>
-    <string name="category_custom">Personnalisé</string>
+    <string name="category_custom">Mes enjeux</string>
 
     <string name="problem_addictive_design">Conception addictive</string>
     <string name="problem_addictive_design_description">Dark patterns, scroll infini, notifications manipulatrices</string>

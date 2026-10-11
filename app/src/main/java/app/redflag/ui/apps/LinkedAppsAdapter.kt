@@ -23,7 +23,9 @@ class LinkedAppsAdapter(
         with(holder.binding) {
             // L'app a pu être désinstallée depuis : on garde son nom et une icône par défaut.
             icon.setImageDrawable(root.context.iconOf(app.packageName))
+            icon.clipToOutline = true
             name.text = app.appName
+            divider.visibility = if (position == 0) android.view.View.GONE else android.view.View.VISIBLE
             unlink.setOnClickListener { onUnlink(app) }
         }
     }

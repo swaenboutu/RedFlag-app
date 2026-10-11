@@ -6,7 +6,6 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -19,9 +18,11 @@ import app.redflag.data.ProblemCatalog
 import app.redflag.data.ProblemRef
 import app.redflag.data.displayLabel
 import app.redflag.databinding.ActivityProblemDetailBinding
-import app.redflag.ui.apps.AppPickerActivity
+import app.redflag.ui.apps.AppsSheet
 import app.redflag.ui.apps.LinkedAppsAdapter
+import app.redflag.ui.common.BottomNav
 import app.redflag.ui.common.EditProblemDialog
+import app.redflag.ui.common.themeIcon
 import app.redflag.ui.common.screenViewModel
 import kotlinx.coroutines.launch
 
@@ -31,13 +32,6 @@ class ProblemDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProblemDetailBinding
     private var state: DetailState? = null
 
-    private val pickApps = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        val data = result.data ?: return@registerForActivityResult
-        val packages = data.getStringArrayListExtra(AppPickerActivity.RESULT_PACKAGES).orEmpty()
-        val labels = data.getStringArrayListExtra(AppPickerActivity.RESULT_LABELS).orEmpty()
-        viewModel.link(packages.zip(labels) { pkg, label -> LinkedApp(pkg, label) })
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProblemDetailBinding.inflate(layoutInflater)
@@ -46,6 +40,7 @@ class ProblemDetailActivity : AppCompatActivity() {
         val adapter = LinkedAppsAdapter { viewModel.unlink(it.packageName) }
         binding.linkedApps.adapter = adapter
 
+        BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_problems, isTabRoot = false)
         binding.back.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
         binding.edit.setOnClickListener { showEditDialog() }
         EditProblemDialog.listen(this) { result ->
@@ -56,9 +51,10 @@ class ProblemDetailActivity : AppCompatActivity() {
             }
         }
         binding.favorite.setOnClickListener { viewModel.toggleFavorite() }
+        AppsSheet.listen(this) { viewModel.link(it) }
         binding.linkApps.setOnClickListener {
-            val linked = ArrayList(state?.linkedApps.orEmpty().map { it.packageName })
-            pickApps.launch(AppPickerActivity.intent(this, linked))
+            val current = state ?: return@setOnClickListener
+            AppsSheet.show(this, titleOf(current), current.linkedApps.map { it.packageName })
         }
         binding.deleteProblem.setOnClickListener { showDeleteDialog() }
 
@@ -67,6 +63,11 @@ class ProblemDetailActivity : AppCompatActivity() {
                 viewModel.state.collect { current ->
                     state = current ?: return@collect
                     binding.title.text = titleOf(current)
+                    binding.themeName.setText(current.themeTitle)
+                    themeIcon(current.themeTitle)?.let { binding.themeIcon.setImageResource(it) }
+                    binding.description.text = current.description
+                    binding.description.visibility = if (current.description.isNullOrBlank()) View.GONE else View.VISIBLE
+                    binding.linkedTitle.text = getString(R.string.detail_linked_apps_count, current.linkedApps.size)
                     showFavorite(current.favorite)
                     binding.noApps.visibility = if (current.linkedApps.isEmpty()) View.VISIBLE else View.GONE
                     binding.deleteProblem.visibility = if (current.ref.isCustom) View.VISIBLE else View.GONE
@@ -74,6 +75,11 @@ class ProblemDetailActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        BottomNav.select(binding.bottomBar.bottomNav, R.id.nav_problems)
     }
 
     /** Étoile pleine et ambre quand la problématique est en favori, contour sinon. */

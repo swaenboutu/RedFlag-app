@@ -37,40 +37,46 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="6dp"
         android:layout_marginEnd="20dp"
-        android:text="@string/problems_manage_hint"
         android:textColor="?attr/colorOnSurfaceVariant"
-        android:textSize="13sp" />
+        android:textSize="14sp"
+        app:lineHeight="20dp" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/newProblem"
-        style="@style/Widget.Material3.Button"
-        android:layout_width="match_parent"
-        android:layout_height="46dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="20dp"
-        android:fontFamily="@font/inter"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:text="@string/action_new_problem"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        app:cornerRadius="23dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="12dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:paddingBottom="8dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:layout_marginTop="10dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="88dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/newProblem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="@font/inter_semibold"
+            android:text="@string/action_create_issue"
+            android:textColor="@color/on_primary_fill"
+            android:textStyle="bold"
+            app:backgroundTint="@color/primary_fill"
+            app:elevation="2dp"
+            app:icon="@drawable/ic_plus"
+            app:iconTint="@color/on_primary_fill" />
+    </FrameLayout>
 
     <include
         android:id="@+id/bottomBar"

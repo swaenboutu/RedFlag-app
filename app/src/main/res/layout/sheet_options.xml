@@ -19,10 +19,10 @@
     <app.redflag.ui.common.HeadingTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/sheetTitle"
         android:layout_marginTop="20dp"
         android:fontFamily="@font/bricolage_grotesque"
         android:includeFontPadding="false"
-        android:text="@string/pause_title"
         android:textColor="?attr/colorOnSurface"
         android:textSize="28sp"
         android:textStyle="bold" />
@@ -69,7 +69,6 @@
             android:layout_weight="62"
             android:fontFamily="@font/inter_semibold"
             android:textStyle="bold"
-            android:text="@string/pause_confirm"
             android:textSize="16sp"
             app:cornerRadius="28dp" />
     </LinearLayout>

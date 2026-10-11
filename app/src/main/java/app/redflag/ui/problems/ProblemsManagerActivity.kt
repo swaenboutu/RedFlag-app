@@ -10,7 +10,7 @@ import app.redflag.R
 import app.redflag.databinding.ActivityProblemsManagerBinding
 import app.redflag.ui.common.AppDrawer
 import app.redflag.ui.common.BottomNav
-import app.redflag.ui.common.NewProblemDialog
+import app.redflag.ui.common.NewProblemSheet
 import app.redflag.ui.common.screenViewModel
 import kotlinx.coroutines.launch
 
@@ -34,7 +34,7 @@ class ProblemsManagerActivity : AppCompatActivity() {
         AppDrawer.setup(this, binding.menuButton)
 
         // Le dialogue de saisie survit à la rotation : on écoute son résultat dès la création de l'écran.
-        NewProblemDialog.listen(this) { label, category ->
+        NewProblemSheet.listen(this) { label, category ->
             viewModel.add(label, category) { added ->
                 if (added) {
                     viewModel.expandTheme(category)
@@ -46,6 +46,11 @@ class ProblemsManagerActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.issueCount.collect {
+                        binding.hint.text = resources.getQuantityString(R.plurals.problems_hint, it, it)
+                    }
+                }
                 viewModel.rows.collect { rows ->
                     // Si la liste est en haut, elle y reste : sans cela, une carte ajoutée en tête (« Vos favoris »)
                     // apparaîtrait au-dessus de la partie visible.
@@ -61,5 +66,5 @@ class ProblemsManagerActivity : AppCompatActivity() {
         BottomNav.select(binding.bottomBar.bottomNav, R.id.nav_problems)
     }
 
-    private fun addProblem() = NewProblemDialog.show(this)
+    private fun addProblem() = NewProblemSheet.show(this)
 }

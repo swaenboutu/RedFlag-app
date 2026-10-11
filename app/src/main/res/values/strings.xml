@@ -205,13 +205,33 @@
         <item quantity="other">%d hours</item>
     </plurals>
 
-    <string name="problems_title">Your issues</string>
-    <string name="problems_manage_hint">Tap a theme to open or close it.</string>
-    <string name="action_new_problem">+  New issue</string>
+    <string name="problems_title">Issues</string>
+    <plurals name="problems_hint">
+        <item quantity="one">%d issue, grouped by theme. Tap an issue to link apps to it.</item>
+        <item quantity="other">%d issues, grouped by theme. Tap an issue to link apps to it.</item>
+    </plurals>
+    <string name="action_create_issue">Create an issue</string>
+    <string name="new_issue_name_label">Issue name</string>
+    <string name="new_issue_name_hint">e.g. Targeted advertising</string>
+    <string name="new_issue_favorite_note">It will be added to your favorites.</string>
+    <string name="new_issue_theme_label">Theme</string>
+    <string name="new_issue_optional">(optional)</string>
+    <string name="theme_none">No theme</string>
+    <string name="new_issue_theme_hint">Without a theme, the issue appears in “%1$s”.</string>
+    <string name="new_issue_create">Create the issue</string>
+    <string name="detail_linked_apps_count">Linked apps · %1$d</string>
+    <string name="detail_link_apps">Link apps</string>
+    <string name="sheet_apps_title">Link apps</string>
+    <string name="sheet_apps_subtitle">to the issue “%1$s”</string>
+    <string name="sheet_apps_confirm">Confirm</string>
+    <plurals name="sheet_apps_confirm_count">
+        <item quantity="one">Confirm · %d app</item>
+        <item quantity="other">Confirm · %d apps</item>
+    </plurals>
+    <string name="search_app_hint">Search an app</string>
     <string name="dialog_new_problem_title">New issue</string>
-    <string name="dialog_new_problem_theme">Theme</string>
     <string name="custom_empty">No issues yet</string>
-    <string name="apps_none">No app</string>
+    <string name="apps_none">no app</string>
     <plurals name="faq_questions">
         <item quantity="one">%d question</item>
         <item quantity="other">%d questions</item>
@@ -236,20 +256,20 @@
     <string name="action_back">Back</string>
     <string name="action_edit">Edit</string>
     <string name="action_link">Link</string>
-    <string name="action_link_apps">Link to apps</string>
     <string name="action_unlink">Unlink</string>
     <string name="action_delete_problem">Delete this issue</string>
     <string name="action_reset_label">Restore original</string>
     <string name="action_favorite_add">Add to favorites</string>
     <string name="action_favorite_remove">Remove from favorites</string>
     <string name="dialog_edit_title">Edit issue</string>
-    <string name="detail_linked_apps">Linked apps</string>
     <string name="detail_no_apps">No app linked to this issue yet.</string>
-    <string name="picker_apps_title">Choose apps</string>
-    <string name="picker_apps_search">Search apps</string>
     <string name="dialog_delete_title">Delete this issue?</string>
     <string name="dialog_delete_message">“%1$s” will be removed from %2$s.</string>
     <string name="error_already_exists">This issue already exists.</string>
+    <plurals name="apps_count_short">
+        <item quantity="one">%d app</item>
+        <item quantity="other">%d apps</item>
+    </plurals>
     <plurals name="apps_count">
         <item quantity="one">%d app</item>
         <item quantity="other">%d apps</item>
@@ -274,7 +294,7 @@
     <string name="category_political">Political ethics</string>
     <string name="category_linked">Linked to this app</string>
     <string name="category_favorites">Your favorites</string>
-    <string name="category_custom">Custom</string>
+    <string name="category_custom">My issues</string>
 
     <string name="problem_addictive_design">Addictive design</string>
     <string name="problem_addictive_design_description">Dark patterns, infinite scroll, manipulative notifications</string>

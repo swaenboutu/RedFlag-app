@@ -1,17 +1,12 @@
 package app.redflag.ui.problems
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.color.MaterialColors
-import com.google.android.material.imageview.ShapeableImageView
-import com.google.android.material.shape.ShapeAppearanceModel
 import app.redflag.R
 import app.redflag.data.displayLabel
 import app.redflag.databinding.ItemManagerProblemBinding
@@ -20,7 +15,6 @@ import app.redflag.ui.common.CARD_GAP_DP
 import app.redflag.ui.common.applyCard
 import app.redflag.ui.common.bindThemeCard
 import app.redflag.ui.common.themeIcon
-import app.redflag.ui.common.iconOf
 import app.redflag.ui.common.problemsSubtitle
 
 /** Thèmes repliables sous forme de cartes blanches ; les problématiques d'un thème ouvert prolongent sa carte. */
@@ -52,9 +46,9 @@ class ProblemsManagerAdapter(
             is ManagerRow.Catalog -> {
                 val context = holder.itemView.context
                 val label = row.problem.displayLabel(context, row.override)
-                bindProblem(holder as ProblemHolder, row, label, row.apps, row.first, row.last)
+                bindProblem(holder as ProblemHolder, row, label, row.apps, row.favorite, row.themeTitle, row.sectionId, row.first, row.last)
             }
-            is ManagerRow.Custom -> bindProblem(holder as ProblemHolder, row, row.label, row.apps, row.first, row.last)
+            is ManagerRow.Custom -> bindProblem(holder as ProblemHolder, row, row.label, row.apps, row.favorite, row.themeTitle, row.sectionId, row.first, row.last)
         }
     }
 
@@ -75,53 +69,27 @@ class ProblemsManagerAdapter(
         val problems = problemsSubtitle(context, row.problemCount)
         if (row.appCount == 0) return problems
         val apps = context.resources.getQuantityString(R.plurals.theme_apps_flagged, row.appCount, row.appCount)
-        return "$problems, $apps"
+        return "$problems · $apps"
     }
 
-    private fun bindProblem(
-        holder: ProblemHolder,
-        row: ManagerRow,
-        label: String,
-        apps: List<LinkedApp>,
-        first: Boolean,
-        last: Boolean,
-    ) = with(holder.binding) {
-        val context = root.context
-        name.text = label
-        count.text = if (apps.isEmpty()) {
-            context.getString(R.string.apps_none)
-        } else {
-            context.resources.getQuantityString(R.plurals.apps_count, apps.size, apps.size)
-        }
-        problemDivider.visibility = if (first) View.GONE else View.VISIBLE
-        bindBadges(badges, apps)
-        root.setOnClickListener { onProblemClick(row) }
-
-        root.applyCard(roundTop = false, roundBottom = last, gapAfterDp = if (last) CARD_GAP_DP else 0)
-    }
-
-    /** Pastilles d'icônes qui se chevauchent, au plus [MAX_BADGES]. */
-    private fun bindBadges(container: LinearLayout, apps: List<LinkedApp>) {
-        container.removeAllViews()
-        val context = container.context
-        val density = context.resources.displayMetrics.density
-        val ring = MaterialColors.getColor(container, MATERIAL_SURFACE)
-        apps.take(MAX_BADGES).forEachIndexed { index, app ->
-            val badge = ShapeableImageView(context).apply {
-                layoutParams = LinearLayout.LayoutParams((27 * density).toInt(), (27 * density).toInt()).apply {
-                    if (index > 0) marginStart = (-9 * density).toInt()
-                }
-                shapeAppearanceModel = ShapeAppearanceModel.builder().setAllCornerSizes(8.5f * density).build()
-                strokeColor = ColorStateList.valueOf(ring)
-                strokeWidth = 3 * density
-                val inset = (1.5f * density).toInt()
-                setPadding(inset, inset, inset, inset)
-                importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-                setImageDrawable(context.iconOf(app.packageName))
+    private fun bindProblem(holder: ProblemHolder, row: ManagerRow, label: String, apps: List<LinkedApp>, favorite: Boolean, themeTitle: Int, sectionId: Int, first: Boolean, last: Boolean) =
+        with(holder.binding) {
+            val context = root.context
+            name.text = label
+            val appsText = if (apps.isEmpty()) {
+                context.getString(R.string.apps_none)
+            } else {
+                context.resources.getQuantityString(R.plurals.apps_count_short, apps.size, apps.size)
             }
-            container.addView(badge)
+            // In the favorites, the theme of the issue; in a theme, a star for the issues that are favorites.
+            val inFavorites = sectionId == R.string.category_favorites
+            count.text = if (inFavorites) "${context.getString(themeTitle)} · $appsText" else appsText
+            count.setCompoundDrawablesRelativeWithIntrinsicBounds(if (favorite && !inFavorites) R.drawable.ic_star_filled_small else 0, 0, 0, 0)
+            problemDivider.visibility = if (first) View.GONE else View.VISIBLE
+            root.setOnClickListener { onProblemClick(row) }
+
+            root.applyCard(roundTop = false, roundBottom = last, gapAfterDp = if (last) CARD_GAP_DP else 0)
         }
-    }
 
     private object Diff : DiffUtil.ItemCallback<ManagerRow>() {
         override fun areItemsTheSame(old: ManagerRow, new: ManagerRow) = when {
@@ -137,7 +105,5 @@ class ProblemsManagerAdapter(
     private companion object {
         const val TYPE_THEME = 0
         const val TYPE_PROBLEM = 1
-        const val MAX_BADGES = 3
-        val MATERIAL_SURFACE = com.google.android.material.R.attr.colorSurface
     }
 }

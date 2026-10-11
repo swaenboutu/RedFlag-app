@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -39,6 +40,8 @@ sealed interface ManagerRow {
         val apps: List<LinkedApp>,
         val first: Boolean,
         val last: Boolean,
+        val favorite: Boolean = false,
+        @param:StringRes val themeTitle: Int = R.string.category_custom,
     ) : ManagerRow
 
     data class Custom(
@@ -48,6 +51,8 @@ sealed interface ManagerRow {
         val apps: List<LinkedApp>,
         val first: Boolean,
         val last: Boolean,
+        val favorite: Boolean = false,
+        @param:StringRes val themeTitle: Int = R.string.category_custom,
     ) : ManagerRow
 }
 
@@ -96,8 +101,17 @@ class ProblemsManagerViewModel(container: AppContainer, private val context: Con
                 val last = i == entries.lastIndex
                 add(
                     when (entry) {
-                        is Entry.Cat -> ManagerRow.Catalog(sectionId, entry.problem, overrides[entry.problem.key], entry.apps, first, last)
-                        is Entry.Cus -> ManagerRow.Custom(sectionId, entry.id, entry.label, entry.apps, first, last)
+                        is Entry.Cat -> ManagerRow.Catalog(
+                            sectionId, entry.problem, overrides[entry.problem.key], entry.apps, first, last,
+                            favorite = ProblemRef.catalog(entry.problem.key) in favorites,
+                            themeTitle = ProblemCatalog.categories.first { c -> c.problems.any { it.key == entry.problem.key } }.title,
+                        )
+                        is Entry.Cus -> ManagerRow.Custom(
+                            sectionId, entry.id, entry.label, entry.apps, first, last,
+                            favorite = ProblemRef(entry.id) in favorites,
+                            themeTitle = custom.firstOrNull { it.id == entry.id }?.category?.let(ProblemCatalog::findCategory)?.title
+                                ?: R.string.category_custom,
+                        )
                     },
                 )
             }
@@ -121,6 +135,11 @@ class ProblemsManagerViewModel(container: AppContainer, private val context: Con
             addSection(R.string.category_custom, ProblemCatalog.customWithoutTheme(custom).map(::entryOf))
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    /** The number of issues (the catalog and the custom ones), for the sentence under the title. */
+    val issueCount: StateFlow<Int> = repository.customProblems
+        .map { ProblemCatalog.allRefs.size + it.size }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ProblemCatalog.allRefs.size)
 
     fun toggle(themeId: Int) = expanded.update { if (themeId in it) it - themeId else it + themeId }
 

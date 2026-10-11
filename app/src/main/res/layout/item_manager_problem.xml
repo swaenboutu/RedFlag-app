@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:minHeight="52dp"
+        android:minHeight="56dp"
         android:orientation="horizontal"
         android:paddingStart="16dp"
         android:paddingTop="8dp"
@@ -39,24 +39,18 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/inter_medium"
                 android:textColor="?attr/colorOnSurface"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
+                android:drawablePadding="6dp"
+                android:gravity="center_vertical"
                 android:textColor="?attr/colorOnSurfaceVariant"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/badges"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" />
 
         <ImageView
             android:layout_width="24dp"
