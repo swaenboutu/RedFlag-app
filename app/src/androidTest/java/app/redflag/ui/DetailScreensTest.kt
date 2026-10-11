@@ -58,4 +58,34 @@ class DetailScreensTest {
             assertEquals(Lifecycle.State.RESUMED, scenario.staysResumed())
         }
     }
+
+    @Test
+    fun aLongListOfLinkedAppsIsShownInFullAndScrollsWithThePage() {
+        val extra = (1..30).map { "test.detail.many$it" }
+        runBlocking { extra.forEach { repository.linkProblem(it, "Many $it", ref) } }
+        try {
+            ActivityScenario.launch<ProblemDetailActivity>(ProblemDetailActivity.intent(context, ref)).use { scenario ->
+                var rows = 0
+                var listHeight = 0
+                val screen = context.resources.displayMetrics.heightPixels
+                val deadline = System.currentTimeMillis() + 5_000
+                while (rows < extra.size && System.currentTimeMillis() < deadline) {
+                    scenario.onActivity {
+                        val list = it.findViewById<android.widget.LinearLayout>(app.redflag.R.id.linkedApps)
+                        rows = list.childCount
+                        listHeight = list.height
+                    }
+                    if (rows < extra.size) Thread.sleep(100)
+                }
+                Thread.sleep(500)
+                scenario.onActivity { listHeight = it.findViewById<android.view.View>(app.redflag.R.id.linkedApps).height }
+
+                assert(rows >= extra.size + 1) { "une ligne par app liée : $rows" }
+                // A list clamped to the screen would be shorter than the screen: the page must be taller and scroll.
+                assert(listHeight > screen) { "la liste ($listHeight px) est plus haute que l'écran ($screen px)" }
+            }
+        } finally {
+            runBlocking { extra.forEach { repository.unlinkProblem(it, ref) } }
+        }
+    }
 }

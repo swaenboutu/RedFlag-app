@@ -19,7 +19,7 @@ import app.redflag.data.ProblemRef
 import app.redflag.data.displayLabel
 import app.redflag.databinding.ActivityProblemDetailBinding
 import app.redflag.ui.apps.AppsSheet
-import app.redflag.ui.apps.LinkedAppsAdapter
+import app.redflag.ui.apps.bindLinkedApps
 import app.redflag.ui.common.BottomNav
 import app.redflag.ui.common.EditProblemSheet
 import app.redflag.ui.common.themeIcon
@@ -36,9 +36,6 @@ class ProblemDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityProblemDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val adapter = LinkedAppsAdapter { viewModel.unlink(it.packageName) }
-        binding.linkedApps.adapter = adapter
 
         BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_problems, isTabRoot = false)
         binding.back.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
@@ -71,7 +68,7 @@ class ProblemDetailActivity : AppCompatActivity() {
                     showFavorite(current.favorite)
                     binding.noApps.visibility = if (current.linkedApps.isEmpty()) View.VISIBLE else View.GONE
                     binding.deleteProblem.visibility = if (current.ref.isCustom) View.VISIBLE else View.GONE
-                    adapter.submitList(current.linkedApps)
+                    bindLinkedApps(binding.linkedApps, current.linkedApps) { viewModel.unlink(it.packageName) }
                 }
             }
         }
