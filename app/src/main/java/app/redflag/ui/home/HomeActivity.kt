@@ -2,7 +2,6 @@ package app.redflag.ui.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.format.DateUtils
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -106,7 +105,7 @@ class HomeActivity : AppCompatActivity() {
 
         avoidedValue.text = state.avoided.toString()
         avoidedLabel.text = resources.getQuantityString(R.plurals.home_avoided_label, state.avoided)
-        avoidedSince.text = getString(R.string.home_avoided_since, DateUtils.formatDateTime(this@HomeActivity, state.startedAt, DateUtils.FORMAT_SHOW_DATE))
+        avoidedSince.text = getString(R.string.home_avoided_since, startedDate(state.startedAt))
 
         // The two blocks below are always shown; until there is something to say they invite the user to start.
         val app = state.topApp
@@ -172,4 +171,8 @@ class HomeActivity : AppCompatActivity() {
             )
         }
     }
+
+    /** "October 11" / "11 octobre", in the language of the app (DateUtils would follow the system language instead). */
+    private fun startedDate(millis: Long): String =
+        android.icu.text.DateFormat.getInstanceForSkeleton("MMMMd", resources.configuration.locales[0]).format(millis)
 }

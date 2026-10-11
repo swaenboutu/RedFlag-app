@@ -21,7 +21,7 @@ import app.redflag.databinding.ActivityProblemDetailBinding
 import app.redflag.ui.apps.AppsSheet
 import app.redflag.ui.apps.LinkedAppsAdapter
 import app.redflag.ui.common.BottomNav
-import app.redflag.ui.common.EditProblemDialog
+import app.redflag.ui.common.EditProblemSheet
 import app.redflag.ui.common.themeIcon
 import app.redflag.ui.common.screenViewModel
 import kotlinx.coroutines.launch
@@ -43,11 +43,11 @@ class ProblemDetailActivity : AppCompatActivity() {
         BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_problems, isTabRoot = false)
         binding.back.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
         binding.edit.setOnClickListener { showEditDialog() }
-        EditProblemDialog.listen(this) { result ->
+        EditProblemSheet.listen(this) { result ->
             val current = state ?: return@listen
             when (result) {
-                EditProblemDialog.Result.Reset -> viewModel.resetLabel()
-                is EditProblemDialog.Result.Rename -> onRenamed(current, result.label)
+                EditProblemSheet.Result.Reset -> viewModel.resetLabel()
+                is EditProblemSheet.Result.Rename -> onRenamed(current, result.label)
             }
         }
         binding.favorite.setOnClickListener { viewModel.toggleFavorite() }
@@ -99,7 +99,7 @@ class ProblemDetailActivity : AppCompatActivity() {
 
     private fun showEditDialog() {
         val current = state ?: return
-        EditProblemDialog.show(
+        EditProblemSheet.show(
             this,
             current = titleOf(current),
             catalog = current.ref.catalogKey != null,

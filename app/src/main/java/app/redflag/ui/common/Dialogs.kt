@@ -1,110 +1,14 @@
 package app.redflag.ui.common
 
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.text.InputType
-import android.view.View
-import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import app.redflag.R
-import app.redflag.util.MAX_CATALOG_LENGTH
-import app.redflag.util.MAX_CUSTOM_LENGTH
-import app.redflag.util.normalizeCustomProblem
-
-/** Champ de saisie avec les marges habituelles d'un dialogue (sans passer par `setView(view, l, t, r, b)`, API réservée). */
-fun Context.dialogInput(input: EditText): View {
-    val density = resources.displayMetrics.density
-    return FrameLayout(this).apply {
-        setPadding((24 * density).toInt(), (8 * density).toInt(), (24 * density).toInt(), 0)
-        addView(input)
-    }
-}
-
-/**
- * Dialogue « Modifier la problématique » : survit à la rotation comme les fenêtres du bas.
- * Le résultat est soit un nouveau texte, soit la demande de rétablir l'intitulé d'origine ([reset]).
- */
-class EditProblemDialog : DialogFragment() {
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val context = requireContext()
-        val args = requireArguments()
-        val maxLength = args.getInt(MAX_LENGTH)
-        val input = EditText(context).apply {
-            // Le texte tapé avant une rotation est restauré par Android (le champ a un id) ; sinon on part de l'intitulé actuel.
-            id = R.id.problemLabel
-            // Un intitulé long (jusqu'à 120 caractères) passe à la ligne au lieu de défiler sur une seule : on le voit en entier.
-            // « Entrée » valide (pas de saut de ligne), comme avec un champ sur une ligne.
-            setRawInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES)
-            setHorizontallyScrolling(false)
-            maxLines = MAX_VISIBLE_LINES
-            imeOptions = EditorInfo.IME_ACTION_DONE
-            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            setText(args.getString(CURRENT))
-            setSelection(text.length)
-        }
-        val builder = MaterialAlertDialogBuilder(context)
-            .setTitle(R.string.dialog_edit_title)
-            .setView(context.dialogInput(input))
-            .setPositiveButton(R.string.save) { _, _ ->
-                val label = normalizeCustomProblem(input.text.toString(), maxLength) ?: return@setPositiveButton
-                parentFragmentManager.setFragmentResult(REQUEST_KEY, bundleOf(LABEL to label))
-            }
-            .setNegativeButton(R.string.cancel, null)
-        // Une problématique du catalogue déjà renommée peut retrouver son intitulé traduit d'origine.
-        if (args.getBoolean(CAN_RESET)) {
-            builder.setNeutralButton(R.string.action_reset_label) { _, _ ->
-                parentFragmentManager.setFragmentResult(REQUEST_KEY, bundleOf(RESET to true))
-            }
-        }
-        return builder.create()
-    }
-
-    /** Ce que l'utilisateur a demandé : un nouveau texte, ou le retour à l'intitulé d'origine. */
-    sealed interface Result {
-        data class Rename(val label: String) : Result
-        data object Reset : Result
-    }
-
-    companion object {
-        private const val REQUEST_KEY = "edit_problem"
-        private const val LABEL = "label"
-        private const val RESET = "reset"
-        private const val CURRENT = "current"
-        private const val MAX_LENGTH = "max_length"
-        private const val CAN_RESET = "can_reset"
-        private const val MAX_VISIBLE_LINES = 4
-        private const val TAG = "edit_problem_dialog"
-
-        /** [catalog] : problématique du catalogue (intitulé plus long autorisé) ; [canReset] : elle a été renommée. */
-        fun show(activity: FragmentActivity, current: String, catalog: Boolean, canReset: Boolean) {
-            if (activity.supportFragmentManager.findFragmentByTag(TAG) != null) return
-            EditProblemDialog().apply {
-                arguments = bundleOf(
-                    CURRENT to current,
-                    MAX_LENGTH to if (catalog) MAX_CATALOG_LENGTH else MAX_CUSTOM_LENGTH,
-                    CAN_RESET to canReset,
-                )
-            }.show(activity.supportFragmentManager, TAG)
-        }
-
-        /** À appeler dans onCreate : le résultat arrive aussi après une rotation. */
-        fun listen(activity: FragmentActivity, onResult: (Result) -> Unit) {
-            activity.supportFragmentManager.setFragmentResultListener(REQUEST_KEY, activity) { _, result ->
-                onResult(if (result.getBoolean(RESET)) Result.Reset else Result.Rename(checkNotNull(result.getString(LABEL))))
-            }
-        }
-    }
-}
 
 /**
  * Avertissement avant d'ouvrir les réglages d'accessibilité, depuis le bandeau de l'écran principal et depuis les Réglages : ce que le
