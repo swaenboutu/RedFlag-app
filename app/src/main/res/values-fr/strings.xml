@@ -2,8 +2,6 @@
 <!-- Français (fr-FR). Garder synchronisé avec values/strings.xml (anglais). -->
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <string name="banner_service_off">La friction est inactive. Activez le service d\'accessibilité pour être alerté avant d\'ouvrir une application que vous avez signalée.</string>
-    <string name="banner_action">Activer</string>
     <string name="apps_title">Vos applications</string>
     <string name="apps_hint">Touchez une app pour lui associer des enjeux.</string>
     <string name="apps_empty">Aucune application trouvée</string>

@@ -11,9 +11,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import app.redflag.R
 
 /**
- * Avertissement avant d'ouvrir les réglages d'accessibilité, depuis le bandeau de l'écran principal et depuis les Réglages : ce que le
- * service lit, à quoi il sert, qu'aucune donnée ne quitte l'appareil, et un consentement explicite. Google Play l'exige pour toute
- * application qui n'est pas un outil d'accessibilité ; l'écran des autorisations de l'accueil joue le même rôle avec le même texte.
+ * Warning before opening the accessibility settings, from the Home screen and from Settings: what the service reads, what it is for,
+ * that no data leaves the device, and an explicit consent. Google Play requires it for any app that is not an accessibility tool; the
+ * permission screen of the welcome tour plays the same role with the same text.
  */
 class AccessibilityDisclosureDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

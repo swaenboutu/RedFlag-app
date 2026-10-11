@@ -15,15 +15,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import app.redflag.R
 import app.redflag.container
-import app.redflag.service.isFrictionServiceEnabled
-import app.redflag.ui.apps.MainActivity
 import app.redflag.ui.common.AccessibilityDisclosureDialog
 import app.redflag.ui.settings.SettingsActivity
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
-import org.junit.Assume.assumeTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -85,17 +82,6 @@ class AccessibilityDisclosureTest {
 
             assertNotNull("l'avertissement s'affiche", scenario.disclosure())
             assertEquals("les réglages d'Android ne sont pas encore ouverts", 0, monitor.hits)
-        }
-    }
-
-    @Test
-    fun theBannerOfTheHomeScreenAsksBeforeOpeningAndroidSettings() {
-        assumeTrue("le bandeau n'existe que si le service est désactivé", !isFrictionServiceEnabled(context))
-        ActivityScenario.launch(MainActivity::class.java).use { scenario ->
-            scenario.onActivity { it.findViewById<View>(R.id.enableService).performClick() }
-
-            assertNotNull("l'avertissement s'affiche", scenario.disclosure())
-            assertEquals(0, monitor.hits)
         }
     }
 

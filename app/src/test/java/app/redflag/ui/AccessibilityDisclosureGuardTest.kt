@@ -1,6 +1,5 @@
 package app.redflag.ui
 
-import app.redflag.ui.apps.MainActivity
 import app.redflag.ui.common.AccessibilityDisclosureDialog
 import app.redflag.ui.onboarding.OnboardingPermissionActivity
 import app.redflag.ui.settings.SettingsActivity
@@ -28,14 +27,12 @@ class AccessibilityDisclosureGuardTest {
     }
 
     @Test
-    fun `l'ecran principal et les reglages ouvrent la fenetre d'avertissement`() {
-        val main = File("src/main/java/app/redflag/ui/apps/MainActivity.kt").readText()
+    fun `l'accueil et les reglages ouvrent la fenetre d'avertissement`() {
         val settings = File("src/main/java/app/redflag/ui/settings/SettingsActivity.kt").readText()
 
         val home = File("src/main/java/app/redflag/ui/home/HomeActivity.kt").readText()
 
         assertTrue("HomeActivity", "AccessibilityDisclosureDialog.show" in home)
-        assertTrue("MainActivity", "AccessibilityDisclosureDialog.show" in main)
         assertTrue("SettingsActivity", "AccessibilityDisclosureDialog.show" in settings)
     }
 }

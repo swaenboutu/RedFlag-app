@@ -9,8 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import app.redflag.R
 import app.redflag.databinding.ActivityMainBinding
-import app.redflag.service.isFrictionServiceEnabled
-import app.redflag.ui.common.AccessibilityDisclosureDialog
 import app.redflag.ui.common.AppDrawer
 import app.redflag.ui.common.BottomNav
 import app.redflag.ui.common.screenViewModel
@@ -37,9 +35,6 @@ class MainActivity : AppCompatActivity() {
 
         BottomNav.setup(this, binding.bottomBar.bottomNav, R.id.nav_apps)
         AppDrawer.setup(this, binding.menuButton)
-        binding.enableService.setOnClickListener {
-            AccessibilityDisclosureDialog.show(this)
-        }
         binding.search.doAfterTextChanged { viewModel.setQuery(it?.toString().orEmpty()) }
         binding.filterAll.setOnClickListener { changeFilter(AppFilter.ALL) }
         binding.filterFlagged.setOnClickListener { changeFilter(AppFilter.FLAGGED) }
@@ -83,7 +78,6 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         BottomNav.select(binding.bottomBar.bottomNav, R.id.nav_apps)
-        binding.serviceBanner.visibility = if (isFrictionServiceEnabled(this)) View.GONE else View.VISIBLE
         // An app may have been installed or removed while the screen was in the background. The first display already loads the
         // list: only reload on later returns.
         if (resumedBefore) viewModel.reload()

@@ -2,8 +2,6 @@
 <!-- Anglais (en-US) : langue par défaut. Le français est dans values-fr. Garder les deux fichiers synchronisés. -->
 <resources>
 
-    <string name="banner_service_off">Friction is off. Turn on the accessibility service to be alerted before opening an app you have flagged.</string>
-    <string name="banner_action">Turn on</string>
     <string name="apps_title">Your apps</string>
     <string name="apps_hint">Tap an app to link issues to it.</string>
     <string name="apps_empty">No app found</string>
