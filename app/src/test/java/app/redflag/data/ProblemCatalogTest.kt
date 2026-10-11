@@ -22,10 +22,10 @@ class ProblemCatalogTest {
     }
 
     @Test
-    fun onlySomeCatalogIssuesHaveAnExplanation() {
-        val withDescription = all.filter { it.description != null }.map { it.key }.toSet()
+    fun everyCatalogIssueHasAnExplanation() {
+        val without = all.filter { it.description == null }.map { it.key }
 
-        assertEquals(setOf("addictive_design", "fomo", "worker_exploitation", "predatory_monetization"), withDescription)
+        assertEquals(emptyList<String>(), without)
     }
 
     @Test

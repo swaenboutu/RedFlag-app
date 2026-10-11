@@ -29,58 +29,58 @@ object ProblemCatalog {
             "mental", R.string.category_mental,
             listOf(
                 PredefinedProblem("addictive_design", R.string.problem_addictive_design, R.string.problem_addictive_design_description),
-                PredefinedProblem("social_comparison", R.string.problem_social_comparison),
+                PredefinedProblem("social_comparison", R.string.problem_social_comparison, R.string.problem_social_comparison_description),
                 PredefinedProblem("fomo", R.string.problem_fomo, R.string.problem_fomo_description),
-                PredefinedProblem("sleep_impact", R.string.problem_sleep_impact),
+                PredefinedProblem("sleep_impact", R.string.problem_sleep_impact, R.string.problem_sleep_impact_description),
             ),
         ),
         ProblemCategory(
             "social", R.string.category_social,
             listOf(
-                PredefinedProblem("sexism", R.string.problem_sexism),
-                PredefinedProblem("racism", R.string.problem_racism),
-                PredefinedProblem("harassment", R.string.problem_harassment),
-                PredefinedProblem("hate_content", R.string.problem_hate_content),
+                PredefinedProblem("sexism", R.string.problem_sexism, R.string.problem_sexism_description),
+                PredefinedProblem("racism", R.string.problem_racism, R.string.problem_racism_description),
+                PredefinedProblem("harassment", R.string.problem_harassment, R.string.problem_harassment_description),
+                PredefinedProblem("hate_content", R.string.problem_hate_content, R.string.problem_hate_content_description),
             ),
         ),
         ProblemCategory(
             "environment", R.string.category_environment,
             listOf(
-                PredefinedProblem("carbon_footprint", R.string.problem_carbon_footprint),
-                PredefinedProblem("planned_obsolescence", R.string.problem_planned_obsolescence),
-                PredefinedProblem("overconsumption", R.string.problem_overconsumption),
+                PredefinedProblem("carbon_footprint", R.string.problem_carbon_footprint, R.string.problem_carbon_footprint_description),
+                PredefinedProblem("planned_obsolescence", R.string.problem_planned_obsolescence, R.string.problem_planned_obsolescence_description),
+                PredefinedProblem("overconsumption", R.string.problem_overconsumption, R.string.problem_overconsumption_description),
             ),
         ),
         ProblemCategory(
             "exploitation", R.string.category_exploitation,
             listOf(
                 PredefinedProblem("worker_exploitation", R.string.problem_worker_exploitation, R.string.problem_worker_exploitation_description),
-                PredefinedProblem("child_labor", R.string.problem_child_labor),
-                PredefinedProblem("subcontractor_conditions", R.string.problem_subcontractor_conditions),
+                PredefinedProblem("child_labor", R.string.problem_child_labor, R.string.problem_child_labor_description),
+                PredefinedProblem("subcontractor_conditions", R.string.problem_subcontractor_conditions, R.string.problem_subcontractor_conditions_description),
             ),
         ),
         ProblemCategory(
             "privacy", R.string.category_privacy,
             listOf(
-                PredefinedProblem("excessive_data", R.string.problem_excessive_data),
-                PredefinedProblem("data_resale", R.string.problem_data_resale),
-                PredefinedProblem("surveillance", R.string.problem_surveillance),
+                PredefinedProblem("excessive_data", R.string.problem_excessive_data, R.string.problem_excessive_data_description),
+                PredefinedProblem("data_resale", R.string.problem_data_resale, R.string.problem_data_resale_description),
+                PredefinedProblem("surveillance", R.string.problem_surveillance, R.string.problem_surveillance_description),
             ),
         ),
         ProblemCategory(
             "economic", R.string.category_economic,
             listOf(
                 PredefinedProblem("predatory_monetization", R.string.problem_predatory_monetization, R.string.problem_predatory_monetization_description),
-                PredefinedProblem("monopoly", R.string.problem_monopoly),
-                PredefinedProblem("tax_evasion", R.string.problem_tax_evasion),
+                PredefinedProblem("monopoly", R.string.problem_monopoly, R.string.problem_monopoly_description),
+                PredefinedProblem("tax_evasion", R.string.problem_tax_evasion, R.string.problem_tax_evasion_description),
             ),
         ),
         ProblemCategory(
             "political", R.string.category_political,
             listOf(
-                PredefinedProblem("misinformation", R.string.problem_misinformation),
-                PredefinedProblem("polarization", R.string.problem_polarization),
-                PredefinedProblem("authoritarian_funding", R.string.problem_authoritarian_funding),
+                PredefinedProblem("misinformation", R.string.problem_misinformation, R.string.problem_misinformation_description),
+                PredefinedProblem("polarization", R.string.problem_polarization, R.string.problem_polarization_description),
+                PredefinedProblem("authoritarian_funding", R.string.problem_authoritarian_funding, R.string.problem_authoritarian_funding_description),
             ),
         ),
     )
@@ -127,10 +127,3 @@ fun PredefinedProblem.displayDescription(context: Context): String? = descriptio
 /** L'explication d'une référence du catalogue ; null pour une personnalisée ou une entrée sans explication. */
 fun ProblemRef.displayDescription(context: Context): String? =
     catalogKey?.let(ProblemCatalog::find)?.displayDescription(context)
-
-/** Le titre d'une problématique suivi de son explication entre parenthèses, quand elle en a une (écran d'interruption). */
-fun Problem.displayLabelWithDescription(context: Context, overrides: Map<String, String>): String? {
-    val label = displayLabel(context, overrides) ?: return null
-    val description = toRef().displayDescription(context) ?: return label
-    return "$label ($description)"
-}

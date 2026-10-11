@@ -113,7 +113,7 @@ class StringResourcesTest {
     @Test
     fun `les explications des problematiques existent dans les deux langues et se rattachent a un libelle`() {
         val descriptions = fr.strings.keys.filter { it.endsWith("_description") && it.startsWith("problem_") }
-        assertEquals("4 explications", 4, descriptions.size)
+        assertEquals("une explication par problématique", 23, descriptions.size)
         assertEquals(descriptions.toSet(), en.strings.keys.filter { it.endsWith("_description") && it.startsWith("problem_") }.toSet())
         assertTrue(descriptions.all { it.removeSuffix("_description") in fr.strings })
     }
