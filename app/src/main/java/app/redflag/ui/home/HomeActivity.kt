@@ -3,8 +3,6 @@ package app.redflag.ui.home
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.content.res.ColorStateList
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -137,38 +135,25 @@ class HomeActivity : AppCompatActivity() {
             topIssueIcon.setImageResource(themeIcon(state.topIssueTheme) ?: R.drawable.ic_nav_tag)
             topIssueName.text = issue.label
             topIssueApps.text = resources.getQuantityString(R.plurals.home_top_issue_apps, issue.apps, issue.apps, state.flaggedApps)
-            showSquares(topIssueSquares, squares(issue.apps, state.flaggedApps))
+            showShare(issue.apps, state.flaggedApps)
             topIssueCard.isClickable = true
             topIssueCard.setOnClickListener { startActivity(ProblemDetailActivity.intent(this@HomeActivity, issue.ref)) }
         } else {
             topIssueIcon.setImageResource(R.drawable.ic_nav_tag)
             topIssueName.setText(R.string.home_empty_name)
             topIssueApps.setText(R.string.home_top_issue_empty)
-            showSquares(topIssueSquares, Squares(0, 0))
+            showShare(0, 0)
             topIssueCard.isClickable = false
             topIssueCard.setOnClickListener(null)
         }
     }
 
-    /** The bar under the top issue: a filled square per app that has it, an empty one for the others. */
-    private fun showSquares(container: LinearLayout, squares: Squares) {
-        container.removeAllViews()
-        // No gap before the text when there is no bar (nothing to show yet).
-        (binding.topIssueApps.layoutParams as LinearLayout.LayoutParams).let {
-            val gap = if (squares.total > 0) 8.dp(container) else 0
-            it.marginStart = gap
-            it.leftMargin = gap
-        }
-        binding.topIssueApps.requestLayout()
-        val size = 14.dp(container)
-        repeat(squares.total) { i ->
-            container.addView(
-                ImageView(this).apply {
-                    setImageResource(if (i < squares.filled) R.drawable.ic_square_on else R.drawable.ic_square_off)
-                    importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
-                },
-                LinearLayout.LayoutParams(size, size).apply { if (i > 0) marginStart = 4.dp(container) },
-            )
+    /** The bar under the top issue: how many of the flagged apps have it. No bar until there is something to show. */
+    private fun showShare(apps: Int, ofTotal: Int) {
+        binding.topIssueBar.visibility = if (ofTotal > 0) View.VISIBLE else View.GONE
+        if (ofTotal > 0) {
+            binding.topIssueBar.max = ofTotal
+            binding.topIssueBar.setProgressCompat(apps.coerceIn(0, ofTotal), false)
         }
     }
 

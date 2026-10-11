@@ -495,28 +495,27 @@
                     android:textColor="?attr/colorOnSurface"
                     android:textSize="17sp" />
 
-                <LinearLayout
+                <!-- Share of the flagged apps that have this issue: reads the same with 2 apps or 80. Hidden until there is an issue. -->
+                <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:id="@+id/topIssueBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:importantForAccessibility="no"
+                    android:visibility="gone"
+                    app:indicatorColor="@color/ink"
+                    app:trackColor="@color/chart_grid"
+                    app:trackCornerRadius="3dp"
+                    app:trackStopIndicatorSize="0dp"
+                    app:trackThickness="6dp" />
+
+                <TextView
+                    android:id="@+id/topIssueApps"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:id="@+id/topIssueSquares"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:importantForAccessibility="no"
-                        android:orientation="horizontal" />
-
-                    <TextView
-                        android:id="@+id/topIssueApps"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:textColor="?attr/colorOnSurfaceVariant"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <ImageView

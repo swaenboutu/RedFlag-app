@@ -37,14 +37,3 @@ fun topIssue(apps: List<MonitoredAppWithProblems>, labelOf: (ProblemRef) -> Stri
         .sortedWith(compareByDescending<TopIssue> { it.apps }.thenBy(alphabetical()) { it.label })
         .firstOrNull()
 }
-
-/** The squares of the bar under the top issue: [Squares.total] of them, [Squares.filled] filled; at most [max] whatever the number of apps. */
-data class Squares(val total: Int, val filled: Int)
-
-fun squares(apps: Int, ofTotal: Int, max: Int = 10): Squares {
-    if (ofTotal <= 0) return Squares(0, 0)
-    if (ofTotal <= max) return Squares(ofTotal, apps.coerceIn(0, ofTotal))
-    // More apps than squares: each square stands for several apps; never show an empty bar for a non-zero count.
-    val filled = Math.ceil(apps.toDouble() * max / ofTotal).toInt().coerceIn(if (apps > 0) 1 else 0, max)
-    return Squares(max, filled)
-}

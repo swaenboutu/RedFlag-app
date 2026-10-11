@@ -5,8 +5,6 @@ import app.redflag.data.MonitoredApp
 import app.redflag.data.MonitoredAppWithProblems
 import app.redflag.data.Problem
 import app.redflag.data.ProblemRef
-import app.redflag.ui.home.Squares
-import app.redflag.ui.home.squares
 import app.redflag.ui.home.topInterruptedApp
 import app.redflag.ui.home.topIssue
 import app.redflag.util.PauseChoice
@@ -80,18 +78,6 @@ class HomeStatsTest {
     @Test
     fun withNoFlaggedAppThereIsNoTopIssue() {
         assertNull(topIssue(emptyList()) { it.id })
-    }
-
-    @Test
-    fun theBarHasOneSquarePerAppUpToTen() {
-        assertEquals(Squares(8, 5), squares(apps = 5, ofTotal = 8))
-        assertEquals(Squares(0, 0), squares(apps = 0, ofTotal = 0))
-    }
-
-    @Test
-    fun withMoreThanTenAppsEachSquareStandsForSeveral() {
-        assertEquals(Squares(10, 5), squares(apps = 15, ofTotal = 30))
-        assertEquals("never empty for a non-zero count", Squares(10, 1), squares(apps = 1, ofTotal = 100))
     }
 
     private val paris = TimeZone.getTimeZone("Europe/Paris")
