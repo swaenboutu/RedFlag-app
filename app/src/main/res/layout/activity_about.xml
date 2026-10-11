@@ -48,20 +48,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="20dp"
-                android:text="@string/about_intro"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:textSize="15sp"
-                app:lineHeight="22dp" />
-
             <LinearLayout
                 style="@style/Widget.Conscience.SettingsCard"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_note_card"
                 android:padding="16dp">
 
                 <TextView
@@ -100,6 +90,7 @@
             <LinearLayout
                 style="@style/Widget.Conscience.SettingsCard"
                 android:layout_marginTop="12dp"
+                android:background="@drawable/bg_note_card"
                 android:padding="16dp">
 
                 <TextView
