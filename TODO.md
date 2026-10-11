@@ -23,7 +23,7 @@ d'accessibilité et demande un accord explicite, FAQ, site statique (`docs/`, EN
   image de présentation 1024×500, captures (on peut reprendre celles de `docs/assets/img/`)
 - [ ] **Test fermé** : 12 testeurs pendant 14 jours avant la production (compte personnel récent), puis rapport
   pré-lancement
-- [ ] **Version 0.5.0** (`versionCode` 10) : release GitHub `v0.5.0` publiée (nouveau design, mode sombre) ; reste la fiche Play (la `v0.1.0` porte l'ancien nom)
+- [ ] **Version 0.5.1** (`versionCode` 11) : release GitHub `v0.5.1` publiée (contours sur toutes les cartes, explication de chaque enjeu, accueil et écran d’un enjeu retravaillés) ; la `v0.5.0` apportait le nouveau design et le mode sombre ; reste la fiche Play (la `v0.1.0` porte l'ancien nom)
 - [ ] **Site** : reprendre la palette (crème, bleu nuit, corail) et les captures du nouveau design, clair et sombre
 
 ## Qualité
