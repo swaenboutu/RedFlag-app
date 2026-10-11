@@ -135,7 +135,6 @@
     <string name="drawer_about">À propos</string>
     <string name="drawer_about_hint">Code source, licence</string>
     <string name="drawer_version">Version %1$s</string>
-    <string name="about_intro">Red Flag ajoute un moment de réflexion avant d’ouvrir les apps que vous avez signalées. C’est un logiciel libre, et tout reste sur votre téléphone.</string>
     <string name="about_license_title">Licence</string>
     <string name="about_license_text">Red Flag est publié sous licence GNU General Public License, version 3 (GPL v3) : vous pouvez l’utiliser, l’étudier, le partager et l’améliorer.</string>
     <string name="about_license_link">Lire la licence</string>

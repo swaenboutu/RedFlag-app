@@ -9,26 +9,20 @@ import androidx.core.content.ContextCompat
 import app.redflag.R
 import com.google.android.material.color.MaterialColors
 
-const val CARD_RADIUS_DP = 18
+const val CARD_RADIUS_DP = 20
 const val CARD_GAP_DP = 10
 
-/** Bigger corners of the outlined cards (welcome tour). */
-const val OUTLINED_CARD_RADIUS_DP = 24
-
 /**
- * Fond de « carte » blanche arrondie. Plusieurs lignes consécutives forment une seule carte :
- * la première arrondit le haut, la dernière arrondit le bas et laisse [gapAfterDp] avant la suivante.
+ * The card background of the lists, outlined like the cards of the Home screen. Several consecutive rows form one card: the first
+ * one rounds the top, the last one rounds the bottom and leaves [gapAfterDp] before the next card.
  */
-fun View.applyCard(roundTop: Boolean, roundBottom: Boolean, gapAfterDp: Int, outlined: Boolean = false) {
+fun View.applyCard(roundTop: Boolean, roundBottom: Boolean, gapAfterDp: Int) {
     val density = resources.displayMetrics.density
-    val radius = (if (outlined) OUTLINED_CARD_RADIUS_DP else CARD_RADIUS_DP) * density
+    val radius = CARD_RADIUS_DP * density
     val top = if (roundTop) radius else 0f
     val bottom = if (roundBottom) radius else 0f
     val surface = MaterialColors.getColor(this@applyCard, com.google.android.material.R.attr.colorSurface)
-    background = if (outlined) outlinedCardBackground(surface, top, bottom, density) else GradientDrawable().apply {
-        setColor(surface)
-        cornerRadii = floatArrayOf(top, top, top, top, bottom, bottom, bottom, bottom)
-    }
+    background = outlinedCardBackground(surface, top, bottom, density)
     (layoutParams as? ViewGroup.MarginLayoutParams)?.let {
         it.bottomMargin = (gapAfterDp * density).toInt()
         layoutParams = it

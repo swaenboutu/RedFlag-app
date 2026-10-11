@@ -57,7 +57,7 @@ class OnboardingAppsAdapter(
                 choice.setOnClickListener { onToggle(row.app.packageName) }
                 divider.visibility = if (row.first) View.GONE else View.VISIBLE
                 // Une seule carte blanche pour toute la liste : arrondie en haut sur la première ligne, en bas sur la dernière.
-                root.applyCard(roundTop = row.first, roundBottom = row.last, gapAfterDp = 0, outlined = true)
+                root.applyCard(roundTop = row.first, roundBottom = row.last, gapAfterDp = 0)
             }
         }
     }

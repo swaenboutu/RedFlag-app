@@ -18,7 +18,6 @@ fun ItemManagerThemeBinding.bindThemeCard(
     hasContent: Boolean,
     onClick: () -> Unit,
     @androidx.annotation.DrawableRes icon: Int? = null,
-    outlined: Boolean = false,
 ) {
     themeIcon.visibility = if (icon == null) View.GONE else View.VISIBLE
     if (icon != null) {
@@ -40,7 +39,7 @@ fun ItemManagerThemeBinding.bindThemeCard(
     themeDivider.visibility = if (open) View.VISIBLE else View.GONE
     root.isClickable = hasContent
     root.setOnClickListener { if (hasContent) onClick() }
-    root.applyCard(roundTop = true, roundBottom = !open, gapAfterDp = if (open) 0 else CARD_GAP_DP, outlined = outlined)
+    root.applyCard(roundTop = true, roundBottom = !open, gapAfterDp = if (open) 0 else CARD_GAP_DP)
 }
 
 /** « 4 problématiques » : le début de tous les sous-titres de thème. */

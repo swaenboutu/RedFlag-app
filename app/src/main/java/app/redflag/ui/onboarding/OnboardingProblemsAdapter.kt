@@ -62,7 +62,6 @@ class OnboardingProblemsAdapter(
             hasContent = true,
             onClick = { onThemeClick(row.id) },
             icon = themeIcon(row.id),
-            outlined = true,
         )
     }
 
@@ -75,7 +74,7 @@ class OnboardingProblemsAdapter(
             onToggle(row.ref, row.checked)
         }
         choiceDivider.visibility = if (row.first) View.GONE else View.VISIBLE
-        root.applyCard(roundTop = false, roundBottom = row.last, gapAfterDp = if (row.last) CARD_GAP_DP else 0, outlined = true)
+        root.applyCard(roundTop = false, roundBottom = row.last, gapAfterDp = if (row.last) CARD_GAP_DP else 0)
     }
 
     private object Diff : DiffUtil.ItemCallback<OnboardingRow>() {
