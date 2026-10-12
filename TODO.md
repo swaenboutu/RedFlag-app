@@ -42,7 +42,7 @@ d'accessibilité et demande un accord explicite, FAQ, site statique (`docs/`, EN
 - [ ] **Ajouter une langue** (par exemple l'espagnol)
   - Nouveau dossier `values-es/` avec les mêmes clés que `values/` (vérification de parité : voir la commande ci-dessous),
     dont les 23 problématiques du catalogue
-  - `res/raw-es/faq.xml` pour la FAQ, puis `node scripts/site.mjs sync-faq` et une page `docs/es/`
+  - `res/raw-es/faq.xml` pour la FAQ, puis `node scripts/site.mjs sync-faq` et une page `docs/index-es.html`
   - Ajouter la langue dans `res/xml/locales_config.xml`
   - Les pluriels espagnols ont une forme `many` en plus
 - [ ] **Recommandations de désinstallation** (idée, règles à travailler) : suggérer de désinstaller une app que l'utilisateur
@@ -74,7 +74,7 @@ d'accessibilité et demande un accord explicite, FAQ, site statique (`docs/`, EN
 ## Vocabulaire
 
 - En français, « problématique » est devenu « enjeu » dans l'application, la FAQ et le site (`values-fr/strings.xml`, `raw-fr/faq.xml`,
-  `docs/fr/`). Restent à jour à la main, si besoin : les pitchs (`pitch-*.md`) et les commentaires du code. Les noms de code
+  `docs/index-fr.html`). Restent à jour à la main, si besoin : les pitchs (`pitch-*.md`) et les commentaires du code. Les noms de code
   (`Problem`, `nav_problems`…) et le terme anglais « issue » ne changent pas.
 
 ## Vérifier la parité des langues

@@ -69,7 +69,7 @@ chosen source, then, on Android 13 and later, allow the app's "restricted settin
 
 ## Website (docs/)
 
-A static website, with no server or dependency: one page per language (`docs/index.html` (English) and `docs/fr/` (French)), an
+A static website, with no server or dependency: one page per language (`docs/index.html` (English) and `docs/index-fr.html` (French)), an
 anchor menu, the FAQ, screenshots and a contact form. No external resource (fonts and scripts are in `docs/assets/`).
 
 ```bash

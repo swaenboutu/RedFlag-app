@@ -18,8 +18,8 @@ const START = "<!-- faq:start -->";
 const END = "<!-- faq:end -->";
 
 const read = (path) => readFileSync(path, "utf8");
-// L'anglais est à la racine du site (docs/index.html), le français dans docs/fr/.
-const page = (lang) => (lang === "en" ? join(docs, "index.html") : join(docs, lang, "index.html"));
+// Les deux pages sont à la racine du site : docs/index.html (anglais) et docs/index-fr.html (français).
+const page = (lang) => join(docs, lang === "en" ? "index.html" : `index-${lang}.html`);
 
 const decode = (text) =>
     text.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, "&");
