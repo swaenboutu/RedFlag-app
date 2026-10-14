@@ -6,7 +6,8 @@ you of your values and asks whether you really want to continue. The goal is not
 Name: **Red Flag**, subtitle "Ethical app check" (store listing title: "Red Flag – Ethical app check"). Both are defined by
 `app_name` and `app_subtitle` in [brand.xml](app/src/main/res/values/brand.xml) and used everywhere (icon, screens, accessibility
 service); the title of this README and the website (`docs/`) have to be changed by hand. The technical identifier
-`app.redflag` is the one from before the name was chosen: it cannot change after the first publication.
+(`applicationId`) is `app.redflag.android`: it cannot change after the first publication on Google Play. The Kotlin package
+(`namespace`) stays `app.redflag`.
 
 Specifications: [Android](pitch-dev-android.md), [iOS](pitch-dev-ios.md), [design](pitch-designer.md) (in French).
 License: [GPL v3](LICENSE) (copyleft: any modified version that is distributed must remain under the GPL, with its source code open).

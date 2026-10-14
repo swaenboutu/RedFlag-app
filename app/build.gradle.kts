@@ -17,7 +17,7 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "app.redflag"
+        applicationId = "app.redflag.android"
         minSdk = 26
         targetSdk = 37
         versionCode = 11

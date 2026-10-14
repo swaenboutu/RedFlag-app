@@ -63,7 +63,7 @@ pick_device() {
     fi
 }
 
-APP_ID=app.redflag
+APP_ID=app.redflag.android
 FIXTURE_ID=app.redflag.fixture
 
 # Gradle désinstalle l'app à la fin des tests sur appareil : on la remet (en debug), et on réactive son service d'accessibilité

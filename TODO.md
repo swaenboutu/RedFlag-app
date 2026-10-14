@@ -59,7 +59,7 @@ d'accessibilité et demande un accord explicite, FAQ, site statique (`docs/`, EN
 
 ## Fait
 
-- [x] Identifiant de l'app `app.redflag` (`applicationId` et package Kotlin, remplace `fr.conscience.numerique`) : à ne plus changer après la première publication sur Play
+- [x] Identifiant de l'app `app.redflag.android` (`applicationId`, choisi parce que `app.redflag` était déjà pris sur Play ; le package Kotlin reste `app.redflag`) : à ne plus changer après la première publication sur Play
 - [x] Doublons factorisés (libellés, sections, icônes, `toRef()`, accès au conteneur) : revue de code, point 3
 - [x] ViewModels par fabrique (`screenViewModel`), testés sur base en mémoire ; accueil et statistiques testés : point 5
 - [x] Un seul identifiant par problématique, base en version 7 : point 6
