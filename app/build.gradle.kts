@@ -69,6 +69,12 @@ android {
         }
     }
 
+    androidResources {
+        // The app is only translated into English and French: the translations of the libraries (Material, AppCompat...) into
+        // some 95 other languages would only weigh down the APK.
+        localeFilters += listOf("en", "fr")
+    }
+
     lint {
         // local.properties est propre à chaque machine et n'est pas versionné : ce contrôle n'a rien à vérifier dans le dépôt
         // (et il signale à tort un fichier déjà correctement échappé).
