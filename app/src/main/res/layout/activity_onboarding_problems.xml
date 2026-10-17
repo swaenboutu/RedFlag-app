@@ -25,15 +25,10 @@
         android:paddingEnd="20dp">
 
         <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Conscience.BigButton"
             android:id="@+id/btnContinue"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:fontFamily="@font/inter_semibold"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/onboarding_continue"
-            android:textSize="18sp"
-            app:cornerRadius="26dp" />
+            android:text="@string/onboarding_continue" />
 
         <TextView
             android:id="@+id/btnSkip"

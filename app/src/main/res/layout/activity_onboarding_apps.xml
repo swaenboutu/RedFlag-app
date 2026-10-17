@@ -67,17 +67,12 @@
         </LinearLayout>
 
         <app.redflag.ui.common.HeadingTextView
+            style="@style/Widget.Conscience.ScreenTitle.Large"
             android:id="@+id/problem"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:ellipsize="end"
-            android:fontFamily="@font/bricolage_grotesque"
-            android:includeFontPadding="false"
-            android:maxLines="3"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+            android:maxLines="3" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -128,16 +123,11 @@
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Conscience.BigButton"
             android:id="@+id/btnNext"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
             android:enabled="false"
-            android:fontFamily="@font/inter_semibold"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/onboarding_next"
-            android:textSize="18sp"
-            app:cornerRadius="26dp" />
+            android:text="@string/onboarding_next" />
 
         <TextView
             android:id="@+id/btnSkip"

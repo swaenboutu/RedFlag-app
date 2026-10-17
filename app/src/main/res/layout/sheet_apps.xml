@@ -10,22 +10,14 @@
     android:paddingBottom="24dp">
 
     <View
-        android:layout_width="36dp"
-        android:layout_height="4dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/bg_sheet_handle"
-        android:importantForAccessibility="no" />
+        style="@style/Widget.Conscience.SheetHandle"
+        android:layout_width="36dp" />
 
     <app.redflag.ui.common.HeadingTextView
+        style="@style/Widget.Conscience.ScreenTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:fontFamily="@font/bricolage_grotesque"
-        android:includeFontPadding="false"
-        android:text="@string/sheet_apps_title"
-        android:textColor="?attr/colorOnSurface"
-        android:textSize="26sp"
-        android:textStyle="bold" />
+        android:text="@string/sheet_apps_title" />
 
     <TextView
         android:id="@+id/subtitle"
@@ -84,15 +76,11 @@
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Conscience.SheetCancelButton"
             android:id="@+id/btnCancel"
-            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="0dp"
-            android:layout_height="48dp"
             android:layout_weight="38"
-            android:text="@string/cancel"
-            android:textColor="?attr/colorOnSurface"
-            app:cornerRadius="28dp"
-            app:strokeColor="@color/outline" />
+            android:text="@string/cancel" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnConfirm"

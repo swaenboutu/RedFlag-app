@@ -146,4 +146,86 @@
         <item name="android:fontFamily">@font/inter</item>
         <item name="android:textSize">12sp</item>
     </style>
+
+    <!-- Styles shared by the layouts: each one replaces an attribute set repeated in several screens. -->
+    <!-- Main button at the bottom of the welcome steps. -->
+    <style name="Widget.Conscience.BigButton" parent="">
+        <item name="android:layout_height">52dp</item>
+        <item name="android:fontFamily">@font/inter_semibold</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="cornerRadius">26dp</item>
+    </style>
+    <!-- Thin separating line. -->
+    <style name="Widget.Conscience.Divider" parent="">
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">?attr/colorOutlineVariant</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
+    <!-- Line between two rows of a card, away from its edges. -->
+    <style name="Widget.Conscience.Divider.Inset">
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginHorizontal">16dp</item>
+        <item name="android:background">?attr/colorOutlineVariant</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
+    <!-- Round touch area of a header icon (menu, close). -->
+    <style name="Widget.Conscience.HeaderButton" parent="">
+        <item name="android:layout_height">44dp</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    </style>
+    <!-- Back button of the detail screens (48 dp). -->
+    <style name="Widget.Conscience.HeaderButton.Large">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="tint">?attr/colorOnSurface</item>
+    </style>
+    <!-- Back button of the screens opened from the menu. -->
+    <style name="Widget.Conscience.HeaderButton.Tinted">
+        <item name="android:layout_height">44dp</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="tint">?attr/colorOnSurface</item>
+    </style>
+    <!-- Title of a screen, next to its back or menu button. -->
+    <style name="Widget.Conscience.ScreenTitle" parent="">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/bricolage_grotesque</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">26sp</item>
+    </style>
+    <!-- Very large title: the first welcome screen, the state card of the Home screen. -->
+    <style name="Widget.Conscience.ScreenTitle.Hero">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/bricolage_grotesque</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+    <!-- Title of a welcome step or of a bottom sheet. -->
+    <style name="Widget.Conscience.ScreenTitle.Large">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/bricolage_grotesque</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">28sp</item>
+    </style>
+    <!-- "Cancel" button of a bottom sheet. -->
+    <style name="Widget.Conscience.SheetCancelButton" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="cornerRadius">28dp</item>
+        <item name="strokeColor">@color/outline</item>
+    </style>
+    <!-- The small bar at the top of a bottom sheet. -->
+    <style name="Widget.Conscience.SheetHandle" parent="">
+        <item name="android:layout_height">4dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:background">@drawable/bg_sheet_handle</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
 </resources>

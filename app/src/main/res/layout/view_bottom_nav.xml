@@ -7,10 +7,8 @@
     android:orientation="vertical">
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?attr/colorOutlineVariant"
-        android:importantForAccessibility="no" />
+        style="@style/Widget.Conscience.Divider"
+        android:layout_width="match_parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"

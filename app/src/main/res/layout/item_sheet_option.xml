@@ -5,11 +5,9 @@
     android:orientation="vertical">
 
     <View
+        style="@style/Widget.Conscience.Divider"
         android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?attr/colorOutlineVariant"
-        android:importantForAccessibility="no" />
+        android:layout_width="match_parent" />
 
     <LinearLayout
         android:id="@+id/row"

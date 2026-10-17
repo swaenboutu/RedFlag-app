@@ -59,10 +59,8 @@
     </LinearLayout>
 
     <View
+        style="@style/Widget.Conscience.Divider"
         android:id="@+id/themeDivider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?attr/colorOutlineVariant"
-        android:importantForAccessibility="no"
         android:visibility="gone" />
 </LinearLayout>

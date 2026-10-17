@@ -31,14 +31,9 @@
             android:paddingBottom="16dp">
 
             <app.redflag.ui.common.HeadingTextView
+                style="@style/Widget.Conscience.ScreenTitle.Large"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/bricolage_grotesque"
-                android:includeFontPadding="false"
-                android:text="@string/onboarding_permission_title"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="28sp"
-                android:textStyle="bold" />
+                android:text="@string/onboarding_permission_title" />
 
             <TextView
                 android:id="@+id/body"
@@ -305,14 +300,9 @@
         android:paddingBottom="0dp">
 
         <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Conscience.BigButton"
             android:id="@+id/btnMain"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:fontFamily="@font/inter_semibold"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:textSize="18sp"
-            app:cornerRadius="26dp" />
+            android:layout_width="match_parent" />
 
         <TextView
             android:id="@+id/btnLater"

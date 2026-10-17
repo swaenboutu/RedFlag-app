@@ -14,14 +14,14 @@ import app.redflag.databinding.ItemAppBinding
 import app.redflag.ui.common.applyCard
 import app.redflag.ui.common.dp
 
-/** Liste des applications : une seule carte blanche, avec les problématiques de chaque app en pastilles. */
+/** The list of apps: a single white card, with the issues of each app as chips. */
 class AppListAdapter(
     private val onClick: (AppItem) -> Unit,
 ) : ListAdapter<AppItem, AppListAdapter.ViewHolder>(Diff) {
 
     class ViewHolder(val binding: ItemAppBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
-            // Icône aux coins arrondis : `clipToOutline` en XML exige Android 12.
+            // Rounded icon corners: `clipToOutline` in XML needs Android 12.
             binding.icon.clipToOutline = true
         }
     }
@@ -37,7 +37,8 @@ class AppListAdapter(
             appDivider.visibility = if (item.first) View.GONE else View.VISIBLE
 
             val labels = item.problems.mapNotNull { it.displayLabel(root.context, item.overrides) }
-            noProblems.visibility = if (labels.isEmpty()) View.VISIBLE else View.GONE
+            subtitle.setText(R.string.problems_none)
+            subtitle.visibility = if (labels.isEmpty()) View.VISIBLE else View.GONE
             chips.visibility = if (labels.isEmpty()) View.GONE else View.VISIBLE
             bindChips(chips, labels)
 
@@ -47,8 +48,8 @@ class AppListAdapter(
     }
 
     /**
-     * Une seule ligne de pastilles : la première prend la place qu'il lui faut (jusqu'à ~200 dp),
-     * la suivante se contente du reste, puis « +N » pour les autres.
+     * A single line of chips: the first one takes the room it needs (up to ~200 dp), the next one makes do with the rest, then
+     * "+N" for the others.
      */
     private fun bindChips(container: LinearLayout, labels: List<String>) {
         container.removeAllViews()

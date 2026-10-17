@@ -9,12 +9,9 @@
     android:orientation="vertical">
 
     <View
+        style="@style/Widget.Conscience.Divider.Inset"
         android:id="@+id/problemDivider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginHorizontal="16dp"
-        android:background="?attr/colorOutlineVariant"
-        android:importantForAccessibility="no" />
+        android:layout_width="match_parent" />
 
     <LinearLayout
         android:layout_width="match_parent"

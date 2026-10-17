@@ -16,24 +16,17 @@
         android:paddingEnd="20dp">
 
         <ImageButton
+            style="@style/Widget.Conscience.HeaderButton.Tinted"
             android:id="@+id/back"
             android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/back"
-            android:src="@drawable/ic_arrow_back"
-            app:tint="?attr/colorOnSurface" />
+            android:src="@drawable/ic_arrow_back" />
 
         <app.redflag.ui.common.HeadingTextView
+            style="@style/Widget.Conscience.ScreenTitle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:fontFamily="@font/bricolage_grotesque"
-            android:includeFontPadding="false"
-            android:text="@string/settings_help_title"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="26sp"
-            android:textStyle="bold" />
+            android:text="@string/settings_help_title" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

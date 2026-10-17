@@ -28,16 +28,11 @@
         android:paddingBottom="0dp">
 
         <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Conscience.BigButton"
             android:id="@+id/btnNext"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
             android:enabled="false"
-            android:fontFamily="@font/inter_semibold"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="@string/onboarding_next"
-            android:textSize="18sp"
-            app:cornerRadius="26dp" />
+            android:text="@string/onboarding_next" />
 
         <TextView
             android:id="@+id/btnSkip"

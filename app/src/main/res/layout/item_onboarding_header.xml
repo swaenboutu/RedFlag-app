@@ -14,15 +14,10 @@
         layout="@layout/view_onboarding_topbar" />
 
     <app.redflag.ui.common.HeadingTextView
+        style="@style/Widget.Conscience.ScreenTitle.Hero"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:fontFamily="@font/bricolage_grotesque"
-        android:includeFontPadding="false"
         android:text="@string/onboarding_problems_title"
-        android:textColor="?attr/colorOnSurface"
-        android:textSize="30sp"
-        android:textStyle="bold"
         app:lineHeight="38dp" />
 
     <TextView
