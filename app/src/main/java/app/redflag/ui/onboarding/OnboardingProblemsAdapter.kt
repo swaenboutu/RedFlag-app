@@ -1,7 +1,6 @@
 package app.redflag.ui.onboarding
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -9,15 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import app.redflag.R
 import app.redflag.data.ProblemRef
-import app.redflag.data.displayDescription
-import app.redflag.data.displayLabel
 import app.redflag.databinding.ItemDetailChoiceBinding
 import app.redflag.databinding.ItemManagerThemeBinding
 import app.redflag.databinding.ItemOnboardingHeaderBinding
-import app.redflag.ui.common.CARD_GAP_DP
-import app.redflag.ui.common.applyCard
+import app.redflag.ui.common.bindIssueChoice
 import app.redflag.ui.common.bindThemeCard
-import app.redflag.ui.common.styledIssueLabel
 import app.redflag.ui.common.themeIcon
 import app.redflag.ui.common.selectedOfSubtitle
 
@@ -65,17 +60,8 @@ class OnboardingProblemsAdapter(
         )
     }
 
-    private fun bindChoice(binding: ItemDetailChoiceBinding, row: OnboardingRow.Choice) = with(binding) {
-        choice.text = styledIssueLabel(root.context, row.ref.displayLabel(root.context, row.override), row.ref.displayDescription(root.context))
-        choice.isChecked = row.checked
-        choice.setOnClickListener {
-            // La case se bascule seule au toucher : on la remet dans l'état réel (un choix refusé ne change rien en base).
-            choice.isChecked = row.checked
-            onToggle(row.ref, row.checked)
-        }
-        choiceDivider.visibility = if (row.first) View.GONE else View.VISIBLE
-        root.applyCard(roundTop = false, roundBottom = row.last, gapAfterDp = if (row.last) CARD_GAP_DP else 0)
-    }
+    private fun bindChoice(binding: ItemDetailChoiceBinding, row: OnboardingRow.Choice) =
+        binding.bindIssueChoice(row.ref, row.override, row.checked, row.first, row.last, onToggle)
 
     private object Diff : DiffUtil.ItemCallback<OnboardingRow>() {
         override fun areItemsTheSame(old: OnboardingRow, new: OnboardingRow) = when {

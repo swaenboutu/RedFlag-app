@@ -2,7 +2,6 @@ package app.redflag.ui.apps
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -10,17 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import app.redflag.R
 import app.redflag.data.ProblemRef
-import app.redflag.data.displayDescription
-import app.redflag.data.displayLabel
 import app.redflag.databinding.ItemDetailChoiceBinding
 import app.redflag.databinding.ItemDetailHeaderBinding
 import app.redflag.databinding.ItemDetailInfoBinding
 import app.redflag.databinding.ItemDetailSectionBinding
 import app.redflag.databinding.ItemManagerThemeBinding
-import app.redflag.ui.common.CARD_GAP_DP
-import app.redflag.ui.common.applyCard
+import app.redflag.ui.common.bindIssueChoice
 import app.redflag.ui.common.bindThemeCard
-import app.redflag.ui.common.styledIssueLabel
 import app.redflag.ui.common.themeIcon
 import app.redflag.ui.common.checkedSubtitle
 import app.redflag.ui.common.iconOf
@@ -80,20 +75,14 @@ class AppDetailAdapter(
         )
     }
 
-    /** La carte des problématiques associées n'a pas besoin du nombre de cochées. */
+    /** The card of the linked issues does not need the number of ticked ones. */
     private fun themeSubtitle(context: Context, row: DetailRow.Theme): String {
         if (row.id == R.string.category_custom && row.problemCount == 0) return context.getString(R.string.custom_empty)
         return checkedSubtitle(context, row.problemCount, if (row.id == R.string.category_linked) 0 else row.checkedCount)
     }
 
-    private fun bindChoice(binding: ItemDetailChoiceBinding, row: DetailRow.Choice) = with(binding) {
-        val context = root.context
-        choice.text = styledIssueLabel(context, row.ref.displayLabel(context, row.override), row.ref.displayDescription(context))
-        choice.isChecked = row.checked
-        choice.setOnClickListener { onToggle(row.ref, row.checked) }
-        choiceDivider.visibility = if (row.first) View.GONE else View.VISIBLE
-        root.applyCard(roundTop = false, roundBottom = row.last, gapAfterDp = if (row.last) CARD_GAP_DP else 0)
-    }
+    private fun bindChoice(binding: ItemDetailChoiceBinding, row: DetailRow.Choice) =
+        binding.bindIssueChoice(row.ref, row.override, row.checked, row.first, row.last, onToggle)
 
     private fun bindInfo(binding: ItemDetailInfoBinding, row: DetailRow.Info) = with(binding) {
         info.text = if (row.count == 0) {
