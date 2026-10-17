@@ -8,16 +8,16 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** La liste des apps du téléphone, avec le vrai PackageManager. */
+/** The list of the phone's apps, with the real PackageManager. */
 @RunWith(AndroidJUnit4::class)
 class InstalledAppsProviderTest {
     private val provider = InstalledAppsProvider(InstrumentationRegistry.getInstrumentation().targetContext)
 
-    /** Une app système non mise à jour : présente dans la liste complète, absente de la liste « sans apps système ». */
+    /** A system app that was never updated: in the full list, not in the list "without system apps". */
     private fun aHiddenSystemApp(): String {
         val all = provider.list(hideSystemApps = false).map { it.packageName }.toSet()
         val withoutSystem = provider.list(hideSystemApps = true).map { it.packageName }.toSet()
-        return (all - withoutSystem).firstOrNull() ?: error("aucune app système à masquer sur cet appareil")
+        return (all - withoutSystem).firstOrNull() ?: error("no system app to hide on this device")
     }
 
     @Test
@@ -31,14 +31,24 @@ class InstalledAppsProviderTest {
         val without = provider.list(hideSystemApps = true).map { it.packageName }.toSet()
         val withFlag = provider.list(hideSystemApps = true, alwaysInclude = setOf(system)).map { it.packageName }.toSet()
 
-        assertFalse("sans signalement, l'app système est masquée", system in without)
-        assertTrue("l'app signalée $system doit rester visible", system in withFlag)
-        assertEquals("seule l'app signalée est ajoutée", setOf(system), withFlag - without)
+        assertFalse("not flagged, the system app is hidden", system in without)
+        assertTrue("the flagged app $system must stay visible", system in withFlag)
+        assertEquals("only the flagged app is added", setOf(system), withFlag - without)
     }
 
     @Test
     fun theAppItselfIsNeverListed() {
         val own = InstrumentationRegistry.getInstrumentation().targetContext.packageName
         assertFalse(own in provider.list(hideSystemApps = false, alwaysInclude = setOf(own)).map { it.packageName })
+    }
+
+    @Test
+    fun theCountMatchesTheListWithoutLoadingIt() {
+        // The statistics count the apps without loading their icons: the number must be the one of the list, whatever the filters.
+        val flagged = setOf(aHiddenSystemApp())
+        for (hide in listOf(true, false)) {
+            assertEquals(provider.list(hide).size, provider.count(hide))
+            assertEquals(provider.list(hide, alwaysInclude = flagged).size, provider.count(hide, alwaysInclude = flagged))
+        }
     }
 }

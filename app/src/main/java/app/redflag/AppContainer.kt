@@ -27,7 +27,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 /**
- * Racine de dépendances minimale, sans framework d'injection. [database] : la base de données ; un test en fournit une en mémoire pour ne pas toucher à celle de l'utilisateur.
+ * Minimal dependency root, with no injection framework. [database]: the database; a test passes an in-memory one so as not to touch
+ * the user's.
  */
 class AppContainer(context: Context, database: AppDatabase = openDatabase(context)) {
     val settings = SettingsStore(context)
@@ -36,20 +37,26 @@ class AppContainer(context: Context, database: AppDatabase = openDatabase(contex
     val installedApps = InstalledAppsProvider(context, icons)
     val frictionGate = FrictionGate()
 
-    /** Pour ce qui doit se terminer même si l'écran qui l'a lancé disparaît (une écriture en base, par exemple). */
+    /** For what must finish even if the screen that started it goes away (a database write, for example). */
     val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     /**
-     * Les apps à lister : le réglage « Liste affichée » est appliqué, mais une app signalée y figure toujours (sinon elle
-     * resterait surveillée sans qu'on puisse la retrouver). Se met à jour quand le réglage ou les apps signalées changent,
-     * et à chaque émission de [refresh] (au retour sur l'écran : une app a pu être installée entre-temps).
+     * The apps to list: the "Displayed list" setting applies, but a flagged app is always there (otherwise it would stay watched
+     * with no way to find it again). Updated when the setting or the flagged apps change, and at each emission of [refresh] (back
+     * on the screen: an app may have been installed in the meantime).
      */
-    fun installedAppsFlow(refresh: Flow<Int> = flowOf(0)): Flow<List<InstalledApp>> = combine(
+    fun installedAppsFlow(refresh: Flow<Int> = flowOf(0)): Flow<List<InstalledApp>> =
+        listing(refresh) { hide, flagged -> installedApps.list(hide, alwaysInclude = flagged) }
+
+    /** The number of apps [installedAppsFlow] lists, without loading their icons (for the statistics). */
+    fun installedAppsCountFlow(): Flow<Int> = listing(flowOf(0)) { hide, flagged -> installedApps.count(hide, alwaysInclude = flagged) }
+
+    private fun <T> listing(refresh: Flow<Int>, read: (hideSystemApps: Boolean, flagged: Set<String>) -> T): Flow<T> = combine(
         settings.hideSystemApps,
         repository.monitoredApps.map { list -> list.map { it.app.packageName }.toSet() }.distinctUntilChanged(),
         refresh,
     ) { hide, flagged, _ -> hide to flagged }
-        .map { (hide, flagged) -> withContext(Dispatchers.IO) { installedApps.list(hide, alwaysInclude = flagged) } }
+        .map { (hide, flagged) -> withContext(Dispatchers.IO) { read(hide, flagged) } }
 }
 
 private fun openDatabase(context: Context): AppDatabase =

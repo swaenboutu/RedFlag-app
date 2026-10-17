@@ -11,15 +11,15 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-/** Une app avec une interruption en place, et le nombre de fois où l'interruption s'est affichée pour elle. */
+/** An app with an interruption in place, and how many times the interruption was shown for it. */
 data class StatsApp(val packageName: String, val appName: String, val attempts: Int)
 
 data class StatsRow(val app: StatsApp, val first: Boolean, val last: Boolean)
 
-/** [installedCount] : null tant que la liste des apps installées n'est pas chargée. */
+/** [installedCount]: null until the installed apps are counted. */
 data class StatsState(val installedCount: Int?, val interceptedCount: Int, val rows: List<StatsRow>)
 
-/** Écran « Statistiques » : combien d'apps ont une interruption, et la liste de celles-ci. */
+/** "Statistics" screen: how many apps have an interruption, and the list of them. */
 class StatsViewModel(private val container: AppContainer) : ViewModel() {
     private val repository = container.repository
 
@@ -42,7 +42,7 @@ class StatsViewModel(private val container: AppContainer) : ViewModel() {
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), StatsState(null, 0, emptyList()))
 
     init {
-        // Le total compte les mêmes apps que la liste : une app signalée y est toujours.
-        viewModelScope.launch { container.installedAppsFlow().collect { installedCount.value = it.size } }
+        // The total counts the same apps as the list of apps (a flagged app is always in it), without loading their icons.
+        viewModelScope.launch { container.installedAppsCountFlow().collect { installedCount.value = it } }
     }
 }

@@ -20,8 +20,8 @@ class AppRepository(private val db: AppDatabase) {
         get() = favoriteDao.observeAll().map { list -> list.map { ProblemRef(it.id) }.toSet() }
 
     /**
-     * Les intitulés qui remplacent la traduction, par identifiant de problématique : celui que l'utilisateur a choisi pour une
-     * problématique du catalogue, et le nom de chaque problématique personnalisée (qui n'en a pas d'autre).
+     * The titles that replace the translation, by issue identifier: the one the user chose for a catalog issue, and the name of
+     * each custom issue (which has no other).
      */
     val labelOverrides: Flow<Map<String, String>>
         get() = combine(overrides.observeAll(), custom.observeAll()) { renamed, created ->
@@ -29,6 +29,9 @@ class AppRepository(private val db: AppDatabase) {
         }
     val refusals: Flow<List<RefusalCount>> get() = events.observeRefusals()
     val choiceEvents: Flow<List<ChoiceEvent>> get() = events.observeAll()
+
+    /** The time of the first choice ever made, null before any. */
+    suspend fun firstChoiceTimestamp(): Long? = events.firstTimestamp()
 
     suspend fun find(packageName: String): MonitoredAppWithProblems? = apps.find(packageName)
 
@@ -46,7 +49,7 @@ class AppRepository(private val db: AppDatabase) {
         return ref
     }
 
-    /** Renomme : l'identifiant ne change pas, rien d'autre n'est à mettre à jour. False si le nom est déjà pris par une autre problématique. */
+    /** Renames: the identifier does not change, nothing else needs updating. False if another issue already has the name. */
     suspend fun renameCustomProblem(id: String, newLabel: String): Boolean {
         val taken = custom.listOnce().any { it.id != id && it.label.equals(newLabel, ignoreCase = true) }
         if (taken) return false
@@ -54,7 +57,7 @@ class AppRepository(private val db: AppDatabase) {
         return true
     }
 
-    /** Retire la problématique de toutes les apps (celles qui n'en ont plus sortent de la surveillance), des favoris et de la liste. */
+    /** Removes the issue from every app (those left with none are no longer watched), from the favorites and from the list. */
     suspend fun deleteCustomProblem(id: String) = db.withTransaction {
         apps.deleteProblemsWithId(id)
         custom.delete(id)

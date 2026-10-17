@@ -8,7 +8,7 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
-/** Les apps surveillées et leurs problématiques associées. */
+/** The watched apps and the issues linked to them. */
 @Dao
 abstract class MonitoredAppDao {
     @Transaction
@@ -46,7 +46,7 @@ abstract class MonitoredAppDao {
     @Query("DELETE FROM problems WHERE packageName = :packageName AND problemId = :problemId")
     protected abstract suspend fun deleteProblem(packageName: String, problemId: String)
 
-    /** Associe une problématique à une app (créée si besoin, sans toucher à sa pause si elle existe). */
+    /** Links an issue to an app (created if needed, without touching its pause if it exists). */
     @Transaction
     open suspend fun link(app: MonitoredApp, problem: Problem) {
         if (appCount(app.packageName) == 0) upsert(app)
@@ -55,7 +55,7 @@ abstract class MonitoredAppDao {
         }
     }
 
-    /** Dissocie ; une app qui n'a plus aucune problématique sort de la surveillance. */
+    /** Unlinks; an app with no issue left is no longer watched. */
     @Transaction
     open suspend fun unlink(packageName: String, problemId: String) {
         deleteProblem(packageName, problemId)
@@ -63,7 +63,7 @@ abstract class MonitoredAppDao {
     }
 }
 
-/** Les problématiques créées par l'utilisateur. */
+/** The issues created by the user. */
 @Dao
 interface CustomProblemDao {
     @Query("SELECT * FROM custom_problems ORDER BY label COLLATE NOCASE")
@@ -82,7 +82,7 @@ interface CustomProblemDao {
     suspend fun delete(id: String)
 }
 
-/** Les problématiques mises en favoris. */
+/** The favorite issues. */
 @Dao
 interface FavoriteDao {
     @Query("SELECT * FROM favorites")
@@ -95,7 +95,7 @@ interface FavoriteDao {
     suspend fun delete(id: String)
 }
 
-/** Les intitulés choisis par l'utilisateur à la place de ceux du catalogue. */
+/** The titles the user chose instead of the catalog ones. */
 @Dao
 interface CatalogOverrideDao {
     @Query("SELECT * FROM catalog_overrides")
@@ -115,6 +115,10 @@ interface ChoiceEventDao {
 
     @Query("SELECT * FROM choice_events ORDER BY timestamp")
     fun observeAll(): Flow<List<ChoiceEvent>>
+
+    /** The time of the oldest choice, null when there is none. */
+    @Query("SELECT MIN(timestamp) FROM choice_events")
+    suspend fun firstTimestamp(): Long?
 
     @Query(
         "SELECT packageName, COUNT(*) AS refusals FROM choice_events " +

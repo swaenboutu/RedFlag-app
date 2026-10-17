@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -44,8 +43,7 @@ class HomeViewModel(private val container: AppContainer, private val context: Co
 
     init {
         viewModelScope.launch {
-            val first = repository.choiceEvents.first().firstOrNull()?.timestamp
-            startedAt.value = settings.startedAt(first ?: System.currentTimeMillis())
+            startedAt.value = settings.startedAt(repository.firstChoiceTimestamp() ?: System.currentTimeMillis())
         }
     }
 
