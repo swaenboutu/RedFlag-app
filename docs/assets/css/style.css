@@ -118,6 +118,20 @@ p {
     border-radius: 6px;
 }
 
+/* Links that leave the site: a small "arrow out of a box" after the text (their title says it opens an external site in a new tab). */
+a[href^="http://"]::after,
+a[href^="https://"]::after {
+    content: "";
+    display: inline-block;
+    width: 0.8em;
+    height: 0.8em;
+    margin-left: 0.4em;
+    vertical-align: -0.05em;
+    background: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
 /* ---------- En-tête et menu ---------- */
 
 .site-header {
@@ -725,7 +739,7 @@ input,
 textarea {
     font: inherit;
     padding: 12px 14px;
-    border: 1.5px solid #cdc4b0;
+    border: 1.5px solid #6b7a92; /* 4.2:1 on the card color (3:1 required for the border of a field) */
     border-radius: 12px;
     background: var(--card);
     color: var(--ink);

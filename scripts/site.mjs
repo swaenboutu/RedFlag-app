@@ -122,6 +122,13 @@ function check() {
             if (!existsSync(target)) fail(`${where} : fichier introuvable : ${ref}`);
         }
 
+        // Liens qui sortent du site : un titre qui le dit, un nouvel onglet et rel="noopener" (le pictogramme vient du CSS).
+        for (const [, tag] of html.matchAll(/<a\s([^>]*href="https?:[^>]*)>/g)) {
+            const href = /href="([^"]+)"/.exec(tag)[1];
+            if (!/\stitle="[^"]{10,}"/.test(" " + tag)) fail(`${where} : lien externe sans titre : ${href}`);
+            if (!/target="_blank"/.test(tag) || !/rel="[^"]*noopener/.test(tag)) fail(`${where} : lien externe sans target="_blank" rel="noopener" : ${href}`);
+        }
+
         // Accessibilité : toute capture a un texte alternatif détaillé.
         for (const [, tag] of html.matchAll(/<img\s([^>]*assets\/img[^>]*)>/g)) {
             const alt = /\salt="([^"]*)"/.exec(" " + tag);
