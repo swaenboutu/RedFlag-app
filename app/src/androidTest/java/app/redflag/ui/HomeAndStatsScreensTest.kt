@@ -3,6 +3,7 @@ package app.redflag.ui
 import android.content.Context
 import android.view.View
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -21,8 +22,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * L'écran d'accueil (liste des apps) et l'écran des statistiques, affichés pour de bon : ce que les ViewModels calculent
- * arrive bien à l'écran. Le calcul lui-même est vérifié dans les tests des ViewModels.
+ * The list of apps and the statistics, really displayed: what the ViewModels compute does reach the screen. The computation
+ * itself is checked in the ViewModel tests.
  */
 @RunWith(AndroidJUnit4::class)
 class HomeAndStatsScreensTest {
@@ -36,8 +37,8 @@ class HomeAndStatsScreensTest {
     @Before
     fun setUp() = runBlocking {
         onboardingWasDone = settings.onboardingDone
-        settings.onboardingDone = true // sinon l'accueil renvoie vers le parcours de première utilisation
-        // Une vraie app installée (l'accueil ne liste que celles-là) que l'utilisateur n'avait pas déjà signalée.
+        settings.onboardingDone = true // otherwise the home screen sends to the welcome tour
+        // A real installed app (the list only shows those) that the user had not flagged already.
         assumeUserApps(context, 1)
         pkg = context.container.installedApps.list(hideSystemApps = true).first { repository.find(it.packageName) == null }.packageName
         repository.linkProblem(pkg, "Application signalée", fomo)
@@ -56,7 +57,7 @@ class HomeAndStatsScreensTest {
         return count
     }
 
-    /** Attend (au plus 5 s) que [condition] soit vraie : les écrans se remplissent en arrière-plan. */
+    /** Waits (at most 5 s) until [condition] is true: the screens fill in in the background. */
     private fun <A : androidx.appcompat.app.AppCompatActivity> ActivityScenario<A>.awaitUntil(condition: () -> Boolean) {
         val deadline = System.currentTimeMillis() + 5_000
         while (!condition() && System.currentTimeMillis() < deadline) Thread.sleep(50)
@@ -65,41 +66,52 @@ class HomeAndStatsScreensTest {
     private fun <A : androidx.appcompat.app.AppCompatActivity> ActivityScenario<A>.click(id: Int) =
         onActivity { it.findViewById<View>(id).performClick() }
 
-    @Test
-    fun homeFiltersTheListWithTheTabs() {
-        ActivityScenario.launch(MainActivity::class.java).use { scenario ->
-            scenario.awaitUntil { scenario.itemCount(R.id.appList) > 0 }
-            val all = scenario.itemCount(R.id.appList)
-            assertTrue("la liste affiche des apps", all > 0)
-
-            scenario.click(R.id.filterFlagged)
-            scenario.awaitUntil { scenario.itemCount(R.id.appList) < all }
-            val flagged = scenario.itemCount(R.id.appList)
-            assertTrue("seules les apps signalées restent", flagged in 1 until all)
-
-            scenario.click(R.id.filterUnflagged)
-            scenario.awaitUntil { scenario.itemCount(R.id.appList) == all - flagged }
-            assertEquals("signalées + non signalées = toutes", all, flagged + scenario.itemCount(R.id.appList))
-
-            scenario.click(R.id.filterAll)
-            scenario.awaitUntil { scenario.itemCount(R.id.appList) == all }
-            assertEquals(all, scenario.itemCount(R.id.appList))
+    private fun ActivityScenario<MainActivity>.firstVisible(): Int {
+        var position = -1
+        onActivity {
+            val manager = it.findViewById<RecyclerView>(R.id.appList).layoutManager as LinearLayoutManager
+            position = manager.findFirstVisibleItemPosition()
         }
+        return position
     }
 
+    private fun ActivityScenario<MainActivity>.text(id: Int): String {
+        var text = ""
+        onActivity { text = it.findViewById<TextView>(id).text.toString() }
+        return text
+    }
+
+    /**
+     * One scenario on the list of apps: the "flagged" tab shows their number, the tabs filter the list, and changing the tab after
+     * scrolling down goes back to the top of the list.
+     */
     @Test
-    fun changingTheFilterGoesBackToTheTopOfTheList() {
+    fun theListOfAppsCountsFiltersAndGoesBackToTheTop() {
         // With the system apps shown the list is long enough to scroll, whatever the device.
         val hideBefore = settings.hideSystemApps.value
         settings.setHideSystemApps(false)
         try {
             ActivityScenario.launch(MainActivity::class.java).use { scenario ->
                 scenario.awaitUntil { scenario.itemCount(R.id.appList) > 10 }
-                scenario.click(R.id.filterUnflagged)
-                scenario.awaitUntil { scenario.firstVisible() == 0 }
+                val all = scenario.itemCount(R.id.appList)
+                assertTrue("la liste affiche des apps", all > 10)
 
-                // Scrolled down in the unflagged apps, then back to "All": the flagged app comes first, so rows are inserted
+                scenario.awaitUntil { Regex("\\([1-9]\\d*\\)").containsMatchIn(scenario.text(R.id.filterFlagged)) }
+                val label = scenario.text(R.id.filterFlagged)
+                assertTrue("l'onglet « signalées » affiche leur nombre : $label", Regex("\\([1-9]\\d*\\)").containsMatchIn(label))
+
+                scenario.click(R.id.filterFlagged)
+                scenario.awaitUntil { scenario.itemCount(R.id.appList) < all }
+                val flagged = scenario.itemCount(R.id.appList)
+                assertTrue("seules les apps signalées restent", flagged in 1 until all)
+
+                scenario.click(R.id.filterUnflagged)
+                scenario.awaitUntil { scenario.itemCount(R.id.appList) == all - flagged }
+                assertEquals("signalées + non signalées = toutes", all, flagged + scenario.itemCount(R.id.appList))
+
+                // Scrolled down in the unflagged apps, then back to "All": the flagged apps come first, so rows are inserted
                 // above the scroll position; the list must still start from the top.
+                scenario.awaitUntil { scenario.firstVisible() == 0 }
                 scenario.onActivity {
                     val list = it.findViewById<RecyclerView>(R.id.appList)
                     list.scrollToPosition(list.adapter!!.itemCount - 1)
@@ -108,32 +120,12 @@ class HomeAndStatsScreensTest {
                 assertTrue("the list is scrolled down", scenario.firstVisible() > 0)
 
                 scenario.click(R.id.filterAll)
-                scenario.awaitUntil { scenario.firstVisible() == 0 }
+                scenario.awaitUntil { scenario.itemCount(R.id.appList) == all && scenario.firstVisible() == 0 }
+                assertEquals("toutes les apps reviennent", all, scenario.itemCount(R.id.appList))
                 assertEquals("back at the top of the list", 0, scenario.firstVisible())
             }
         } finally {
             settings.setHideSystemApps(hideBefore)
-        }
-    }
-
-    private fun ActivityScenario<MainActivity>.firstVisible(): Int {
-        var position = -1
-        onActivity {
-            val manager = it.findViewById<RecyclerView>(R.id.appList).layoutManager as androidx.recyclerview.widget.LinearLayoutManager
-            position = manager.findFirstVisibleItemPosition()
-        }
-        return position
-    }
-
-    @Test
-    fun homeShowsTheNumberOfFlaggedAppsOnItsTab() {
-        ActivityScenario.launch(MainActivity::class.java).use { scenario ->
-            var label = ""
-            scenario.awaitUntil {
-                scenario.onActivity { label = it.findViewById<TextView>(R.id.filterFlagged).text.toString() }
-                label.contains("(0)").not() && label.contains("(")
-            }
-            assertTrue("l'onglet « signalées » affiche leur nombre : $label", Regex("\\([1-9]\\d*\\)").containsMatchIn(label))
         }
     }
 

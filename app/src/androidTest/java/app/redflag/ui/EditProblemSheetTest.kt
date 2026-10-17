@@ -8,12 +8,11 @@ import app.redflag.R
 import app.redflag.ui.common.EditProblemSheet
 import app.redflag.ui.settings.FaqActivity
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** The "Edit issue" bottom sheet : un intitulé long doit s'y lire en entier (il passe à la ligne). */
+/** The "Edit issue" bottom sheet: a long title must be readable in full (it wraps over several lines). */
 @RunWith(AndroidJUnit4::class)
 class EditProblemSheetTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -32,7 +31,7 @@ class EditProblemSheetTest {
         return checkNotNull(input) { "la fenêtre ne s'est pas ouverte" }
     }
 
-    /** Attend que le champ ait été mis en page (le nombre de lignes n'existe qu'ensuite). */
+    /** Waits until the field is laid out (the number of lines only exists then). */
     private fun ActivityScenario<FaqActivity>.lines(input: EditText): Int {
         // The sheet slides in: wait until the field has its final width and its line count stops changing.
         var count = 0
@@ -48,27 +47,25 @@ class EditProblemSheetTest {
         return count
     }
 
+    private fun ActivityScenario<FaqActivity>.closeSheet() = onActivity { activity ->
+        activity.supportFragmentManager.fragments.filterIsInstance<EditProblemSheet>().forEach { it.dismissNow() }
+    }
+
+    /** One scenario, one screen: a long title wraps over several lines, then a short one stays on a single line. */
     @Test
-    fun aLongCatalogLabelIsShownInFullOnSeveralLines() {
+    fun aLongTitleWrapsAndAShortOneStaysOnOneLine() {
         // A catalog title renamed by the user can be long: it must stay readable (the catalog titles themselves are short now).
         val label = "Worker exploitation in warehouses, delivery services and content moderation farms"
         assertTrue("l'intitulé de ce test est bien long", label.length > 60)
 
         ActivityScenario.launch(FaqActivity::class.java).use { scenario ->
-            val input = scenario.showEditDialog(label, catalog = true)
+            val long = scenario.showEditDialog(label, catalog = true)
+            assertEquals("le texte n'est pas coupé", label, long.text.toString())
+            assertTrue("il passe à la ligne au lieu de défiler sur une seule", scenario.lines(long) >= 2)
 
-            assertEquals("le texte n'est pas coupé", label, input.text.toString())
-            assertTrue("il passe à la ligne au lieu de défiler sur une seule", scenario.lines(input) >= 2)
-        }
-    }
-
-    @Test
-    fun aShortLabelStaysOnOneLine() {
-        ActivityScenario.launch(FaqActivity::class.java).use { scenario ->
-            val input = scenario.showEditDialog("Trop de pubs", catalog = false)
-
-            assertNotNull(input)
-            assertEquals(1, scenario.lines(input))
+            scenario.closeSheet()
+            val short = scenario.showEditDialog("Trop de pubs", catalog = false)
+            assertEquals("un titre court tient sur une ligne", 1, scenario.lines(short))
         }
     }
 }

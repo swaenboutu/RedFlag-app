@@ -1,24 +1,20 @@
 package app.redflag.ui
 
 import android.app.Instrumentation
-import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import app.redflag.R
-import app.redflag.container
 import app.redflag.data.loadFaq
 import app.redflag.ui.settings.FaqActivity
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
 import org.junit.Assume.assumeTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** The FAQ screen, really displayed, and how the drawer opens it. */
+/** The FAQ screen, really displayed (the drawer entry that opens it is checked in HomeScreenTest). */
 @RunWith(AndroidJUnit4::class)
 class FaqScreenTest {
     private val instrumentation: Instrumentation = InstrumentationRegistry.getInstrumentation()
@@ -40,35 +36,36 @@ class FaqScreenTest {
         while (itemCount() != expected && System.currentTimeMillis() < deadline) Thread.sleep(50)
     }
 
-    @Test
-    fun allThemesAreListedAndClosedAtFirst() {
-        ActivityScenario.launch(FaqActivity::class.java).use { scenario ->
-            scenario.awaitCount(faq.size)
-
-            assertEquals("un thème par ligne, tous fermés", faq.size, scenario.itemCount())
+    private fun ActivityScenario<FaqActivity>.textOfRow(position: Int, id: Int): String {
+        var text = ""
+        onActivity {
+            val holder = it.findViewById<RecyclerView>(R.id.list).findViewHolderForAdapterPosition(position)!!
+            text = holder.itemView.findViewById<TextView>(id).text.toString()
         }
+        return text
     }
 
+    /** One scenario on one screen: closed themes, a theme then a question opened, a rotation, then everything closed again. */
     @Test
-    fun tappingAThemeThenAQuestionRevealsTheQuestionsThenTheAnswer() {
+    fun themesAndQuestionsOpenCloseAndStayOpenAfterRotation() {
         ActivityScenario.launch(FaqActivity::class.java).use { scenario ->
             scenario.awaitCount(faq.size)
-            val questions = faq.first().entries.size
+            assertEquals("un thème par ligne, tous fermés", faq.size, scenario.itemCount())
 
+            val questions = faq.first().entries.size
             scenario.tapRow(0)
             scenario.awaitCount(faq.size + questions)
             assertEquals("les questions du thème apparaissent", faq.size + questions, scenario.itemCount())
 
             scenario.tapRow(1)
-            scenario.awaitCount(faq.size + questions + 1)
-            assertEquals("la réponse apparaît sous la question", faq.size + questions + 1, scenario.itemCount())
+            val open = faq.size + questions + 1
+            scenario.awaitCount(open)
+            assertEquals("la réponse apparaît sous la question", open, scenario.itemCount())
+            assertEquals(faq.first().entries.first().answer, scenario.textOfRow(2, R.id.answer))
 
-            var answer = ""
-            scenario.onActivity {
-                val holder = it.findViewById<RecyclerView>(R.id.list).findViewHolderForAdapterPosition(2)!!
-                answer = holder.itemView.findViewById<TextView>(R.id.answer).text.toString()
-            }
-            assertEquals(faq.first().entries.first().answer, answer)
+            scenario.recreate()
+            scenario.awaitCount(open)
+            assertEquals("après une rotation, la question reste ouverte", open, scenario.itemCount())
 
             scenario.tapRow(1)
             scenario.awaitCount(faq.size + questions)
@@ -77,24 +74,6 @@ class FaqScreenTest {
             assertEquals("tout se referme", faq.size, scenario.itemCount())
         }
     }
-
-    @Test
-    fun anOpenQuestionStaysOpenAfterRotation() {
-        ActivityScenario.launch(FaqActivity::class.java).use { scenario ->
-            scenario.awaitCount(faq.size)
-            scenario.tapRow(0)
-            scenario.awaitCount(faq.size + faq.first().entries.size)
-            scenario.tapRow(1)
-            val expected = faq.size + faq.first().entries.size + 1
-            scenario.awaitCount(expected)
-
-            scenario.recreate()
-
-            scenario.awaitCount(expected)
-            assertEquals(expected, scenario.itemCount())
-        }
-    }
-
 
     /** Changes the language of the app as Android does (settings), from a test: `adb shell cmd locale set-app-locales`. */
     private fun setAppLanguage(tag: String?) {
@@ -117,38 +96,10 @@ class FaqScreenTest {
         try {
             ActivityScenario.launch(FaqActivity::class.java).use { scenario ->
                 scenario.awaitCount(faq.size)
-                var title = ""
-                scenario.onActivity {
-                    val holder = it.findViewById<RecyclerView>(R.id.list).findViewHolderForAdapterPosition(0)!!
-                    title = holder.itemView.findViewById<TextView>(R.id.themeTitle).text.toString()
-                }
-
-                assertEquals("L’application", title)
+                assertEquals("L’application", scenario.textOfRow(0, R.id.themeTitle))
             }
         } finally {
             setAppLanguage(null)
-        }
-    }
-
-    @Test
-    fun theDrawerOpensTheFaqScreen() {
-        val settings = instrumentation.targetContext.container.settings
-        val onboardingBefore = settings.onboardingDone
-        settings.onboardingDone = true // the home screen must not send to the welcome tour
-        val monitor = instrumentation.addMonitor(FaqActivity::class.java.name, null, false)
-        try {
-            ActivityScenario.launch(app.redflag.ui.home.HomeActivity::class.java).use { scenario ->
-                scenario.onActivity { it.findViewById<View>(R.id.drawerFaq).performClick() }
-
-                val opened = monitor.waitForActivityWithTimeout(5_000)
-
-                assertNotNull("the drawer entry opens the FAQ screen", opened)
-                assertTrue(opened is FaqActivity)
-                instrumentation.runOnMainSync { opened.finish() }
-            }
-        } finally {
-            instrumentation.removeMonitor(monitor)
-            settings.onboardingDone = onboardingBefore
         }
     }
 }

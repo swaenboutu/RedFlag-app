@@ -56,38 +56,27 @@ class DebugModeScreenTest {
         while (debugVisibility() != expected && System.currentTimeMillis() < deadline) Thread.sleep(50)
     }
 
+    /** One scenario: hidden at first, still hidden after six taps, shown after seven, and kept when the screen comes back. */
     @Test
-    fun theDebugSectionIsHiddenAtFirst() {
+    fun theDebugSectionNeedsSevenTapsOnTheVersionAndIsKept() {
         ActivityScenario.launch(SettingsActivity::class.java).use { scenario ->
-            assertEquals(View.GONE, scenario.debugVisibility())
+            assertEquals("cachée au départ", View.GONE, scenario.debugVisibility())
         }
-    }
 
-    @Test
-    fun sixTapsOnTheVersionAreNotEnough() {
         tapVersion(DebugUnlock.TAPS_REQUIRED - 1)
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        ActivityScenario.launch(SettingsActivity::class.java).use { scenario ->
+        assertFalse("six appuis ne suffisent pas", settings.debugMode.value)
 
-            assertEquals(View.GONE, scenario.debugVisibility())
-            assertFalse(settings.debugMode.value)
-        }
-    }
-
-    @Test
-    fun sevenTapsShowTheDebugSectionAndItIsKept() {
         tapVersion(DebugUnlock.TAPS_REQUIRED)
         ActivityScenario.launch(SettingsActivity::class.java).use { scenario ->
             scenario.awaitVisibility(View.VISIBLE)
-
-            assertEquals(View.VISIBLE, scenario.debugVisibility())
+            assertEquals("visible après sept appuis", View.VISIBLE, scenario.debugVisibility())
             assertTrue("le mode est enregistré", settings.debugMode.value)
-        }
 
-        // Back on the screen (or after a restart of the app), the section is still there without tapping again.
-        ActivityScenario.launch(SettingsActivity::class.java).use { scenario ->
+            // Back on the screen (or after a restart of the app), the section is still there without tapping again.
+            scenario.recreate()
             scenario.awaitVisibility(View.VISIBLE)
-            assertEquals(View.VISIBLE, scenario.debugVisibility())
+            assertEquals("toujours là quand l'écran revient", View.VISIBLE, scenario.debugVisibility())
         }
     }
 }

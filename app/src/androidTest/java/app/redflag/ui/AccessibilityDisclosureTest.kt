@@ -75,56 +75,48 @@ class AccessibilityDisclosureTest {
     private fun ActivityScenario<SettingsActivity>.tapPermissionsRow() =
         onActivity { it.findViewById<View>(R.id.rowPermissions).performClick() }
 
+    /**
+     * One scenario on the Settings screen: the permissions row shows the warning first (Android's settings stay closed), the
+     * warning says what is read and what is not shared, "Cancel" opens nothing, and agreeing opens Android's settings once.
+     */
     @Test
-    fun theSettingsRowAsksBeforeOpeningAndroidSettings() {
-        ActivityScenario.launch(SettingsActivity::class.java).use { scenario ->
-            scenario.tapPermissionsRow()
-
-            assertNotNull("l'avertissement s'affiche", scenario.disclosure())
-            assertEquals("les réglages d'Android ne sont pas encore ouverts", 0, monitor.hits)
-        }
-    }
-
-    @Test
-    fun theDisclosureNamesWhatIsReadAndWhatIsNotShared() {
+    fun theWarningComesFirstExplainsItselfAndOnlyAgreeingOpensAndroidSettings() {
         ActivityScenario.launch(SettingsActivity::class.java).use { scenario ->
             scenario.tapPermissionsRow()
             val dialog = scenario.disclosure()
-            assertNotNull(dialog)
+            assertNotNull("l'avertissement s'affiche", dialog)
+            assertEquals("les réglages d'Android ne sont pas encore ouverts", 0, monitor.hits)
 
             var text = ""
             scenario.onActivity { text = (dialog!!.dialog as AlertDialog).findViewById<TextView>(android.R.id.message)!!.text.toString() }
-
             assertTrue("dit ce qui est lu : le nom de l'app au premier plan", text.contains("foreground", true) || text.contains("premier plan", true))
             assertTrue("dit que rien ne quitte l'appareil", text.contains("leaves your device") || text.contains("ne quitte"))
-        }
-    }
-
-    @Test
-    fun cancellingDoesNotOpenAndroidSettings() {
-        ActivityScenario.launch(SettingsActivity::class.java).use { scenario ->
-            scenario.tapPermissionsRow()
-            assertNotNull(scenario.disclosure())
 
             scenario.press(DialogInterface.BUTTON_NEGATIVE)
             instrumentation.waitForIdleSync() // the settings would be opened right from the click
+            assertEquals("« Annuler » n'ouvre rien", 0, monitor.hits)
 
-            assertEquals(0, monitor.hits)
+            scenario.awaitNoDisclosure()
+            scenario.tapPermissionsRow()
+            assertNotNull("l'avertissement revient", scenario.disclosure())
+            scenario.press(DialogInterface.BUTTON_POSITIVE)
+            val deadline = System.currentTimeMillis() + 5_000
+            while (monitor.hits == 0 && System.currentTimeMillis() < deadline) Thread.sleep(50)
+            assertEquals("« Accepter et continuer » ouvre les réglages d'accessibilité", 1, monitor.hits)
         }
     }
 
-    @Test
-    fun agreeingOpensAndroidSettings() {
-        ActivityScenario.launch(SettingsActivity::class.java).use { scenario ->
-            scenario.tapPermissionsRow()
-            assertNotNull(scenario.disclosure())
-
-            scenario.press(DialogInterface.BUTTON_POSITIVE)
-
-            val deadline = System.currentTimeMillis() + 5_000
-            while (monitor.hits == 0 && System.currentTimeMillis() < deadline) Thread.sleep(50)
-
-            assertEquals("« Accepter et continuer » ouvre les réglages d'accessibilité", 1, monitor.hits)
+    /** Waits (at most 5 s) until the cancelled warning is gone, so that the next tap shows a new one. */
+    private fun <A : AppCompatActivity> ActivityScenario<A>.awaitNoDisclosure() {
+        val deadline = System.currentTimeMillis() + 5_000
+        while (System.currentTimeMillis() < deadline) {
+            var shown = true
+            onActivity {
+                it.supportFragmentManager.executePendingTransactions()
+                shown = it.supportFragmentManager.fragments.any { f -> f is AccessibilityDisclosureDialog }
+            }
+            if (!shown) return
+            Thread.sleep(50)
         }
     }
 }

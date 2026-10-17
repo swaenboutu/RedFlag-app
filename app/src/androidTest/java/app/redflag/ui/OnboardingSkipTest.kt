@@ -25,7 +25,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
-import org.junit.Assume.assumeTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -95,99 +94,67 @@ class OnboardingSkipTest {
         while (!condition() && System.currentTimeMillis() < deadline) Thread.sleep(50)
     }
 
+    /**
+     * One scenario on the issues step: nothing chosen, "Continue" is off; more than three issues can be chosen (no counter, no
+     * limit); "Skip" opens the list of all apps and "Continue" the apps of the issues.
+     */
     @Test
-    fun skippingTheProblemsLeadsToTheListOfAllApps() {
-        ActivityScenario.launch(OnboardingProblemsActivity::class.java).use { scenario ->
-            assertTrue(scenario.tapOpens<OnboardingProblemsActivity, OnboardingAppListActivity>(R.id.btnSkip))
-        }
-    }
-
-    @Test
-    fun theProblemsStepStillNeedsAChoiceToContinue() = runBlocking {
+    fun theProblemsStepNeedsAChoiceAcceptsMoreThanThreeAndLeadsOnBothWays() = runBlocking {
         refs.forEach { repository.setFavorite(it, false) }
         ActivityScenario.launch(OnboardingProblemsActivity::class.java).use { scenario ->
             scenario.await { !scenario.isEnabled(R.id.btnContinue) }
             assertFalse("rien de choisi : « Continuer » reste désactivé", scenario.isEnabled(R.id.btnContinue))
 
-            repository.setFavorite(refs[0], true)
+            refs.take(5).forEach { repository.setFavorite(it, true) }
             scenario.await { scenario.isEnabled(R.id.btnContinue) }
-            assertTrue(scenario.isEnabled(R.id.btnContinue))
-            assertTrue(scenario.tapOpens<OnboardingProblemsActivity, OnboardingAppsActivity>(R.id.btnContinue))
-        }
-    }
-
-    @Test
-    fun moreThanThreeProblemsCanBeChosenFromTheScreen() = runBlocking {
-        refs.forEach { repository.setFavorite(it, false) }
-        refs.take(5).forEach { repository.setFavorite(it, true) }
-
-        ActivityScenario.launch(OnboardingProblemsActivity::class.java).use { scenario ->
-            scenario.await { scenario.isEnabled(R.id.btnContinue) }
-
-            assertTrue(scenario.isEnabled(R.id.btnContinue))
+            assertTrue("cinq enjeux choisis : « Continuer » est actif", scenario.isEnabled(R.id.btnContinue))
             assertEquals("plus de compteur ni de limite à l'écran", View.VISIBLE, scenario.visibility(R.id.btnSkip))
+
+            assertTrue("« Passer » mène à la liste de toutes les apps",
+                scenario.tapOpens<OnboardingProblemsActivity, OnboardingAppListActivity>(R.id.btnSkip))
+            assertTrue("« Continuer » mène aux apps des enjeux",
+                scenario.tapOpens<OnboardingProblemsActivity, OnboardingAppsActivity>(R.id.btnContinue))
         }
     }
 
+    /**
+     * One scenario on the list of all apps: the installed apps are listed, a row opens the welcome-tour version of the app's page,
+     * "Next" waits for a flagged app, and both "Next" and "Skip" lead to the permissions.
+     */
     @Test
-    fun theListOfAllAppsLeadsToThePermissionsWhateverTheChoice() {
-        assumeUserApps(context, 1)
-        ActivityScenario.launch(OnboardingAppListActivity::class.java).use { scenario ->
-            scenario.await {
-                var count = 0
-                scenario.onActivity { count = it.findViewById<RecyclerView>(R.id.appList).adapter?.itemCount ?: 0 }
-                count > 0
-            }
-            var count = 0
-            scenario.onActivity { count = it.findViewById<RecyclerView>(R.id.appList).adapter?.itemCount ?: 0 }
-            assertTrue("les applications installées sont listées", count > 0)
-
-            assertTrue(scenario.tapOpens<OnboardingAppListActivity, OnboardingPermissionActivity>(R.id.btnSkip))
-        }
-    }
-
-    @Test
-    fun nextOnTheListOfAllAppsIsEnabledOnceAnAppIsFlagged() = runBlocking {
+    fun theListOfAllAppsOpensTheTourDetailAndLeadsToThePermissions() = runBlocking {
         assumeUserApps(context, 1)
         val pkg = context.container.installedApps.list(hideSystemApps = true)
             .first { repository.find(it.packageName) == null }.packageName
         flaggedPackage = pkg
-
-        ActivityScenario.launch(OnboardingAppListActivity::class.java).use { scenario ->
-            instrumentation.waitForIdleSync()
-            val alreadyFlagged = repository.monitoredApps.first().isNotEmpty()
-            if (!alreadyFlagged) assertFalse("aucune app signalée : « Suivant » désactivé", scenario.isEnabled(R.id.btnNext))
-
-            repository.linkProblem(pkg, "App", ProblemRef.catalog("fomo"))
-            scenario.await { scenario.isEnabled(R.id.btnNext) }
-
-            assertTrue(scenario.isEnabled(R.id.btnNext))
-            assertTrue(scenario.tapOpens<OnboardingAppListActivity, OnboardingPermissionActivity>(R.id.btnNext))
-        }
-    }
-
-
-    @Test
-    fun anAppOfTheListOpensTheOnboardingVersionOfItsDetail() {
-        assumeUserApps(context, 1)
         val onboarding = instrumentation.addMonitor(OnboardingAppDetailActivity::class.java.name, null, false)
         val regular = instrumentation.addMonitor(AppDetailActivity::class.java.name, null, false)
         try {
             ActivityScenario.launch(OnboardingAppListActivity::class.java).use { scenario ->
+                var count = 0
                 scenario.await {
-                    var ready = false
-                    scenario.onActivity { ready = (it.findViewById<RecyclerView>(R.id.appList).adapter?.itemCount ?: 0) > 0 }
-                    ready
+                    scenario.onActivity { count = it.findViewById<RecyclerView>(R.id.appList).adapter?.itemCount ?: 0 }
+                    count > 0
                 }
+                assertTrue("les applications installées sont listées", count > 0)
+
                 scenario.onActivity {
                     it.findViewById<RecyclerView>(R.id.appList).findViewHolderForAdapterPosition(0)!!.itemView.performClick()
                 }
-
                 val opened = onboarding.waitForActivityWithTimeout(3_000)
-
                 assertNotNull("l'écran de l'accueil s'ouvre", opened)
                 assertEquals("pas la fiche habituelle, avec sa barre du bas", 0, regular.hits)
                 instrumentation.runOnMainSync { opened.finish() }
+
+                val alreadyFlagged = repository.monitoredApps.first().isNotEmpty()
+                if (!alreadyFlagged) assertFalse("aucune app signalée : « Suivant » désactivé", scenario.isEnabled(R.id.btnNext))
+                repository.linkProblem(pkg, "App", ProblemRef.catalog("fomo"))
+                scenario.await { scenario.isEnabled(R.id.btnNext) }
+                assertTrue("une app signalée : « Suivant » actif", scenario.isEnabled(R.id.btnNext))
+                assertTrue("« Suivant » mène aux autorisations",
+                    scenario.tapOpens<OnboardingAppListActivity, OnboardingPermissionActivity>(R.id.btnNext))
+                assertTrue("« Passer » aussi, quel que soit le choix",
+                    scenario.tapOpens<OnboardingAppListActivity, OnboardingPermissionActivity>(R.id.btnSkip))
             }
         } finally {
             instrumentation.removeMonitor(onboarding)
@@ -270,28 +237,25 @@ class OnboardingSkipTest {
     }
 
 
+    /**
+     * The permissions step, whatever the state of the accessibility service on the device: service already on, the screen stays
+     * (it does not finish the tour by itself) and says so; service off, its "Skip" button finishes the welcome tour.
+     */
     @Test
-    fun withTheServiceAlreadyOnTheScreenStaysAndOffersToFinish() {
-        ActivityScenario.launch(OnboardingPermissionActivity::class.java).use { scenario ->
-            assumeTrue(app.redflag.service.isFrictionServiceEnabled(context))
-            instrumentation.waitForIdleSync()
-
-            // Not coming from the settings: the screen did not finish the welcome tour by itself.
-            assertEquals(androidx.lifecycle.Lifecycle.State.RESUMED, scenario.state)
-            assertEquals(View.VISIBLE, scenario.visibility(R.id.status))
-        }
-    }
-
-    @Test
-    fun theSkipButtonOfThePermissionsStepFinishesTheOnboarding() {
+    fun thePermissionsStepStaysWhenTheServiceIsOnAndCanBeSkippedWhenItIsOff() {
         val before = context.container.settings.onboardingDone
         try {
             ActivityScenario.launch(OnboardingPermissionActivity::class.java).use { scenario ->
-                // The "Skip" button only exists while the accessibility service is off: otherwise the test is skipped.
-                assumeTrue(scenario.visibility(R.id.btnLater) == View.VISIBLE)
-
-                assertTrue(scenario.tapOpens<OnboardingPermissionActivity, HomeActivity>(R.id.btnLater))
-                assertTrue("l'accueil est marqué comme terminé", context.container.settings.onboardingDone)
+                if (app.redflag.service.isFrictionServiceEnabled(context)) {
+                    instrumentation.waitForIdleSync()
+                    // Not coming from the settings: the screen did not finish the welcome tour by itself.
+                    assertEquals(androidx.lifecycle.Lifecycle.State.RESUMED, scenario.state)
+                    assertEquals(View.VISIBLE, scenario.visibility(R.id.status))
+                } else {
+                    assertEquals("service désactivé : le bouton « Passer » est là", View.VISIBLE, scenario.visibility(R.id.btnLater))
+                    assertTrue(scenario.tapOpens<OnboardingPermissionActivity, HomeActivity>(R.id.btnLater))
+                    assertTrue("l'accueil est marqué comme terminé", context.container.settings.onboardingDone)
+                }
             }
         } finally {
             context.container.settings.onboardingDone = before

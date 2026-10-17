@@ -153,8 +153,8 @@ device_classes_for_changes() {
                     */data/InstalledAppsProvider.kt) add data.InstalledAppsProviderTest ;;&
                     # Home screen (the launcher), its drawer (Settings, FAQ, About) and the welcome tour it may open.
                     */ui/home/HomeActivity.kt|*/ui/home/PauseSheet.kt|*/layout/activity_home.xml|*/ui/common/AppDrawer.kt|*/layout/view_drawer.xml)
-                        add ui.HomeTabTest; add ui.ForcedOnboardingTest; add ui.DebugModeScreenTest; add ui.FaqScreenTest ;;&
-                    */ui/common/BottomNav.kt|*/layout/view_bottom_nav.xml) add ui.HomeTabTest; add ui.DetailScreensTest; add ui.HomeAndStatsScreensTest ;;&
+                        add ui.HomeScreenTest; add ui.ForcedOnboardingTest; add ui.DebugModeScreenTest ;;&
+                    */ui/common/BottomNav.kt|*/layout/view_bottom_nav.xml) add ui.HomeScreenTest; add ui.DetailScreensTest; add ui.HomeAndStatsScreensTest ;;&
                     # Apps and Statistics tabs.
                     */ui/apps/MainActivity.kt|*/ui/apps/AppListAdapter.kt|*/layout/activity_main.xml|*/layout/item_app.xml|*/ui/stats/StatsActivity.kt|*/ui/stats/StatsAdapter.kt|*/layout/activity_stats.xml|*/layout/item_stats_app.xml)
                         add ui.HomeAndStatsScreensTest ;;&

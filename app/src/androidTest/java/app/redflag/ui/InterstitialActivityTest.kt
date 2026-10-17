@@ -19,8 +19,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * L'écran d'interruption est en `singleTask` : quand il est déjà ouvert pour une app et qu'une autre app à interrompre
- * passe au premier plan, Android le réutilise. Il doit alors se mettre à jour (bug déjà rencontré : il restait sur la première app).
+ * The interruption screen is `singleTask`: when it is already open for an app and another app to interrupt comes to the
+ * foreground, Android reuses it. It must then update itself (a bug seen before: it stayed on the first app).
  */
 @RunWith(AndroidJUnit4::class)
 class InterstitialActivityTest {
@@ -46,7 +46,7 @@ class InterstitialActivityTest {
         repository.unlinkProblem(appB, ProblemRef.catalog("racism"))
     }
 
-    /** Attend (au plus 5 s) que l'écran affiche [expected] : le chargement se fait en arrière-plan. */
+    /** Waits (at most 5 s) until the screen shows [expected]: it loads in the background. */
     private fun ActivityScenario<InterstitialActivity>.waitForAppName(expected: String): String {
         var shown = ""
         val deadline = System.currentTimeMillis() + 5_000
@@ -58,7 +58,7 @@ class InterstitialActivityTest {
         return if (shown.contains(expected)) expected else shown
     }
 
-    /** Ce que fait Android quand il réutilise l'écran : il appelle `onNewIntent` (protégé) avec le nouvel intent. */
+    /** What Android does when it reuses the screen: it calls `onNewIntent` (protected) with the new intent. */
     private fun ActivityScenario<InterstitialActivity>.deliverNewIntent(intent: android.content.Intent) {
         onActivity { InstrumentationRegistry.getInstrumentation().callActivityOnNewIntent(it, intent) }
     }
@@ -71,41 +71,84 @@ class InterstitialActivityTest {
 
     private fun answers(pkg: String) = runBlocking { repository.choiceEvents.first() }.count { it.packageName == pkg }
 
-    /** Attend (au plus 3 s) que [pkg] ait au moins [expected] réponses enregistrées : l'écriture est asynchrone. */
+    /** Waits (at most 3 s) until [pkg] has at least [expected] answers recorded: the write is asynchronous. */
     private fun awaitAnswers(pkg: String, expected: Int) {
         val deadline = System.currentTimeMillis() + 3_000
         while (answers(pkg) < expected && System.currentTimeMillis() < deadline) Thread.sleep(50)
     }
 
     /**
-     * Quitter l'écran avec le bouton Accueil : il passe à l'arrière-plan (onStop) sans qu'aucune réponse n'ait été donnée.
-     * On appelle onStop directement : déplacer l'écran vers l'état « créé » avec ActivityScenario prend près d'une minute.
+     * Leaving the screen with the Home button: it goes to the background (onStop) without any answer given.
+     * onStop is called directly: moving the screen to the "created" state with ActivityScenario takes almost a minute.
      */
     private fun ActivityScenario<InterstitialActivity>.leaveWithHome() =
         onActivity { InstrumentationRegistry.getInstrumentation().callActivityOnStop(it) }
 
-    /** Revenir sur l'écran (onStart), par exemple depuis les applications récentes. */
+    /** Coming back to the screen (onStart), for example from the recent apps. */
     private fun ActivityScenario<InterstitialActivity>.comeBack() =
         onActivity { InstrumentationRegistry.getInstrumentation().callActivityOnStart(it) }
 
+    /**
+     * One scenario on one screen, as a user would live it: the screen shows the app (and stays on it when the same app comes back),
+     * a rotation is not a refusal, leaving without answering counts one refusal per display, a reused screen follows the new app
+     * (all its issues listed) and its refusals go to that app, and "No" records a refusal for the app shown.
+     */
     @Test
-    fun eachDisplayLeftWithoutAnsweringCountsOneRefusal() {
+    fun theScreenFollowsTheAppShownAndCountsOneRefusalPerDisplay() {
         ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
-            scenario.waitForAppName("Application A")
-            val before = answers(appA)
+            assertEquals("Application A", scenario.waitForAppName("Application A"))
+            assertTrue(scenario.text(R.id.subtitle).contains("Application A"))
 
+            // The same app coming back: nothing changes.
+            scenario.deliverNewIntent(InterstitialActivity.intent(context, appA))
+            assertEquals("Application A", scenario.waitForAppName("Application A"))
+
+            // A rotation recreates the screen: it is not a refusal.
+            var before = answers(appA)
+            scenario.recreate()
+            scenario.waitForAppName("Application A")
+            Thread.sleep(300) // nothing must be written: give a wrong write the time to happen
+            assertEquals("recréer l'écran ne compte pas", before, answers(appA))
+
+            // Leaving with the Home button: one refusal per display, not one per exit.
             scenario.leaveWithHome()
             awaitAnswers(appA, before + 1)
             assertEquals("la sortie est comptée comme un refus", before + 1, answers(appA))
-
             scenario.leaveWithHome()
             Thread.sleep(300)
             assertEquals("une seule fois par affichage", before + 1, answers(appA))
-
             scenario.comeBack()
             scenario.leaveWithHome()
             awaitAnswers(appA, before + 2)
             assertEquals("deux affichages, deux refus", before + 2, answers(appA))
+
+            // Another app to interrupt comes to the foreground: Android reuses the screen, which follows the new app.
+            scenario.comeBack()
+            scenario.deliverNewIntent(InterstitialActivity.intent(context, appB))
+            assertEquals("Application B", scenario.waitForAppName("Application B"))
+            assertTrue("le sous-titre cite la nouvelle app", scenario.text(R.id.subtitle).contains("Application B"))
+            val problems = scenario.text(R.id.problems)
+            val sexismLabel = context.getString(R.string.problem_sexism)
+            val racismLabel = context.getString(R.string.problem_racism)
+            assertTrue("les deux problématiques sont listées", problems.contains(sexismLabel) && problems.contains(racismLabel))
+
+            before = answers(appA)
+            var beforeB = answers(appB)
+            scenario.leaveWithHome()
+            awaitAnswers(appB, beforeB + 1)
+            assertEquals("A n'est pas concernée", before, answers(appA))
+            assertEquals("B reçoit le refus", beforeB + 1, answers(appB))
+
+            // "No": a refusal for the app shown (B), nothing for the first one.
+            scenario.comeBack()
+            beforeB = answers(appB)
+            scenario.onActivity { it.findViewById<android.view.View>(R.id.btnBack).performClick() }
+            awaitAnswers(appB, beforeB + 1)
+            Thread.sleep(300)
+            val refusalsB = runBlocking { repository.choiceEvents.first() }.filter { it.packageName == appB }.takeLast(1)
+            assertEquals("le refus est enregistré pour l'app affichée (B)", beforeB + 1, answers(appB))
+            assertTrue("c'est bien un refus", refusalsB.single().let { !it.proceeded })
+            assertEquals("rien pour la première app (A)", before, answers(appA))
         }
     }
 
@@ -116,84 +159,12 @@ class InterstitialActivityTest {
             val before = answers(appA)
 
             scenario.onActivity { it.findViewById<android.view.View>(R.id.btnContinue).performClick() }
-            Thread.sleep(500)
+            awaitAnswers(appA, before + 1)
+            Thread.sleep(300) // a refusal written on leaving would come right after
 
             val events = runBlocking { repository.choiceEvents.first() }.filter { it.packageName == appA }
             assertEquals("une seule réponse enregistrée", before + 1, events.size)
             assertTrue("c'est un Oui", events.last().proceeded)
-        }
-    }
-
-    @Test
-    fun rotatingTheScreenIsNotARefusal() {
-        ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
-            scenario.waitForAppName("Application A")
-            val before = answers(appA)
-
-            scenario.recreate()
-            Thread.sleep(500)
-
-            assertEquals("recréer l'écran ne compte pas", before, answers(appA))
-        }
-    }
-
-    @Test
-    fun leavingCountsForTheAppShownAtThatMoment() {
-        ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
-            scenario.waitForAppName("Application A")
-            scenario.deliverNewIntent(InterstitialActivity.intent(context, appB))
-            scenario.waitForAppName("Application B")
-            val beforeA = answers(appA)
-            val beforeB = answers(appB)
-
-            scenario.leaveWithHome()
-            awaitAnswers(appB, beforeB + 1)
-
-            assertEquals("A n'est pas concernée", beforeA, answers(appA))
-            assertEquals("B reçoit le refus", beforeB + 1, answers(appB))
-        }
-    }
-
-    @Test
-    fun showsTheAppAndFollowsTheAppItIsReusedFor() {
-        ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
-            assertEquals("Application A", scenario.waitForAppName("Application A"))
-            assertTrue(scenario.text(R.id.subtitle).contains("Application A"))
-
-            // La même app qui revient : rien ne change.
-            scenario.deliverNewIntent(InterstitialActivity.intent(context, appA))
-            assertEquals("Application A", scenario.waitForAppName("Application A"))
-
-            // Une autre app à interrompre passe au premier plan : Android réutilise l'écran existant.
-            scenario.deliverNewIntent(InterstitialActivity.intent(context, appB))
-            assertEquals("Application B", scenario.waitForAppName("Application B"))
-            assertTrue("le sous-titre cite la nouvelle app", scenario.text(R.id.subtitle).contains("Application B"))
-
-            // Toutes les problématiques de l'app sont listées, sans « et N autres ».
-            val problems = scenario.text(R.id.problems)
-            val sexismLabel = context.getString(R.string.problem_sexism)
-            val racismLabel = context.getString(R.string.problem_racism)
-            assertTrue("les deux problématiques sont listées", problems.contains(sexismLabel) && problems.contains(racismLabel))
-        }
-    }
-
-    @Test
-    fun answeringNoRecordsARefusalForTheCurrentApp() {
-        ActivityScenario.launch<InterstitialActivity>(InterstitialActivity.intent(context, appA)).use { scenario ->
-            scenario.waitForAppName("Application A")
-            scenario.deliverNewIntent(InterstitialActivity.intent(context, appB))
-            scenario.waitForAppName("Application B")
-
-            val beforeA = answers(appA)
-            val beforeB = answers(appB)
-            scenario.onActivity { it.findViewById<android.view.View>(R.id.btnBack).performClick() }
-            awaitAnswers(appB, beforeB + 1)
-            Thread.sleep(300)
-
-            val refusalsB = runBlocking { repository.choiceEvents.first() }.filter { it.packageName == appB }.takeLast(1)
-            assertEquals("le refus est enregistré pour l'app affichée (B)", beforeB + 1, answers(appB))
-            assertTrue("c'est bien un refus", refusalsB.single().let { !it.proceeded })
-            assertEquals("rien pour la première app (A)", beforeA, answers(appA))
         }
     }
 }

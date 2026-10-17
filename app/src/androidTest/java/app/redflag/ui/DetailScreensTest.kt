@@ -44,41 +44,34 @@ class DetailScreensTest {
         return if (finishing) Lifecycle.State.DESTROYED else state
     }
 
+    /** One scenario per screen family: an app's page, then its statistics (also after being recreated), stay open. */
     @Test
-    fun appStatisticsStayOpenEvenAfterBeingRecreated() {
-        ActivityScenario.launch<AppStatsActivity>(AppStatsActivity.intent(context, pkg, "Application détail")).use { scenario ->
-            assertEquals(Lifecycle.State.RESUMED, scenario.staysResumed())
-            scenario.recreate()
-            assertEquals(Lifecycle.State.RESUMED, scenario.staysResumed())
-        }
-    }
-
-    @Test
-    fun appDetailAndProblemDetailStayOpen() {
+    fun anAppPageAndItsStatisticsStayOpen() {
         ActivityScenario.launch<AppDetailActivity>(AppDetailActivity.intent(context, pkg, "Application détail")).use { scenario ->
-            assertEquals(Lifecycle.State.RESUMED, scenario.staysResumed())
+            assertEquals("la fiche de l'app reste ouverte", Lifecycle.State.RESUMED, scenario.staysResumed())
         }
-        ActivityScenario.launch<ProblemDetailActivity>(ProblemDetailActivity.intent(context, ref)).use { scenario ->
-            assertEquals(Lifecycle.State.RESUMED, scenario.staysResumed())
+        ActivityScenario.launch<AppStatsActivity>(AppStatsActivity.intent(context, pkg, "Application détail")).use { scenario ->
+            assertEquals("les statistiques restent ouvertes", Lifecycle.State.RESUMED, scenario.staysResumed())
+            scenario.recreate()
+            assertEquals("même après avoir été recréées", Lifecycle.State.RESUMED, scenario.staysResumed())
         }
     }
 
+    /** An issue's page stays open, and a long list of linked apps is shown in full and scrolls with the page. */
     @Test
-    fun aLongListOfLinkedAppsIsShownInFullAndScrollsWithThePage() {
+    fun anIssuePageStaysOpenAndShowsALongListOfAppsInFull() {
         val extra = (1..30).map { "test.detail.many$it" }
         runBlocking { extra.forEach { repository.linkProblem(it, "Many $it", ref) } }
         try {
             ActivityScenario.launch<ProblemDetailActivity>(ProblemDetailActivity.intent(context, ref)).use { scenario ->
+                assertEquals("la page de l'enjeu reste ouverte", Lifecycle.State.RESUMED, scenario.staysResumed())
+
                 var rows = 0
                 var listHeight = 0
                 val screen = context.resources.displayMetrics.heightPixels
                 val deadline = System.currentTimeMillis() + 5_000
                 while (rows < extra.size && System.currentTimeMillis() < deadline) {
-                    scenario.onActivity {
-                        val list = it.findViewById<android.widget.LinearLayout>(app.redflag.R.id.linkedApps)
-                        rows = list.childCount
-                        listHeight = list.height
-                    }
+                    scenario.onActivity { rows = it.findViewById<android.widget.LinearLayout>(app.redflag.R.id.linkedApps).childCount }
                     if (rows < extra.size) Thread.sleep(100)
                 }
                 InstrumentationRegistry.getInstrumentation().waitForIdleSync() // the rows are laid out

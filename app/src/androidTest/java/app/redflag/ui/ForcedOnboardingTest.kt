@@ -17,8 +17,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * Le réglage de debug « Toujours afficher l'accueil » : l'accueil s'affiche à chaque lancement depuis l'icône de l'app, même
- * quand le processus reste en vie (le service d'accessibilité l'empêche de s'arrêter, c'est ce qui avait rendu le réglage inopérant).
+ * The debug setting "Always show the welcome tour": the tour shows at every launch from the app icon, even when the process
+ * stays alive (the accessibility service keeps it running, which had made the setting useless).
  */
 @RunWith(AndroidJUnit4::class)
 class ForcedOnboardingTest {
@@ -33,7 +33,7 @@ class ForcedOnboardingTest {
     fun setUp() {
         doneBefore = settings.onboardingDone
         debugBefore = settings.debugMode.value
-        settings.enableDebugMode() // le réglage « toujours afficher l'accueil » n'existe qu'en mode debug
+        settings.enableDebugMode() // the "always show the welcome tour" setting only exists in debug mode
         alwaysBefore = settings.alwaysShowOnboarding.value
         settings.onboardingDone = true
     }
@@ -49,7 +49,7 @@ class ForcedOnboardingTest {
         .addCategory(Intent.CATEGORY_LAUNCHER)
         .setComponent(ComponentName(context, HomeActivity::class.java))
 
-    /** Lance l'app et dit si l'écran d'accueil s'est ouvert. */
+    /** Launches the app and tells whether the welcome tour opened. */
     private fun onboardingOpensFor(intent: Intent): Boolean {
         val monitor = instrumentation.addMonitor(OnboardingActivity::class.java.name, null, false)
         try {
@@ -63,28 +63,20 @@ class ForcedOnboardingTest {
         }
     }
 
+    /**
+     * One scenario: setting off, the icon opens no welcome tour; setting on, every launch from the icon shows it (twice in a row in
+     * the same process); and coming back to the home screen from a tab does not restart it.
+     */
     @Test
-    fun everyLaunchFromTheIconShowsTheOnboardingWhenForced() {
-        settings.setAlwaysShowOnboarding(true)
-
-        // Deux lancements de suite dans le même processus : le second montre l'accueil aussi.
-        assertTrue(onboardingOpensFor(launcherIntent()))
-        assertTrue(onboardingOpensFor(launcherIntent()))
-    }
-
-    @Test
-    fun theSettingOffKeepsTheOnboardingHidden() {
+    fun theSettingDecidesWhetherEveryLaunchFromTheIconShowsTheOnboarding() {
         settings.setAlwaysShowOnboarding(false)
+        assertFalse("réglage éteint : pas d'accueil", onboardingOpensFor(launcherIntent()))
 
-        assertFalse(onboardingOpensFor(launcherIntent()))
-    }
-
-    @Test
-    fun returningToTheHomeScreenFromAnotherScreenOfTheAppDoesNotRestartTheOnboarding() {
         settings.setAlwaysShowOnboarding(true)
+        assertTrue("réglage allumé : l'accueil s'affiche", onboardingOpensFor(launcherIntent()))
+        assertTrue("et encore au lancement suivant, dans le même processus", onboardingOpensFor(launcherIntent()))
 
-        // Les onglets rouvrent l'écran principal par un intent sans catégorie « lanceur » : pas d'accueil.
-        val fromTabs = Intent(context, HomeActivity::class.java)
-        assertFalse(onboardingOpensFor(fromTabs))
+        // The tabs open the home screen again with an intent without the launcher category: no welcome tour.
+        assertFalse("depuis les onglets : pas d'accueil", onboardingOpensFor(Intent(context, HomeActivity::class.java)))
     }
 }
