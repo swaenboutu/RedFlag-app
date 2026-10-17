@@ -18,8 +18,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * Les écrans de détail (fiche d'une app, statistiques d'une app) restent ouverts : ils portent la barre de navigation, et
- * remettre l'onglet en surbrillance au retour sur l'écran ne doit surtout pas les refermer (régression déjà rencontrée).
+ * The detail screens (an app's page, an app's statistics) stay open: they carry the navigation bar, and highlighting the tab
+ * again when coming back to the screen must never close them (a regression seen before).
  */
 @RunWith(AndroidJUnit4::class)
 class DetailScreensTest {
@@ -35,9 +35,13 @@ class DetailScreensTest {
     fun tearDown() = runBlocking { repository.unlinkProblem(pkg, ref) }
 
     private fun <A : androidx.appcompat.app.AppCompatActivity> ActivityScenario<A>.staysResumed(): Lifecycle.State {
-        // Laisse le temps à un éventuel finish() déclenché au retour sur l'écran (onResume).
-        Thread.sleep(1_000)
-        return state
+        // A finish() triggered when the screen comes back (onResume) runs on the main thread: once it is idle, the screen is
+        // either still resumed or already finishing.
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        if (state != Lifecycle.State.RESUMED) return state
+        var finishing = false
+        onActivity { finishing = it.isFinishing }
+        return if (finishing) Lifecycle.State.DESTROYED else state
     }
 
     @Test
@@ -77,7 +81,7 @@ class DetailScreensTest {
                     }
                     if (rows < extra.size) Thread.sleep(100)
                 }
-                Thread.sleep(500)
+                InstrumentationRegistry.getInstrumentation().waitForIdleSync() // the rows are laid out
                 scenario.onActivity { listHeight = it.findViewById<android.view.View>(app.redflag.R.id.linkedApps).height }
 
                 assert(rows >= extra.size + 1) { "une ligne par app liée : $rows" }

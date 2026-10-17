@@ -30,7 +30,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** Le parcours d'accueil peut être passé à chaque étape : problématiques, applications, autorisations. */
+/** The welcome tour can be skipped at every step: issues, apps, permissions. */
 @RunWith(AndroidJUnit4::class)
 class OnboardingSkipTest {
     private val instrumentation: Instrumentation = InstrumentationRegistry.getInstrumentation()
@@ -52,7 +52,7 @@ class OnboardingSkipTest {
         Unit
     }
 
-    /** Touche [id] et dit si l'écran [next] s'est ouvert en réponse. */
+    /** Taps [id] and tells whether the screen [N] opened in response. */
     private inline fun <reified A : Activity, reified N : Activity> ActivityScenario<A>.tapOpens(id: Int): Boolean {
         val monitor = instrumentation.addMonitor(N::class.java.name, null, false)
         try {
@@ -75,6 +75,19 @@ class OnboardingSkipTest {
         var value = -1
         onActivity { value = it.findViewById<View>(id).visibility }
         return value
+    }
+
+    private fun <A : Activity> ActivityScenario<A>.text(id: Int): String {
+        var value = ""
+        onActivity { value = it.findViewById<android.widget.TextView>(id).text.toString() }
+        return value
+    }
+
+    /** Skips the current issue page and waits until the next one is shown (its "Issue x of y" label changes). */
+    private fun ActivityScenario<OnboardingAppsActivity>.skipPage() {
+        val before = text(R.id.step)
+        onActivity { it.findViewById<View>(R.id.btnSkip).performClick() }
+        await { text(R.id.step) != before }
     }
 
     private fun <A : Activity> ActivityScenario<A>.await(condition: () -> Boolean) {
@@ -141,7 +154,7 @@ class OnboardingSkipTest {
         flaggedPackage = pkg
 
         ActivityScenario.launch(OnboardingAppListActivity::class.java).use { scenario ->
-            scenario.await { true }
+            instrumentation.waitForIdleSync()
             val alreadyFlagged = repository.monitoredApps.first().isNotEmpty()
             if (!alreadyFlagged) assertFalse("aucune app signalée : « Suivant » désactivé", scenario.isEnabled(R.id.btnNext))
 
@@ -194,8 +207,7 @@ class OnboardingSkipTest {
             scenario.onActivity { hasBottomBar = it.findViewById<View>(R.id.bottomNav) != null }
             assertFalse("pas de menu en bas pendant l'accueil", hasBottomBar)
 
-            scenario.await { true }
-            Thread.sleep(300)
+            instrumentation.waitForIdleSync()
             assertFalse("aucune problématique : « Suivant » désactivé", scenario.isEnabled(R.id.btnNext))
 
             repository.linkProblem(app.packageName, app.label, ProblemRef.catalog("fomo"))
@@ -205,7 +217,7 @@ class OnboardingSkipTest {
             var finishing = false
             scenario.onActivity {
                 it.findViewById<View>(R.id.btnNext).performClick()
-                finishing = it.isFinishing // finish() est immédiat : pas besoin d'attendre la destruction, lente sur un émulateur chargé
+                finishing = it.isFinishing // finish() is immediate: no need to wait for the destruction, slow on a busy emulator
             }
             assertTrue("« Suivant » ramène à la liste", finishing)
         }
@@ -235,10 +247,7 @@ class OnboardingSkipTest {
             assertEquals("the first pages have no explanation", View.GONE, scenario.visibility(R.id.moreInfo))
 
             // Only three issues are handled: after two pages, the third is the last one.
-            repeat(2) {
-                scenario.onActivity { it.findViewById<View>(R.id.btnSkip).performClick() }
-                Thread.sleep(300)
-            }
+            repeat(2) { scenario.skipPage() }
             scenario.await { scenario.visibility(R.id.moreInfo) == View.VISIBLE }
             assertEquals("the link disappears on the last page", View.GONE, scenario.visibility(R.id.btnSkip))
             assertTrue("\"Finish later\" is always active", scenario.isEnabled(R.id.btnNext))
@@ -254,11 +263,7 @@ class OnboardingSkipTest {
 
         ActivityScenario.launch(OnboardingAppsActivity::class.java).use { scenario ->
             scenario.await { scenario.visibility(R.id.btnSkip) == View.VISIBLE }
-            repeat(2) {
-                scenario.onActivity { it.findViewById<View>(R.id.btnSkip).performClick() }
-                Thread.sleep(300)
-            }
-            Thread.sleep(300)
+            repeat(2) { scenario.skipPage() }
             assertEquals("nothing is left for later", View.GONE, scenario.visibility(R.id.moreInfo))
             assertEquals(View.VISIBLE, scenario.visibility(R.id.btnSkip))
         }
@@ -269,9 +274,9 @@ class OnboardingSkipTest {
     fun withTheServiceAlreadyOnTheScreenStaysAndOffersToFinish() {
         ActivityScenario.launch(OnboardingPermissionActivity::class.java).use { scenario ->
             assumeTrue(app.redflag.service.isFrictionServiceEnabled(context))
-            Thread.sleep(500)
+            instrumentation.waitForIdleSync()
 
-            // Pas passé par les réglages : l'écran n'a pas terminé l'accueil de lui-même.
+            // Not coming from the settings: the screen did not finish the welcome tour by itself.
             assertEquals(androidx.lifecycle.Lifecycle.State.RESUMED, scenario.state)
             assertEquals(View.VISIBLE, scenario.visibility(R.id.status))
         }
@@ -282,7 +287,7 @@ class OnboardingSkipTest {
         val before = context.container.settings.onboardingDone
         try {
             ActivityScenario.launch(OnboardingPermissionActivity::class.java).use { scenario ->
-                // Le bouton « Passer » n'existe que si le service d'accessibilité est désactivé : sinon, le test est ignoré.
+                // The "Skip" button only exists while the accessibility service is off: otherwise the test is skipped.
                 assumeTrue(scenario.visibility(R.id.btnLater) == View.VISIBLE)
 
                 assertTrue(scenario.tapOpens<OnboardingPermissionActivity, HomeActivity>(R.id.btnLater))

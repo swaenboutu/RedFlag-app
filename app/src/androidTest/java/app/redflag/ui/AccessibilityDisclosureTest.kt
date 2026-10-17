@@ -25,7 +25,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** Avant d'ouvrir les réglages d'accessibilité, une fenêtre explique ce que lit le service et demande un consentement explicite. */
+/** Before the accessibility settings open, a window explains what the service reads and asks for an explicit consent. */
 @RunWith(AndroidJUnit4::class)
 class AccessibilityDisclosureTest {
     private val instrumentation: Instrumentation = InstrumentationRegistry.getInstrumentation()
@@ -37,8 +37,8 @@ class AccessibilityDisclosureTest {
     fun setUp() {
         doneBefore = context.container.settings.onboardingDone
         context.container.settings.onboardingDone = true
-        // Surveille l'ouverture des réglages d'Android (elle ne doit jamais précéder le consentement) et la bloque : on compte les
-        // tentatives sans réellement quitter l'application.
+        // Watches for Android's settings being opened (it must never come before the consent) and blocks it: the attempts are
+        // counted without really leaving the app.
         monitor = instrumentation.addMonitor(
             IntentFilter(Settings.ACTION_ACCESSIBILITY_SETTINGS),
             Instrumentation.ActivityResult(Activity.RESULT_OK, Intent()),
@@ -107,7 +107,7 @@ class AccessibilityDisclosureTest {
             assertNotNull(scenario.disclosure())
 
             scenario.press(DialogInterface.BUTTON_NEGATIVE)
-            Thread.sleep(500)
+            instrumentation.waitForIdleSync() // the settings would be opened right from the click
 
             assertEquals(0, monitor.hits)
         }

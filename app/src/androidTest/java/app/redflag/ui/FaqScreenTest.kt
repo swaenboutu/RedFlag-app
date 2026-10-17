@@ -18,7 +18,7 @@ import org.junit.Assume.assumeTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** L'écran de la FAQ, affiché pour de bon, et son accès depuis le tiroir. */
+/** The FAQ screen, really displayed, and how the drawer opens it. */
 @RunWith(AndroidJUnit4::class)
 class FaqScreenTest {
     private val instrumentation: Instrumentation = InstrumentationRegistry.getInstrumentation()
@@ -30,7 +30,7 @@ class FaqScreenTest {
         return count
     }
 
-    /** Touche la ligne [position] de la liste, comme le ferait un doigt. */
+    /** Taps row [position] of the list, as a finger would. */
     private fun ActivityScenario<FaqActivity>.tapRow(position: Int) {
         onActivity { it.findViewById<RecyclerView>(R.id.list).findViewHolderForAdapterPosition(position)!!.itemView.performClick() }
     }
@@ -96,20 +96,23 @@ class FaqScreenTest {
     }
 
 
-    /** Change la langue de l'app comme le fait Android (réglages), depuis un test : `adb shell cmd locale set-app-locales`. */
+    /** Changes the language of the app as Android does (settings), from a test: `adb shell cmd locale set-app-locales`. */
     private fun setAppLanguage(tag: String?) {
         val args = if (tag == null) "" else " --locales $tag"
         val output = instrumentation.uiAutomation
             .executeShellCommand("cmd locale set-app-locales ${instrumentation.targetContext.packageName}$args")
         android.os.ParcelFileDescriptor.AutoCloseInputStream(output).use { it.readBytes() }
-        Thread.sleep(1_000) // le système applique la langue de façon asynchrone
+        // The system applies the language asynchronously: wait (at most 5 s) until it reports the new one for the app.
+        val locales = instrumentation.targetContext.getSystemService(android.app.LocaleManager::class.java)
+        val deadline = System.currentTimeMillis() + 5_000
+        while (locales.applicationLocales.toLanguageTags() != (tag ?: "") && System.currentTimeMillis() < deadline) Thread.sleep(50)
     }
 
     @Test
     fun theFaqFollowsTheLanguageChosenForTheApp() {
-        // La commande `cmd locale` (langue par app, depuis le shell) n'existe que depuis Android 13.
+        // The `cmd locale` command (per-app language, from the shell) only exists since Android 13.
         assumeTrue(android.os.Build.VERSION.SDK_INT >= 33)
-        // Même process, langue de l'app changée : la FAQ doit se lire dans cette langue (et pas celle de l'application au démarrage).
+        // Same process, language of the app changed: the FAQ must read in that language (not the one the app started with).
         setAppLanguage("fr-FR")
         try {
             ActivityScenario.launch(FaqActivity::class.java).use { scenario ->

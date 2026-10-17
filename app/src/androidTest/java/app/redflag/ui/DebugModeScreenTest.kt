@@ -16,7 +16,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** La section « Debug » des Réglages : cachée, puis visible après sept appuis sur le numéro de version, et conservée. */
+/** The "Debug" section of the Settings: hidden, then visible after seven taps on the version number, and kept. */
 @RunWith(AndroidJUnit4::class)
 class DebugModeScreenTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -66,7 +66,7 @@ class DebugModeScreenTest {
     @Test
     fun sixTapsOnTheVersionAreNotEnough() {
         tapVersion(DebugUnlock.TAPS_REQUIRED - 1)
-        Thread.sleep(300)
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         ActivityScenario.launch(SettingsActivity::class.java).use { scenario ->
 
             assertEquals(View.GONE, scenario.debugVisibility())
@@ -84,7 +84,7 @@ class DebugModeScreenTest {
             assertTrue("le mode est enregistré", settings.debugMode.value)
         }
 
-        // De retour sur l'écran (ou après un redémarrage de l'app), la section est toujours là sans refaire les appuis.
+        // Back on the screen (or after a restart of the app), the section is still there without tapping again.
         ActivityScenario.launch(SettingsActivity::class.java).use { scenario ->
             scenario.awaitVisibility(View.VISIBLE)
             assertEquals(View.VISIBLE, scenario.debugVisibility())
