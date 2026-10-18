@@ -23,19 +23,19 @@
             </answer>
         </entry>
         <entry id="enable_service">
-            <question>Comment activer le service d’accessibilité ?</question>
+            <question>Comment donner à Red Flag les autorisations dont il a besoin ?</question>
             <answer>
-                Red Flag ne fonctionne que lorsque le service d’accessibilité d’Android est activé. Seul vous pouvez l’activer : l’application ne peut pas le faire à votre place.
+                Red Flag a besoin de deux autorisations d’Android : « Accès aux données d’utilisation », pour savoir quelle application s’ouvre, et « Superposition aux autres applis », pour afficher l’écran d’interruption par-dessus. Seul vous pouvez les accorder : l’application ne peut pas le faire à votre place.
 
-                1. Appuyez sur « Accepter et continuer » sur le dernier écran d’accueil, ou sur « Activer le service d’accessibilité » dans l’onglet Accueil (après une courte explication). Les réglages d’accessibilité d’Android s’ouvrent.
+                1. Appuyez sur « Accepter et continuer » sur le dernier écran d’accueil, ou sur « Accorder les autorisations » dans l’onglet Accueil (après une courte explication). Les réglages « Accès aux données d’utilisation » d’Android s’ouvrent.
 
-                2. Dans la liste des applications, cherchez « Red Flag » (sous « Applications téléchargées » sur la plupart des téléphones ; sur certains, ouvrez d’abord « Applications installées »).
+                2. Cherchez « Red Flag » (sur la plupart des téléphones, l’écran s’ouvre directement dessus) et autorisez-la.
 
-                3. Ouvrez-la, activez « Utiliser Red Flag », puis confirmez dans la fenêtre qu’Android affiche.
+                3. Revenez dans Red Flag et appuyez à nouveau : les réglages « Superposition aux autres applis » d’Android s’ouvrent. Autorisez Red Flag de la même façon.
 
-                Revenez dans Red Flag : l’onglet Accueil affiche « Activée » dès que le service est activé. Vous pouvez le désactiver à tout moment au même endroit.
+                Revenez dans Red Flag : l’onglet Accueil affiche « Activée » dès que les deux autorisations sont accordées. Une notification reste dans le volet des notifications tant que Red Flag veille : Android l’exige. Vous pouvez retirer ces autorisations à tout moment aux mêmes endroits.
 
-                Si Android indique que le paramètre est restreint, ou que l’accès a été refusé, c’est que vous avez installé l’application à partir d’un fichier (APK) et non depuis le Play Store. Ouvrez les Réglages d’Android, allez dans Applications, puis Red Flag, touchez le menu ⋮ en haut à droite et choisissez « Autoriser les paramètres restreints ». Reprenez ensuite à l’étape 1.
+                Sur certains téléphones (Xiaomi, par exemple), il faut aussi autoriser Red Flag à « afficher des fenêtres pop-up lorsqu’elle s’exécute en arrière-plan » et à fonctionner sans restriction de batterie, dans les réglages de l’application.
             </answer>
         </entry>
         <entry id="buttons">
@@ -61,13 +61,11 @@
             </answer>
         </entry>
         <entry id="accessibility">
-            <question>Pourquoi l’application a-t-elle besoin du service d’accessibilité ?</question>
+            <question>Pourquoi l’application a-t-elle besoin de l’accès aux données d’utilisation et de la superposition ?</question>
             <answer>
-                C’est le seul moyen qu’Android donne à une application de savoir quelle application vient de passer au premier plan,
-                pour afficher l’interruption au bon moment.
+                L’accès aux données d’utilisation permet à une application de savoir quelle application vient de passer au premier plan, pour afficher l’interruption au bon moment. La superposition aux autres applis permet à Red Flag d’ouvrir son écran à ce moment-là, par-dessus l’application.
 
-                Le service ne lit ni ce qui s’affiche à l’écran ni ce que vous tapez : il ne voit que le nom de l’application qui
-                s’ouvre. Vous pouvez le désactiver à tout moment dans les réglages d’Android.
+                Red Flag ne lit ni ce qui s’affiche à l’écran ni ce que vous tapez : il ne regarde que le nom de l’application qui s’ouvre, et ne garde rien de votre historique d’utilisation. Vous pouvez retirer ces autorisations à tout moment dans les réglages d’Android.
             </answer>
         </entry>
         <entry id="delete">

@@ -90,7 +90,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun theStateFollowsTheMainSwitchAndTheAccessibilityService() = runBlocking {
+    fun theStateFollowsTheMainSwitchAndThePermissions() = runBlocking {
         val vm = viewModel()
         vm.setServiceEnabled(true)
         assertFalse(vm.state.await { it.loaded }.paused)
@@ -103,6 +103,6 @@ class HomeViewModelTest {
         assertFalse(vm.state.await { !it.paused }.paused)
 
         vm.setServiceEnabled(false)
-        assertFalse("the service is off", vm.state.await { !it.serviceEnabled }.serviceEnabled)
+        assertFalse("a permission is missing", vm.state.await { !it.serviceEnabled }.serviceEnabled)
     }
 }

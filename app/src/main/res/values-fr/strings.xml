@@ -64,22 +64,28 @@
     </plurals>
     <string name="onboarding_skip">Passer cette étape</string>
     <string name="onboarding_apps_body">Cochez les apps concernées selon vous.</string>
-    <string name="onboarding_permission_title">Une dernière autorisation</string>
+    <string name="onboarding_permission_title">Deux autorisations</string>
     <!-- The tags are real HTML (escaped): the texts go through HtmlCompat, see OnboardingPermissionActivity. -->
-    <string name="onboarding_permission_intro">Pour savoir quand vous ouvrez une app signalée, %1$s a besoin du &lt;b&gt;service d\'accessibilité&lt;/b&gt; d\'Android.</string>
-    <string name="onboarding_permission_step1">Appuyez sur « %1$s » : les réglages d\'Android s\'ouvrent.</string>
-    <string name="onboarding_permission_step2">Dans la liste des applications, cherchez &lt;b&gt;%1$s&lt;/b&gt;.</string>
-    <string name="onboarding_permission_step3">Ouvrez-la et choisissez de l\'&lt;b&gt;activer&lt;/b&gt;, puis confirmez.</string>
-    <string name="onboarding_permission_sample_state">Désactivé</string>
+    <string name="onboarding_permission_intro">Pour savoir quand vous ouvrez une app signalée et afficher son rappel par-dessus, %1$s a besoin de deux autorisations d’Android : l’&lt;b&gt;accès aux données d’utilisation&lt;/b&gt; et la &lt;b&gt;superposition aux autres applis&lt;/b&gt;.</string>
+    <string name="onboarding_permission_step1">Appuyez sur « %1$s » : les réglages &lt;b&gt;Accès aux données d’utilisation&lt;/b&gt; d’Android s’ouvrent.</string>
+    <string name="onboarding_permission_step2">Cherchez &lt;b&gt;%1$s&lt;/b&gt; et autorisez-la.</string>
+    <string name="onboarding_permission_step3">Revenez ici et appuyez à nouveau : dans &lt;b&gt;Superposition aux autres applis&lt;/b&gt;, autorisez %1$s de la même façon.</string>
+    <string name="onboarding_permission_sample_state">Non autorisée</string>
     <string name="onboarding_permission_note1">%1$s cherche seulement à savoir &lt;b&gt;quelle application est lancée&lt;/b&gt;.</string>
     <string name="onboarding_permission_note2">Il ne lit et ne collecte rien de ce que vous faites sur votre téléphone, et rien n\'en sort.</string>
-    <string name="onboarding_permission_note3">Vous pouvez retirer cette autorisation à tout moment dans les réglages d\'Android.</string>
-    <string name="onboarding_permission_body">Pour vous prévenir avant l\'ouverture d\'une application signalée, %1$s a besoin du service d\'accessibilité d\'Android. Il détecte uniquement le nom de l\'application qui passe au premier plan : aucun contenu de l\'écran n\'est lu et aucune donnée ne quitte votre téléphone.\n\nDans les réglages qui s\'ouvrent, cherchez « %1$s » et activez-le.</string>
-    <!-- Shown over Android's accessibility settings, which open right after the consent. -->
-    <string name="accessibility_find_app_toast">Recherchez l\'application %1$s et activez-la</string>
-    <string name="accessibility_consent_action">Accepter et continuer</string>
-    <string name="accessibility_disclosure_title">Service d\'accessibilité</string>
-    <string name="onboarding_permission_enabled">Tout est prêt : le service est activé.</string>
+    <string name="onboarding_permission_note3">Vous pouvez retirer ces autorisations à tout moment dans les réglages d\'Android.</string>
+    <string name="onboarding_permission_enabled">Tout est prêt : les deux autorisations sont accordées.</string>
+    <string name="onboarding_permission_next_overlay">L’accès aux données d’utilisation est accordé. Encore une : la superposition aux autres applis.</string>
+    <!-- Shown over Android's settings, which open right after the consent. -->
+    <string name="permission_find_app_toast">Recherchez l’application %1$s et autorisez-la</string>
+    <string name="permission_consent_action">Accepter et continuer</string>
+    <string name="usage_disclosure_title">Accès aux données d’utilisation</string>
+    <string name="usage_disclosure_body">Pour vous prévenir avant l’ouverture d’une application signalée, %1$s a besoin de l’accès aux données d’utilisation d’Android. Il ne s’en sert que pour savoir quelle application passe au premier plan : aucun contenu de l’écran n’est lu, votre historique d’utilisation ne sert à rien d’autre et aucune donnée ne quitte votre téléphone.\n\nDans les réglages qui s’ouvrent, cherchez « %1$s » et autorisez-la.</string>
+    <string name="overlay_disclosure_title">Superposition aux autres applis</string>
+    <string name="overlay_disclosure_body">Pour afficher son écran « Une seconde. » par-dessus une application signalée au moment où elle s’ouvre, %1$s a besoin de s’afficher par-dessus les autres applis. Il n’affiche rien d’autre et aucune donnée ne quitte votre téléphone.\n\nDans les réglages qui s’ouvrent, autorisez « %1$s ».</string>
+    <string name="monitor_channel_name">Interruption</string>
+    <string name="monitor_notification_title">%1$s est actif</string>
+    <string name="monitor_notification_text">Veille sur vos applications signalées</string>
     <string name="onboarding_finish">Terminer</string>
     <string name="onboarding_app_list_title">Quelles applications vous concernent ?</string>
     <string name="onboarding_app_list_body">Touchez une application pour choisir les enjeux qu’elle soulève. Vous pourrez modifier ce choix à tout moment.</string>
@@ -97,8 +103,8 @@
     <string name="home_paused_forever">%1$s ne vous interrompra pas tant que vous ne l’aurez pas réactivé.</string>
     <string name="home_resume">Réactiver maintenant</string>
     <string name="home_inactive">Inactive</string>
-    <string name="home_inactive_text">Le service d’accessibilité d’Android est désactivé : %1$s ne peut pas vous interrompre.</string>
-    <string name="home_inactive_action">Activer le service d’accessibilité</string>
+    <string name="home_inactive_text">Des autorisations d’Android manquent : %1$s ne peut pas vous interrompre.</string>
+    <string name="home_inactive_action">Accorder les autorisations</string>
     <!-- The number is shown on its own, in large type, next to this label. -->
     <plurals name="home_avoided_label" tools:ignore="ImpliedQuantity">
         <item quantity="one">lancement évité</item>
@@ -303,7 +309,6 @@
     <string name="btn_back">Non, pas maintenant</string>
     <string name="btn_pause">Ne plus me demander pendant %1$s</string>
 
-    <string name="accessibility_service_description">Détecte uniquement le nom de l\'application qui passe au premier plan, pour afficher un rappel avant l\'ouverture d\'une application que vous avez signalée. Aucun contenu d\'écran n\'est lu et aucune donnée ne quitte votre appareil.</string>
 
     <string name="category_mental">Bien-être mental</string>
     <string name="category_social">Éthique sociale</string>

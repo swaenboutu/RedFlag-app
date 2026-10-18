@@ -2,7 +2,6 @@ package app.redflag.ui.onboarding
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -11,20 +10,26 @@ import app.redflag.container
 import app.redflag.ui.common.setHtml
 import app.redflag.ui.common.underline
 import app.redflag.databinding.ActivityOnboardingPermissionBinding
-import app.redflag.service.isFrictionServiceEnabled
+import app.redflag.service.FrictionMonitorService
+import app.redflag.service.FrictionPermission
+import app.redflag.service.missingPermission
+import app.redflag.service.openPermissionSettings
 import app.redflag.ui.home.HomeActivity
 
 /**
- * Au retour des réglages d'Android ([openedSettings]), l'accueil est terminé dès que le service est activé : on arrive
- * directement dans l'application. Sans être passé par les réglages, l'écran reste affiché avec son bouton « Terminer ».
+ * Back from Android's settings ([openedSettings]), the welcome tour is over as soon as both permissions are granted: the user goes
+ * straight into the app. Without going through the settings, the screen stays with its "Finish" button.
  */
-fun shouldFinishOnboardingOnReturn(openedSettings: Boolean, serviceEnabled: Boolean) = openedSettings && serviceEnabled
+fun shouldFinishOnboardingOnReturn(openedSettings: Boolean, permissionsGranted: Boolean) = openedSettings && permissionsGranted
 
-/** Accueil, dernière étape : expliquer et demander l'activation du service d'accessibilité. */
+/**
+ * Welcome tour, last step: explains the two permissions ("Usage access", then "Display over other apps") and asks for them one after
+ * the other. The screen itself is the explanation shown before each of Android's settings screens.
+ */
 class OnboardingPermissionActivity : AppCompatActivity() {
     private lateinit var binding: ActivityOnboardingPermissionBinding
 
-    /** Vrai une fois les réglages d'accessibilité ouverts depuis cet écran (conservé en cas de rotation). */
+    /** True once Android's settings were opened from this screen (kept across a rotation). */
     private var openedSettings = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,9 +42,9 @@ class OnboardingPermissionActivity : AppCompatActivity() {
 
         val appName = getString(R.string.app_name)
         binding.body.setHtml(R.string.onboarding_permission_intro, appName)
-        binding.step1.setHtml(R.string.onboarding_permission_step1, getString(R.string.accessibility_consent_action))
+        binding.step1.setHtml(R.string.onboarding_permission_step1, getString(R.string.permission_consent_action))
         binding.step2.setHtml(R.string.onboarding_permission_step2, appName)
-        binding.step3.setHtml(R.string.onboarding_permission_step3)
+        binding.step3.setHtml(R.string.onboarding_permission_step3, appName)
         binding.sampleName.text = appName
         binding.note1.setHtml(R.string.onboarding_permission_note1, appName)
         binding.note2.setHtml(R.string.onboarding_permission_note2)
@@ -47,25 +52,27 @@ class OnboardingPermissionActivity : AppCompatActivity() {
         binding.btnLater.setOnClickListener { finishOnboarding() }
     }
 
-    /** L'utilisateur revient des réglages Android : on reflète l'état réel du service. */
+    /** The user comes back from Android's settings: the screen shows the real state of the permissions. */
     override fun onResume() {
         super.onResume()
-        val enabled = isFrictionServiceEnabled(this)
-        if (shouldFinishOnboardingOnReturn(openedSettings, enabled)) {
+        val missing = missingPermission(this)
+        if (missing == null) FrictionMonitorService.startIfPermitted(this)
+        if (shouldFinishOnboardingOnReturn(openedSettings, missing == null)) {
             finishOnboarding()
             return
         }
-        binding.status.visibility = if (enabled) View.VISIBLE else View.GONE
-        binding.btnLater.visibility = if (enabled) View.GONE else View.VISIBLE
-        if (enabled) {
+        binding.status.visibility = if (missing != FrictionPermission.USAGE_ACCESS) View.VISIBLE else View.GONE
+        binding.status.setText(if (missing == null) R.string.onboarding_permission_enabled else R.string.onboarding_permission_next_overlay)
+        binding.btnLater.visibility = if (missing == null) View.GONE else View.VISIBLE
+        if (missing == null) {
             binding.btnMain.setText(R.string.onboarding_finish)
             binding.btnMain.setOnClickListener { finishOnboarding() }
         } else {
-            binding.btnMain.setText(R.string.accessibility_consent_action)
+            binding.btnMain.setText(R.string.permission_consent_action)
             binding.btnMain.setOnClickListener {
                 openedSettings = true
-                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-                Toast.makeText(this, getString(R.string.accessibility_find_app_toast, getString(R.string.app_name)), Toast.LENGTH_LONG).show()
+                openPermissionSettings(this, missing)
+                Toast.makeText(this, getString(R.string.permission_find_app_toast, getString(R.string.app_name)), Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -75,7 +82,7 @@ class OnboardingPermissionActivity : AppCompatActivity() {
         outState.putBoolean(KEY_OPENED_SETTINGS, openedSettings)
     }
 
-    /** Fin de l'accueil (avec ou sans le service) : il ne s'affichera plus, et le retour ne mène plus à l'accueil. */
+    /** End of the welcome tour (with or without the permissions): it will not show again, and Back no longer leads to it. */
     private fun finishOnboarding() {
         container.settings.onboardingDone = true
         startActivity(

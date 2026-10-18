@@ -5,8 +5,8 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-// Signature de la version de production : `keystore.properties` (à la racine, jamais versionné) donne le fichier de clé et ses
-// mots de passe. Sans lui (autre machine, intégration continue), la version de production se construit simplement non signée.
+// Signing of the release build: `keystore.properties` (at the root, never committed) gives the key file and its passwords.
+// Without it (another machine, continuous integration), the release build is simply built unsigned.
 val keystoreProperties = Properties().apply {
     val file = rootProject.file("keystore.properties")
     if (file.exists()) file.inputStream().use { load(it) }
@@ -37,6 +37,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            // Experimental "usage access + overlay" variant: installable next to the accessibility version on the same phone.
+            applicationIdSuffix = ".usage"
+        }
         release {
             signingConfig = signingConfigs.findByName("release")
             isMinifyEnabled = true
@@ -58,13 +62,13 @@ android {
     }
 
     sourceSets {
-        // Les schémas JSON de Room servent aux tests de migration sur appareil.
+        // Room's JSON schemas are used by the migration tests on the device.
         getByName("androidTest").assets.directories.add("$projectDir/schemas")
     }
 
     testOptions {
         unitTests.all {
-            // StringResourcesTest lit les fichiers de traduction : sans ceci, Gradle ne relance pas les tests quand ils changent.
+            // StringResourcesTest reads the translation files: without this, Gradle does not run the tests again when they change.
             it.inputs.dir("src/main/res")
         }
     }
@@ -76,14 +80,14 @@ android {
     }
 
     lint {
-        // local.properties est propre à chaque machine et n'est pas versionné : ce contrôle n'a rien à vérifier dans le dépôt
-        // (et il signale à tort un fichier déjà correctement échappé).
+        // local.properties is specific to each machine and not committed: this check has nothing to verify in the repository
+        // (and it wrongly flags a file that is already correctly escaped).
         disable += "PropertyEscape"
     }
 }
 
-// room-testing (tests de migration) lit les schémas JSON avec kotlinx-serialization 1.8 alors que le reste de l'app est épinglé en 1.7.3 :
-// mélanger les deux versions plante (AbstractMethodError). On aligne tout sur 1.8.1, uniquement pour les tests sur appareil.
+// room-testing (migration tests) reads the JSON schemas with kotlinx-serialization 1.8 while the rest of the app is pinned to 1.7.3:
+// mixing both versions crashes (AbstractMethodError). Everything is aligned on 1.8.1, for the device tests only.
 configurations.matching { it.name.contains("AndroidTest", ignoreCase = true) }.configureEach {
     resolutionStrategy.eachDependency {
         if (requested.group == "org.jetbrains.kotlinx" && requested.name.startsWith("kotlinx-serialization-")) {

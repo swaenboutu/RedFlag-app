@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
- * What the home screen shows. [serviceEnabled]: Android's accessibility service is on; [paused]: the interruption is off by choice
+ * What the home screen shows. [serviceEnabled]: both Android permissions (usage access, display over other apps) are granted; [paused]: the interruption is off by choice
  * ([resumeAt]: when it comes back on by itself, 0 = when the user turns it on); [flaggedApps]; [avoided]: launches the user chose
  * not to do since [startedAt]; [topApp]: the app that interrupted the most; [topIssue] with [topIssueTheme], the title of its theme (for the icon).
  */

@@ -22,7 +22,7 @@ Kotlin, MVVM, Room (KSP), XML views + ViewBinding, Material 3. `minSdk 26`, `tar
 ```
 app/src/main/java/app/redflag/
 ├── data/      Room (entities, one DAO per table, database), repository, installed apps list, icon cache
-├── service/   FrictionAccessibilityService (foreground app detection), FrictionGate
+├── service/   FrictionMonitorService (foreground app detection via usage access), ForegroundWatcher, FrictionGate
 ├── ui/        One folder per area: apps (list, app detail), problems (list and detail of the issues),
 │              stats, settings (Settings and FAQ), interruption ("One second" screen), onboarding, common (shared pieces)
 └── util/      Pure utilities (parseProblems)
@@ -51,11 +51,14 @@ scripts/test.sh full                                              # before a pus
 A `pre-push` hook (`scripts/hooks/`) runs `full` before every `git push` and cancels the push if it fails (an emulator is
 required; `git push --no-verify` to bypass it). After a clone: `git config core.hooksPath scripts/hooks`.
 
-The device tests clear the app's data at the start, then reinstall it (as debug) at the end, re-enabling its accessibility
-service if it was on: the app therefore stays on the emulator (only its data is reset).
+The device tests clear the app's data at the start, then reinstall it (as debug) at the end, granting back its two permissions
+(usage access, display over other apps) if they were granted: the app therefore stays on the emulator (only its data is reset).
 
-Open the folder in Android Studio, then run on the AVD. Then enable the service in
-*Settings > Accessibility > Red Flag* (the banner on the main screen leads there).
+On the `test/usage-overlay` branch (experimental), the debug build is `app.redflag.android.usage` and detects the foreground app
+with *Usage access* plus *Display over other apps* instead of the accessibility service.
+
+Open the folder in Android Studio, then run on the AVD. Then grant *Usage access* and *Display over other apps* to Red Flag
+(the welcome tour and the Home tab lead there).
 
 ## Publishing a test version (GitHub Releases)
 

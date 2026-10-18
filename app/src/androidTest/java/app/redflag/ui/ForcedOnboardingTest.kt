@@ -18,7 +18,7 @@ import org.junit.runner.RunWith
 
 /**
  * The debug setting "Always show the welcome tour": the tour shows at every launch from the app icon, even when the process
- * stays alive (the accessibility service keeps it running, which had made the setting useless).
+ * stays alive (the watching service keeps it running, which had made the setting useless).
  */
 @RunWith(AndroidJUnit4::class)
 class ForcedOnboardingTest {

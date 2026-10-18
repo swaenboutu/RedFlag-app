@@ -14,8 +14,9 @@ import app.redflag.R
 import app.redflag.container
 import app.redflag.data.SettingsStore
 import app.redflag.databinding.ActivityHomeBinding
-import app.redflag.service.isFrictionServiceEnabled
-import app.redflag.ui.common.AccessibilityDisclosureDialog
+import app.redflag.service.FrictionMonitorService
+import app.redflag.service.hasFrictionPermissions
+import app.redflag.ui.common.PermissionDisclosureDialog
 import app.redflag.ui.common.AppDrawer
 import app.redflag.ui.common.BottomNav
 import app.redflag.ui.common.dp
@@ -56,7 +57,7 @@ class HomeActivity : AppCompatActivity() {
 
         binding.btnPause.setOnClickListener { PauseSheet.show(this) }
         binding.btnResume.setOnClickListener { settings.setInterceptionEnabled(true) }
-        binding.btnActivate.setOnClickListener { AccessibilityDisclosureDialog.show(this) }
+        binding.btnActivate.setOnClickListener { PermissionDisclosureDialog.show(this) }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -78,7 +79,9 @@ class HomeActivity : AppCompatActivity() {
         super.onResume()
         if (!::binding.isInitialized) return
         BottomNav.select(binding.bottomBar.bottomNav, R.id.nav_home)
-        viewModel.setServiceEnabled(isFrictionServiceEnabled(this))
+        val granted = hasFrictionPermissions(this)
+        viewModel.setServiceEnabled(granted)
+        if (granted) FrictionMonitorService.startIfPermitted(this)
     }
 
     private fun render(state: HomeState) = with(binding) {

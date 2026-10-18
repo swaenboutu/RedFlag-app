@@ -64,24 +64,33 @@ pick_device() {
     fi
 }
 
-APP_ID=app.redflag.android
+# The debug build of this variant has the ".usage" suffix (installable next to the accessibility version).
+APP_ID=app.redflag.android.usage
 FIXTURE_ID=app.redflag.fixture
 TEST_LIST=/data/local/tmp/redflag-tests.txt
 
 # The device animations are left as they are: turning them off made most tests faster, but OnboardingSkipTest then sometimes
 # stalled for about 20 s in a full run, which cancelled the gain.
 
-# Gradle uninstalls the app at the end of the device tests: it is put back (debug), and its accessibility service turned back on
-# if it was on (the "secure" settings can only be changed on an emulator or a development device; elsewhere, without effect).
+# Gradle uninstalls the app at the end of the device tests: it is put back (debug), and its two permissions (usage access, display
+# over other apps) granted back if they were granted (appops can be changed from adb; without effect where it is refused).
 # (Leaving the APKs installed after the run, or installing the test apps in the same Gradle call as the tests, saved a few seconds
 # but made OnboardingSkipTest stall for minutes in full runs: both were tried and dropped.)
-restore_app() { # $1 = accessibility services enabled before the tests
+# Prints the permissions granted to the app, e.g. "GET_USAGE_STATS SYSTEM_ALERT_WINDOW".
+granted_permissions() {
+    local op
+    for op in GET_USAGE_STATS SYSTEM_ALERT_WINDOW; do
+        adb shell appops get "$APP_ID" "$op" 2>/dev/null | grep -q "allow" && printf '%s ' "$op"
+    done
+    return 0
+}
+
+restore_app() { # $1 = permissions granted before the tests (see granted_permissions)
     echo ">> réinstallation de l'app"
     "${GRADLE[@]}" :app:installDebug
-    if [[ "$1" == *"$APP_ID"* ]]; then
-        adb shell settings put secure enabled_accessibility_services "$1" >/dev/null 2>&1 || true
-        adb shell settings put secure accessibility_enabled 1 >/dev/null 2>&1 || true
-    fi
+    local op
+    for op in $1; do adb shell appops set "$APP_ID" "$op" allow >/dev/null 2>&1 || true; done
+    # The watch (a service that is not exported) starts again the next time the app is opened.
 }
 
 run_device() { # $@ = full class names (empty = all)
@@ -99,7 +108,7 @@ run_device() { # $@ = full class names (empty = all)
     # Ordinary apps that the screens list (a bare emulator only has system apps, which are hidden); removed at the end.
     "${GRADLE[@]}" :fixtures:installADebug :fixtures:installBDebug
     local services status=0
-    services=$(adb shell settings get secure enabled_accessibility_services 2>/dev/null | tr -d '\r' || true)
+    services=$(granted_permissions)
     # Data cleared rather than app uninstalled: the same starting point (nothing must remain from the previous use).
     adb shell pm clear "$APP_ID" >/dev/null 2>&1 || true
     # Before Android 9 the test runner refuses to reinstall an app that is already there (INSTALL_FAILED_ALREADY_EXISTS): remove it first.
@@ -168,9 +177,9 @@ device_classes_for_changes() {
                     */AppContainer.kt|*/ui/interruption/*.kt|*/service/Friction*.kt|*/layout/activity_interstitial.xml) add ui.InterstitialActivityTest ;;&
                     # Bottom sheets (the edit sheet and their common base).
                     */ui/common/EditProblemSheet.kt|*/layout/sheet_edit_problem.xml|*/ui/common/OptionsSheet.kt) add ui.EditProblemSheetTest ;;&
-                    # Warning before the accessibility settings (required by Google Play): Home, Settings, the window.
-                    */ui/common/Dialogs.kt|*/ui/onboarding/OnboardingPermissionActivity.kt|*/ui/home/HomeActivity.kt|*/ui/settings/SettingsActivity.kt|*/service/*Accessibility*.kt|*/res/xml/accessibility_service_config.xml)
-                        add ui.AccessibilityDisclosureTest ;;&
+                    # Warning before each of Android's permission screens: Home, Settings, the window.
+                    */ui/common/Dialogs.kt|*/ui/onboarding/OnboardingPermissionActivity.kt|*/ui/home/HomeActivity.kt|*/ui/settings/SettingsActivity.kt|*/service/Permissions.kt)
+                        add ui.PermissionDisclosureTest ;;&
                     # FAQ (and the Settings, the theme card it shares with other screens).
                     */ui/settings/Faq*.kt|*/data/Faq.kt|*/layout/activity_faq.xml|*/layout/item_faq_*.xml|*/ui/settings/SettingsActivity.kt|*/layout/activity_settings.xml|*/ui/common/ThemeCard.kt|*/ui/common/CardStyle.kt|*/layout/item_manager_theme.xml)
                         add ui.FaqScreenTest ;;&

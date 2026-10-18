@@ -28,19 +28,19 @@
             </answer>
         </entry>
         <entry id="enable_service">
-            <question>How do I turn on the accessibility service?</question>
+            <question>How do I give Red Flag the permissions it needs?</question>
             <answer>
-                Red Flag only works once Android’s accessibility service is on. Only you can turn it on: the app cannot do it for you.
+                Red Flag needs two Android permissions: “Usage access”, to know which app opens, and “Display over other apps”, to show the interruption screen on top of it. Only you can grant them: the app cannot do it for you.
 
-                1. Tap “Agree and continue” on the last welcome screen, or tap “Turn on the accessibility service” on the Home tab (after a short explanation). Android’s accessibility settings open.
+                1. Tap “Agree and continue” on the last welcome screen, or tap “Grant the permissions” on the Home tab (after a short explanation). Android’s “Usage access” settings open.
 
-                2. In the list of apps, find “Red Flag” (under “Downloaded apps” on most phones; on some, open “Installed apps” first).
+                2. Find “Red Flag” (on most phones the screen opens straight on it) and allow it.
 
-                3. Open it, turn on “Use Red Flag”, then confirm in the window Android shows.
+                3. Go back to Red Flag and tap again: Android’s “Display over other apps” settings open. Allow Red Flag the same way.
 
-                Go back to Red Flag: the Home tab shows “On” once the service is on. You can turn it off at any time in the same place.
+                Go back to Red Flag: the Home tab shows “On” once both permissions are granted. A notification stays in the notification shade while Red Flag watches: Android requires it. You can withdraw both permissions at any time in the same places.
 
-                If Android says the setting is restricted, or that access was denied, you installed the app from a file (APK) rather than from the Play Store. Open Android’s Settings, go to Apps, then Red Flag, tap the ⋮ menu at the top right and choose “Allow restricted settings”. Then start again from step 1.
+                On some phones (Xiaomi, for example), you may also need to allow Red Flag to “display pop-up windows while running in the background” and to run without battery restrictions, in the app’s settings.
             </answer>
         </entry>
         <entry id="buttons">
@@ -65,13 +65,11 @@
             </answer>
         </entry>
         <entry id="accessibility">
-            <question>Why does the app need the accessibility service?</question>
+            <question>Why does the app need usage access and to display over other apps?</question>
             <answer>
-                It is the only way Android lets an app know which app has just come to the front, so that the interruption can be
-                shown at the right moment.
+                Usage access is what lets an app know which app has just come to the front, so that the interruption can be shown at the right moment. Displaying over other apps is what lets Red Flag open its screen at that moment, on top of the app.
 
-                The service does not read what is on your screen or what you type: it only sees the name of the app that opens.
-                You can turn it off at any time in Android’s settings.
+                Red Flag does not read what is on your screen or what you type: it only looks at the name of the app that opens, and keeps none of your usage history. You can withdraw both permissions at any time in Android’s settings.
             </answer>
         </entry>
         <entry id="delete">

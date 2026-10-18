@@ -238,21 +238,21 @@ class OnboardingSkipTest {
 
 
     /**
-     * The permissions step, whatever the state of the accessibility service on the device: service already on, the screen stays
-     * (it does not finish the tour by itself) and says so; service off, its "Skip" button finishes the welcome tour.
+     * The permissions step, whatever the state of the two permissions on the device: both already granted, the screen stays (it
+     * does not finish the tour by itself) and says so; one missing, its "Skip" button finishes the welcome tour.
      */
     @Test
-    fun thePermissionsStepStaysWhenTheServiceIsOnAndCanBeSkippedWhenItIsOff() {
+    fun thePermissionsStepStaysWhenThePermissionsAreGrantedAndCanBeSkippedOtherwise() {
         val before = context.container.settings.onboardingDone
         try {
             ActivityScenario.launch(OnboardingPermissionActivity::class.java).use { scenario ->
-                if (app.redflag.service.isFrictionServiceEnabled(context)) {
+                if (app.redflag.service.hasFrictionPermissions(context)) {
                     instrumentation.waitForIdleSync()
                     // Not coming from the settings: the screen did not finish the welcome tour by itself.
                     assertEquals(androidx.lifecycle.Lifecycle.State.RESUMED, scenario.state)
                     assertEquals(View.VISIBLE, scenario.visibility(R.id.status))
                 } else {
-                    assertEquals("service désactivé : le bouton « Passer » est là", View.VISIBLE, scenario.visibility(R.id.btnLater))
+                    assertEquals("a permission is missing: the Skip button is there", View.VISIBLE, scenario.visibility(R.id.btnLater))
                     assertTrue(scenario.tapOpens<OnboardingPermissionActivity, HomeActivity>(R.id.btnLater))
                     assertTrue("l'accueil est marqué comme terminé", context.container.settings.onboardingDone)
                 }

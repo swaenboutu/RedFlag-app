@@ -17,8 +17,9 @@ import app.redflag.data.Appearance
 import app.redflag.data.SettingsStore
 import app.redflag.databinding.ActivitySettingsBinding
 import app.redflag.databinding.ItemSettingRowBinding
-import app.redflag.service.isFrictionServiceEnabled
-import app.redflag.ui.common.AccessibilityDisclosureDialog
+import app.redflag.service.FrictionMonitorService
+import app.redflag.service.hasFrictionPermissions
+import app.redflag.ui.common.PermissionDisclosureDialog
 import app.redflag.ui.common.formatPause
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -34,7 +35,7 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.back.setOnClickListener { finish() }
 
-        // Coins arrondis + effets tactiles contenus dans les cartes : `clipToOutline` en XML exige Android 12.
+        // Rounded corners + touch ripples kept inside the cards: `clipToOutline` in XML needs Android 12.
         listOf(binding.cardDisplay, binding.cardInterruption, binding.cardApps)
             .forEach { it.clipToOutline = true }
         binding.cardDebug.clipToOutline = true
@@ -43,7 +44,7 @@ class SettingsActivity : AppCompatActivity() {
         setupRow(binding.rowPause, R.string.settings_pause_title, R.string.settings_pause_subtitle) { SnoozeSheet.show(this) }
         setupRow(binding.rowList, R.string.settings_list_title) { showListDialog() }
         setupRow(binding.rowPermissions, R.string.settings_permissions_title) {
-            AccessibilityDisclosureDialog.show(this)
+            PermissionDisclosureDialog.show(this)
         }
         setupDebug()
 
@@ -78,12 +79,12 @@ class SettingsActivity : AppCompatActivity() {
         if (clickable) row.root.setOnClickListener { onClick() } else row.root.background = null
     }
 
-    /** Section « Debug » : cachée tant que le mode debug n'est pas activé (voir le tiroir, `AppDrawer`) ; elle l'est ensuite, pour de bon. */
+    /** "Debug" section: hidden until debug mode is turned on (see the drawer, `AppDrawer`); then shown for good. */
     private fun setupDebug() {
         with(binding.rowOnboarding) {
             title.setText(R.string.settings_debug_onboarding_title)
             subtitle.setText(R.string.settings_debug_onboarding_subtitle)
-            // Toute la ligne bascule l'interrupteur, pas seulement le bouton.
+            // The whole row flips the switch, not only the switch itself.
             root.setOnClickListener { toggle.toggle() }
             toggle.setOnCheckedChangeListener { _, checked -> settings.setAlwaysShowOnboarding(checked) }
         }
@@ -91,7 +92,7 @@ class SettingsActivity : AppCompatActivity() {
         binding.rowReset.chevron.visibility = View.GONE
     }
 
-    /** Efface toutes les données de l'app (base, réglages), comme « Effacer les données » d'Android ; l'app se ferme. */
+    /** Clears all the app's data (database, settings), like Android's "Clear data"; the app closes. */
     private fun confirmReset() {
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.settings_debug_reset_confirm_title)
@@ -103,9 +104,10 @@ class SettingsActivity : AppCompatActivity() {
             .show()
     }
 
-    /** Pastille verte « Accordées » ou rouge « Non accordées » selon l'état du service d'accessibilité. */
+    /** Green "Granted" or red "Not granted" dot, depending on the two Android permissions; the watch starts once both are there. */
     private fun showPermissionStatus() = with(binding.rowPermissions) {
-        val granted = isFrictionServiceEnabled(this@SettingsActivity)
+        val granted = hasFrictionPermissions(this@SettingsActivity)
+        if (granted) FrictionMonitorService.startIfPermitted(this@SettingsActivity)
         value.setText(if (granted) R.string.permissions_granted else R.string.permissions_missing)
         dot.visibility = View.VISIBLE
         dot.backgroundTintList = ColorStateList.valueOf(

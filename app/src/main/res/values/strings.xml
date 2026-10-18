@@ -59,22 +59,28 @@
     </plurals>
     <string name="onboarding_skip">Skip this step</string>
     <string name="onboarding_apps_body">Tick the apps you think this issue applies to.</string>
-    <string name="onboarding_permission_title">One last permission</string>
+    <string name="onboarding_permission_title">Two permissions</string>
     <!-- The tags are real HTML (escaped): the texts go through HtmlCompat, see OnboardingPermissionActivity. -->
-    <string name="onboarding_permission_intro">To know when you open a flagged app, %1$s needs Android’s &lt;b&gt;accessibility service&lt;/b&gt;.</string>
-    <string name="onboarding_permission_step1">Tap “%1$s”: Android’s settings open.</string>
-    <string name="onboarding_permission_step2">In the list of apps, find &lt;b&gt;%1$s&lt;/b&gt;.</string>
-    <string name="onboarding_permission_step3">Open it and choose to &lt;b&gt;turn it on&lt;/b&gt;, then confirm.</string>
-    <string name="onboarding_permission_sample_state">Off</string>
+    <string name="onboarding_permission_intro">To know when you open a flagged app and show its reminder over it, %1$s needs two Android permissions: &lt;b&gt;usage access&lt;/b&gt; and &lt;b&gt;display over other apps&lt;/b&gt;.</string>
+    <string name="onboarding_permission_step1">Tap “%1$s”: Android’s &lt;b&gt;Usage access&lt;/b&gt; settings open.</string>
+    <string name="onboarding_permission_step2">Find &lt;b&gt;%1$s&lt;/b&gt; and allow it.</string>
+    <string name="onboarding_permission_step3">Come back here and tap again: in &lt;b&gt;Display over other apps&lt;/b&gt;, allow %1$s the same way.</string>
+    <string name="onboarding_permission_sample_state">Not allowed</string>
     <string name="onboarding_permission_note1">%1$s only looks at &lt;b&gt;which app is launched&lt;/b&gt;.</string>
     <string name="onboarding_permission_note2">It does not read or collect anything you do on your phone, and nothing leaves it.</string>
-    <string name="onboarding_permission_note3">You can withdraw this permission at any time in Android’s settings.</string>
-    <string name="onboarding_permission_body">To warn you before you open an app you have flagged, %1$s needs Android\'s accessibility service. It only detects the name of the app coming to the foreground: no screen content is read and no data leaves your device.\n\nIn the settings that open, find “%1$s” and turn it on.</string>
-    <!-- Shown over Android's accessibility settings, which open right after the consent. -->
-    <string name="accessibility_find_app_toast">Find the %1$s app and turn it on</string>
-    <string name="accessibility_consent_action">Agree and continue</string>
-    <string name="accessibility_disclosure_title">Accessibility service</string>
-    <string name="onboarding_permission_enabled">All set: the service is on.</string>
+    <string name="onboarding_permission_note3">You can withdraw these permissions at any time in Android’s settings.</string>
+    <string name="onboarding_permission_enabled">All set: both permissions are granted.</string>
+    <string name="onboarding_permission_next_overlay">Usage access is granted. One more: display over other apps.</string>
+    <!-- Shown over Android's settings, which open right after the consent. -->
+    <string name="permission_find_app_toast">Find the %1$s app and allow it</string>
+    <string name="permission_consent_action">Agree and continue</string>
+    <string name="usage_disclosure_title">Usage access</string>
+    <string name="usage_disclosure_body">To warn you before you open an app you have flagged, %1$s needs Android’s usage access. It only uses it to know which app comes to the foreground: no screen content is read, your usage history is used for nothing else, and no data leaves your device.\n\nIn the settings that open, find “%1$s” and allow it.</string>
+    <string name="overlay_disclosure_title">Display over other apps</string>
+    <string name="overlay_disclosure_body">To show its “One second.” screen on top of a flagged app as it opens, %1$s needs to display over other apps. It shows nothing else, and no data leaves your device.\n\nIn the settings that open, allow “%1$s”.</string>
+    <string name="monitor_channel_name">Interruption</string>
+    <string name="monitor_notification_title">%1$s is on</string>
+    <string name="monitor_notification_text">Watching for your flagged apps</string>
     <string name="onboarding_finish">Finish</string>
     <string name="onboarding_app_list_title">Which apps concern you?</string>
     <string name="onboarding_app_list_body">Tap an app to choose the issues it raises. You can change this at any time.</string>
@@ -91,8 +97,8 @@
     <string name="home_paused_forever">%1$s will not interrupt you until you turn it back on.</string>
     <string name="home_resume">Resume now</string>
     <string name="home_inactive">Inactive</string>
-    <string name="home_inactive_text">Android’s accessibility service is off: %1$s cannot interrupt you.</string>
-    <string name="home_inactive_action">Turn on the accessibility service</string>
+    <string name="home_inactive_text">Android permissions are missing: %1$s cannot interrupt you.</string>
+    <string name="home_inactive_action">Grant the permissions</string>
     <plurals name="home_avoided_label">
         <item quantity="one">launch avoided</item>
         <item quantity="other">launches avoided</item>
@@ -280,7 +286,6 @@
     <string name="btn_back">No, not now</string>
     <string name="btn_pause">Don’t ask again for %1$s</string>
 
-    <string name="accessibility_service_description">Only detects the name of the app that comes to the foreground, in order to show a reminder before you open an app you have flagged. No screen content is read and no data leaves your device.</string>
 
     <string name="category_mental">Mental well-being</string>
     <string name="category_social">Social ethics</string>
