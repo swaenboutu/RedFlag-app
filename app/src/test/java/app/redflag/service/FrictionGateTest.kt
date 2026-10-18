@@ -130,4 +130,44 @@ class FrictionGateTest {
     fun `sans Non, aucune app n'est protegee par le delai de garde`() {
         assertFalse(gate.isDeclineGuarded("a"))
     }
+
+    @Test
+    fun `relancer l'app juste apres un Non redemande`() {
+        gate.declined("a")
+        gate.otherAppInForeground("launcher")
+        advance(FrictionGate.DECLINE_SETTLE_MILLIS)
+
+        assertFalse("the user has been on the home screen: opening the app again asks again", gate.isDeclineGuarded("a"))
+    }
+
+    @Test
+    fun `les evenements parasites qui suivent aussitot l'arrivee de l'accueil restent ignores`() {
+        gate.declined("a")
+        gate.otherAppInForeground("launcher")
+        advance(FrictionGate.DECLINE_SETTLE_MILLIS - 1)
+
+        assertTrue(gate.isDeclineGuarded("a"))
+    }
+
+    @Test
+    fun `un evenement de la meme app n'est pas la preuve que l'utilisateur est parti`() {
+        gate.declined("a")
+        gate.otherAppInForeground("a")
+        advance(FrictionGate.DECLINE_SETTLE_MILLIS)
+
+        assertTrue("only the delay can end the protection here", gate.isDeclineGuarded("a"))
+    }
+
+    @Test
+    fun `chaque Non repart de zero`() {
+        gate.declined("a")
+        gate.otherAppInForeground("launcher")
+        advance(FrictionGate.DECLINE_SETTLE_MILLIS)
+        assertFalse(gate.isDeclineGuarded("a"))
+
+        gate.declined("a")
+        assertTrue("a new answer, a new protection", gate.isDeclineGuarded("a"))
+        advance(FrictionGate.DECLINE_SETTLE_MILLIS)
+        assertTrue("no launcher event since this second No", gate.isDeclineGuarded("a"))
+    }
 }

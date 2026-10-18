@@ -47,9 +47,9 @@ class FrictionAccessibilityService : AccessibilityService() {
         if (pkg == packageName || pkg == SYSTEM_UI || isInputMethod(pkg)) return
 
         val gate = container.frictionGate
-        val target = monitored[pkg]
-
-        if (target == null) return
+        // After a "No", the launcher coming to the foreground tells that the user is elsewhere: opening the app again must ask.
+        gate.otherAppInForeground(pkg)
+        val target = monitored[pkg] ?: return
 
         if (gate.isDeclineGuarded(pkg)) return
         if (gate.isAllowed(pkg) || target.app.snoozedUntil > System.currentTimeMillis()) return
