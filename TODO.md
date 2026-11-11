@@ -11,7 +11,7 @@ d'accessibilité et demande un accord explicite, FAQ, site statique (`docs/`, EN
 - [ ] **Compte développeur** : création, vérification d'identité, enregistrement de l'app (vérification des développeurs
   Google)
 - [ ] **Mettre le site en ligne** (GitHub Pages sur `docs/`) : son adresse sert de politique de confidentialité
-  - Remplacer l'adresse provisoire `example@email.com` : `node scripts/site.mjs set-email <adresse>`
+  - ~~Remplacer l'adresse provisoire~~ : fait, `swaen@boutu.fr` (`node scripts/site.mjs set-email <adresse>` pour la changer)
   - Relire la politique de confidentialité (section « Vie privée » du site) ; elle doit avoir sa propre adresse
     (page ou ancre stable) à donner à la Play Console
 - [ ] **Politique de confidentialité dans l'app** : ajouter son lien dans « À propos » (tiroir) une fois qu'elle est hébergée sur le site

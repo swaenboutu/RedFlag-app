@@ -77,7 +77,7 @@ anchor menu, the FAQ, screenshots and a contact form. No external resource (font
 python -m http.server 8000 -d docs     # preview at http://localhost:8000
 node scripts/site.mjs sync-faq         # copies the app's FAQ (res/raw/faq.xml and raw-fr/faq.xml) into both pages
 node scripts/site.mjs check            # links, anchors, images, languages, FAQ up to date, contact address (also run by scripts/test.sh)
-node scripts/site.mjs set-email address@example.com   # contact address: currently example@email.com
+node scripts/site.mjs set-email address@example.com   # contact address: currently swaen@boutu.fr
 ```
 
 The FAQ therefore has a single source (the app's XML files): edit it there, then run `sync-faq`. The form prepares a message in the
