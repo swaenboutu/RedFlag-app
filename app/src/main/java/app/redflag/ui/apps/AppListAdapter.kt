@@ -81,9 +81,9 @@ class AppListAdapter(
     private object Diff : DiffUtil.ItemCallback<AppItem>() {
         override fun areItemsTheSame(old: AppItem, new: AppItem) = old.app.packageName == new.app.packageName
         // Not `old == new`: the icon is a new Drawable at each listing (no equals), every row would look changed and be rebound.
+        // So the whole item is compared with the app (and its icon) taken from the new one; only the app's label is compared apart.
         override fun areContentsTheSame(old: AppItem, new: AppItem) =
-            old.app.label == new.app.label && old.problems == new.problems && old.overrides == new.overrides &&
-                old.first == new.first && old.last == new.last
+            old.app.label == new.app.label && old.copy(app = new.app) == new
     }
 
     private companion object {
