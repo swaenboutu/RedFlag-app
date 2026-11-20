@@ -2,7 +2,10 @@ package app.redflag.ui.stats
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -11,6 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import app.redflag.R
 import app.redflag.container
 import app.redflag.data.StatsRange
+import app.redflag.data.UninstallSuggestion
 import app.redflag.data.displayLabel
 import app.redflag.databinding.ActivityAppStatsBinding
 import app.redflag.ui.common.BottomNav
@@ -45,6 +49,12 @@ class AppStatsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { show(it) }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.suggestion.collect { showSuggestion(packageName, it) }
             }
         }
     }
@@ -98,6 +108,34 @@ class AppStatsActivity : AppCompatActivity() {
         binding.chartEmpty.visibility = if (state.attempts == 0) View.VISIBLE else View.GONE
         binding.chart.contentDescription =
             getString(R.string.stats_chart_description, caption, state.attempts, state.bypassed, state.snoozed)
+    }
+
+    /**
+     * The uninstall suggestion card, under the name of the app: only for an app that is still installed, never a notification, no
+     * judgement in the wording. The action opens the app's page in the Android settings, where the user can uninstall it (no
+     * extra permission needed).
+     */
+    private fun showSuggestion(packageName: String, suggestion: UninstallSuggestion?) {
+        val visible = suggestion != null && isInstalled(packageName)
+        binding.suggestionCard.visibility = if (visible) View.VISIBLE else View.GONE
+        if (!visible) return
+        binding.suggestionText.text = getString(
+            R.string.uninstall_suggestion_text,
+            binding.appName.text,
+            suggestion!!.refusals,
+            suggestion.attempts,
+        )
+        binding.suggestionOpen.setOnClickListener {
+            startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null)))
+        }
+        binding.suggestionDismiss.setOnClickListener { viewModel.dismissSuggestion() }
+    }
+
+    private fun isInstalled(packageName: String): Boolean = try {
+        packageManager.getApplicationInfo(packageName, 0)
+        true
+    } catch (_: PackageManager.NameNotFoundException) {
+        false
     }
 
     /** Under the name: the issues this app is flagged for, separated by dots (nothing for an app that is not flagged). */

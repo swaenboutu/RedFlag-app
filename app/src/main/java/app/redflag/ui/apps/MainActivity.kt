@@ -1,9 +1,6 @@
 package app.redflag.ui.apps
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
@@ -45,12 +42,6 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.suggestion.collect { showSuggestion(it) }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
                     // After a filter change, go back to the top once the new list is in place: scrolling before would leave the
                     // old position when rows are inserted above (for instance "Not flagged" -> "All" brings the flagged apps first).
@@ -65,21 +56,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    /**
-     * The uninstall suggestion card: never a notification, no judgement in the wording. The action opens the app's page in the
-     * Android settings, where the user can uninstall it (no extra permission needed).
-     */
-    private fun showSuggestion(item: SuggestionItem?) {
-        binding.suggestionCard.visibility = if (item == null) View.GONE else View.VISIBLE
-        if (item == null) return
-        val s = item.suggestion
-        binding.suggestionText.text = getString(R.string.uninstall_suggestion_text, item.label, s.refusals, s.attempts)
-        binding.suggestionOpen.setOnClickListener {
-            startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", s.packageName, null)))
-        }
-        binding.suggestionDismiss.setOnClickListener { viewModel.dismissSuggestion(s.packageName) }
     }
 
     /**

@@ -5,8 +5,6 @@ import androidx.lifecycle.viewModelScope
 import app.redflag.AppContainer
 import app.redflag.data.InstalledApp
 import app.redflag.data.Problem
-import app.redflag.data.UninstallSuggestion
-import app.redflag.data.UninstallSuggestions
 import app.redflag.util.alphabetical
 import app.redflag.util.matchesSearch
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,9 +26,6 @@ data class AppItem(
     val first: Boolean = false,
     val last: Boolean = false,
 )
-
-/** An uninstall suggestion shown above the list, for an app that is still installed: [label] is its name. */
-data class SuggestionItem(val suggestion: UninstallSuggestion, val label: String)
 
 enum class AppFilter { ALL, FLAGGED, UNFLAGGED }
 
@@ -75,22 +70,6 @@ class MainViewModel(private val container: AppContainer) : ViewModel() {
 
         AppsState(visible, all.count { it.problems.isNotEmpty() }, filter, loaded = true)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppsState())
-
-    /**
-     * At most one uninstall suggestion at a time (the most refused app), and only for an app that is still installed: it stays
-     * discreet, and goes away once the app is uninstalled or the user chose "Don't suggest again".
-     */
-    val suggestion: StateFlow<SuggestionItem?> = combine(
-        installed,
-        container.repository.choiceEvents,
-        container.settings.dismissedUninstallSuggestions,
-    ) { apps, events, dismissed ->
-        val byPackage = apps.orEmpty().associateBy { it.packageName }
-        UninstallSuggestions.suggest(events, System.currentTimeMillis(), dismissed)
-            .firstNotNullOfOrNull { s -> byPackage[s.packageName]?.let { SuggestionItem(s, it.label) } }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
-
-    fun dismissSuggestion(packageName: String) = container.settings.dismissUninstallSuggestion(packageName)
 
     init {
         // Recharge la liste quand le réglage « Liste affichée » ou les apps signalées changent, ou sur demande (reload).
