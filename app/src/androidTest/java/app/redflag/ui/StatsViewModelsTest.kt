@@ -61,12 +61,12 @@ class StatsViewModelsTest {
         env.repository.recordChoice("app.other", proceeded = false)
 
         val vm = env.viewModel(mapOf(AppStatsArgs.PACKAGE to "app.a")) { AppStatsViewModel(env.container, it) }
-        val day = vm.state.await { it.allTimeAttempts == 4 }
+        val month = vm.state.await { it.allTimeAttempts == 4 }
 
-        assertEquals(StatsRange.DAY, day.range)
-        assertEquals(4, day.attempts)
-        assertEquals(1, day.bypassed)
-        assertEquals(1, day.snoozed)
+        assertEquals("par mois par défaut", StatsRange.MONTH, month.range)
+        assertEquals(4, month.attempts)
+        assertEquals(1, month.bypassed)
+        assertEquals(1, month.snoozed)
 
         vm.setRange(StatsRange.YEAR)
         val year = vm.state.await { it.range == StatsRange.YEAR }

@@ -32,12 +32,16 @@ data class AppStatsState(val range: StatsRange, val buckets: List<StatsBucket>, 
 class AppStatsViewModel(private val container: AppContainer, handle: SavedStateHandle) : ViewModel() {
     private val packageName: String = checkNotNull(handle[AppStatsArgs.PACKAGE])
 
-    private val range = MutableStateFlow(StatsRange.DAY)
+    /**
+     * Par mois par défaut : sur 14 jours seulement, les chiffres pouvaient contredire la suggestion de désinstallation, qui compte
+     * sur 3 mois.
+     */
+    private val range = MutableStateFlow(StatsRange.MONTH)
 
     val state: StateFlow<AppStatsState> = combine(container.repository.choiceEvents, range) { events, range ->
         val mine = events.filter { it.packageName == packageName }
         AppStatsState(range, Stats.buckets(mine, range), allTimeAttempts = mine.size)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppStatsState(StatsRange.DAY, emptyList(), 0))
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppStatsState(StatsRange.MONTH, emptyList(), 0))
 
     /**
      * A suggestion to uninstall this app, when the user almost always refuses to open it (see [UninstallSuggestions]); null
