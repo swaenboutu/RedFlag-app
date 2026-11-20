@@ -31,8 +31,26 @@ class FrictionAccessibilityService : AccessibilityService() {
         override fun onReceive(context: Context, intent: Intent) = container.frictionGate.revokeAll()
     }
 
+    /**
+     * The keyboards' packages, kept in memory: asking the system at each window event would cost an IPC for every app of the phone.
+     * Refreshed when the user changes keyboard.
+     */
+    @Volatile
+    private var inputMethods: Set<String> = emptySet()
+
+    private val inputMethodChanged = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) = refreshInputMethods()
+    }
+
+    private fun refreshInputMethods() {
+        val imm = getSystemService(InputMethodManager::class.java)
+        inputMethods = imm?.enabledInputMethodList.orEmpty().map { it.packageName }.toSet()
+    }
+
     override fun onServiceConnected() {
         registerReceiver(screenOff, IntentFilter(Intent.ACTION_SCREEN_OFF))
+        registerReceiver(inputMethodChanged, IntentFilter(Intent.ACTION_INPUT_METHOD_CHANGED))
+        refreshInputMethods()
         scope.launch {
             container.repository.monitoredApps.collect { list ->
                 monitored = list.associateBy { it.app.packageName }
@@ -60,14 +78,12 @@ class FrictionAccessibilityService : AccessibilityService() {
 
     override fun onDestroy() {
         runCatching { unregisterReceiver(screenOff) }
+        runCatching { unregisterReceiver(inputMethodChanged) }
         scope.cancel()
         super.onDestroy()
     }
 
-    private fun isInputMethod(pkg: String): Boolean {
-        val imm = getSystemService(InputMethodManager::class.java) ?: return false
-        return imm.enabledInputMethodList.any { it.packageName == pkg }
-    }
+    private fun isInputMethod(pkg: String): Boolean = pkg in inputMethods
 
     private companion object {
         const val SYSTEM_UI = "com.android.systemui"
