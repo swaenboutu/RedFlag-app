@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by screenViewModel { c, _, _ -> MainViewModel(c) }
     private lateinit var binding: ActivityMainBinding
-    private var resumedBefore = false
 
     /** The filter the user just picked, until the list for it has been shown (then the list goes back to the top). */
     private var pendingFilter: AppFilter? = null
@@ -78,10 +77,6 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         BottomNav.select(binding.bottomBar.bottomNav, R.id.nav_apps)
-        // An app may have been installed or removed while the screen was in the background. The first display already loads the
-        // list: only reload on later returns.
-        if (resumedBefore) viewModel.reload()
-        resumedBefore = true
     }
 
     private companion object {

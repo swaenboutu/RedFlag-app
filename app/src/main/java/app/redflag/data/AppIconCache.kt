@@ -28,6 +28,11 @@ class AppIconCache(private val context: Context) {
         return icon
     }
 
+    /** The app was installed, removed or updated: its icon may have changed, it is read again next time. */
+    fun forget(packageName: String) {
+        cache.remove(packageName)
+    }
+
     fun put(packageName: String, icon: Drawable) {
         icon.constantState?.let { cache.put(packageName, it) }
     }

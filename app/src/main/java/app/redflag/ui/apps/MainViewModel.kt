@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
@@ -41,7 +40,6 @@ data class AppsState(
 
 class MainViewModel(private val container: AppContainer) : ViewModel() {
     private val installed = MutableStateFlow<List<InstalledApp>?>(null)
-    private val refresh = MutableStateFlow(0)
     private val query = MutableStateFlow("")
     private val filter = MutableStateFlow(AppFilter.ALL)
 
@@ -74,12 +72,10 @@ class MainViewModel(private val container: AppContainer) : ViewModel() {
     }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppsState())
 
     init {
-        // Recharge la liste quand le réglage « Liste affichée » ou les apps signalées changent, ou sur demande (reload).
-        viewModelScope.launch { container.installedAppsFlow(refresh).collect { installed.value = it } }
+        // Recharge la liste quand le réglage « Liste affichée » ou les apps signalées changent, ou quand une app est installée,
+        // désinstallée ou mise à jour (même pendant que l'écran est ouvert).
+        viewModelScope.launch { container.installedAppsFlow().collect { installed.value = it } }
     }
-
-    /** À appeler au retour sur l'écran : une app a pu être installée ou désinstallée pendant que l'écran était en arrière-plan. */
-    fun reload() = refresh.update { it + 1 }
 
     fun setQuery(text: String) {
         query.value = text
