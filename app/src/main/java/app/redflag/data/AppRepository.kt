@@ -115,6 +115,9 @@ class AppRepository(private val db: AppDatabase) {
 
     suspend fun snooze(packageName: String, until: Long) = apps.snooze(packageName, until)
 
+    /** Debug: adds answers as they are (fake data, see [SampleData]). */
+    suspend fun addChoices(choices: List<ChoiceEvent>) = events.insertAll(choices)
+
     suspend fun recordChoice(packageName: String, proceeded: Boolean, snoozed: Boolean = false) =
         events.insert(
             ChoiceEvent(

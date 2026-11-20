@@ -188,6 +188,9 @@
     <string name="settings_debug_already">Debug mode is already on</string>
     <string name="settings_debug_onboarding_title">Always show the welcome screens</string>
     <string name="settings_debug_onboarding_subtitle">Each time the app is launched from its icon.</string>
+    <string name="settings_debug_sample_title">Add sample data</string>
+    <string name="settings_debug_sample_subtitle">Random answers over the last 3 months, for a few installed apps.</string>
+    <string name="settings_debug_sample_done">%1$d answers added for %2$d apps</string>
     <string name="settings_debug_reset_title">Reset the app</string>
     <string name="settings_debug_reset_subtitle">Erase everything, as on a first launch.</string>
     <string name="settings_debug_reset_confirm_title">Reset the app?</string>
@@ -339,4 +342,8 @@
     <string name="problem_polarization_description">Recommendations that keep you inside your own bubble</string>
     <string name="problem_authoritarian_funding">Funding of authoritarian regimes</string>
     <string name="problem_authoritarian_funding_description">Investors or partners tied to repressive governments</string>
+    <string name="uninstall_suggestion_title">Still need this app?</string>
+    <string name="uninstall_suggestion_text">Over the last 3 months, you chose not to open %1$s %2$d times out of %3$d. If you no longer need it, you could uninstall it.</string>
+    <string name="uninstall_suggestion_open">Open app settings</string>
+    <string name="uninstall_suggestion_dismiss">Don’t suggest again</string>
 </resources>

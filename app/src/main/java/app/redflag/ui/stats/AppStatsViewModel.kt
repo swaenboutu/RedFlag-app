@@ -7,6 +7,8 @@ import app.redflag.AppContainer
 import app.redflag.data.Stats
 import app.redflag.data.StatsBucket
 import app.redflag.data.StatsRange
+import app.redflag.data.UninstallSuggestion
+import app.redflag.data.UninstallSuggestions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -29,15 +31,34 @@ data class AppStatsState(val range: StatsRange, val buckets: List<StatsBucket>, 
     val snoozed: Int get() = buckets.sumOf { it.snoozed }
 }
 
-class AppStatsViewModel(container: AppContainer, handle: SavedStateHandle) : ViewModel() {
+class AppStatsViewModel(private val container: AppContainer, handle: SavedStateHandle) : ViewModel() {
     private val packageName: String = checkNotNull(handle[AppStatsArgs.PACKAGE])
 
-    private val range = MutableStateFlow(StatsRange.DAY)
+    /**
+     * Par mois par défaut : sur 14 jours seulement, les chiffres pouvaient contredire la suggestion de désinstallation, qui compte
+     * sur 3 mois.
+     */
+    private val range = MutableStateFlow(StatsRange.MONTH)
 
     val state: StateFlow<AppStatsState> = combine(container.repository.history, range) { history, range ->
         val mine = history.forApp(packageName)
         AppStatsState(range, Stats.buckets(mine, range), allTimeAttempts = mine.attempts)
-    }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppStatsState(StatsRange.DAY, emptyList(), 0))
+    }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppStatsState(StatsRange.MONTH, emptyList(), 0))
+
+    /**
+     * A suggestion to uninstall this app, when the user almost always refuses to open it (see [UninstallSuggestions]); null
+     * otherwise, or once the user chose "Don't suggest again" for it. The rules need single answers over 3 months: the recent ones,
+     * kept one by one for longer than that (see [app.redflag.data.HistoryCompaction.KEEP_MILLIS]).
+     */
+    val suggestion: StateFlow<UninstallSuggestion?> = combine(
+        container.repository.choiceEvents,
+        container.settings.dismissedUninstallSuggestions,
+    ) { events, dismissed ->
+        UninstallSuggestions.suggest(events.filter { it.packageName == packageName }, System.currentTimeMillis(), dismissed)
+            .firstOrNull()
+    }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    fun dismissSuggestion() = container.settings.dismissUninstallSuggestion(packageName)
 
     fun setRange(value: StatsRange) {
         range.value = value
