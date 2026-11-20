@@ -2,6 +2,8 @@ package app.redflag.data
 
 import androidx.room.withTransaction
 import app.redflag.util.alphabetical
+import java.time.YearMonth
+import java.time.ZoneId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -12,6 +14,7 @@ class AppRepository(private val db: AppDatabase) {
     private val favoriteDao get() = db.favoriteDao()
     private val overrides get() = db.catalogOverrideDao()
     private val events get() = db.choiceEventDao()
+    private val months get() = db.choiceMonthDao()
 
     val monitoredApps: Flow<List<MonitoredAppWithProblems>> get() = apps.observeAll()
     val customProblems: Flow<List<CustomProblem>> get() = custom.observeAll().map { list -> list.sortedWith(compareBy(alphabetical()) { it.label }) }
@@ -27,11 +30,38 @@ class AppRepository(private val db: AppDatabase) {
         get() = combine(overrides.observeAll(), custom.observeAll()) { renamed, created ->
             renamed.associate { it.catalogKey to it.label } + created.associate { it.id to it.label }
         }
-    val refusals: Flow<List<RefusalCount>> get() = events.observeRefusals()
+    /** "No" answers per app, from the whole history (recent answers and older monthly counts). */
+    val refusals: Flow<List<RefusalCount>>
+        get() = history.map { h -> h.refusalsByApp().map { (pkg, count) -> RefusalCount(pkg, count) }.sortedBy { it.packageName } }
+
+    /** The recent answers, one by one (the older ones are only counted: see [history]). */
     val choiceEvents: Flow<List<ChoiceEvent>> get() = events.observeAll()
 
-    /** The time of the first choice ever made, null before any. */
-    suspend fun firstChoiceTimestamp(): Long? = events.firstTimestamp()
+    /** Every answer: the recent ones one by one, the older ones counted per month. What statistics and totals must read. */
+    val history: Flow<ChoiceHistory> get() = combine(events.observeAll(), months.observeAll()) { e, m -> ChoiceHistory(e, m) }
+
+    /**
+     * The time of the first choice ever made, null before any. Once the oldest answers are only counted per month, it is the start
+     * of their month (the start date shown on Home is saved before that happens: see [AppContainer.compactHistoryIfDue]).
+     */
+    suspend fun firstChoiceTimestamp(zone: ZoneId = ZoneId.systemDefault()): Long? {
+        val month = months.firstMonth()?.let { YearMonth.parse(it).atDay(1).atStartOfDay(zone).toInstant().toEpochMilli() }
+        return listOfNotNull(events.firstTimestamp(), month).minOrNull()
+    }
+
+    /**
+     * Counts the answers older than [HistoryCompaction.KEEP_MILLIS] in their month, then removes them, all at once: either both
+     * happen or neither, so no answer is lost or counted twice. Returns how many answers were compacted.
+     */
+    suspend fun compactHistory(now: Long = System.currentTimeMillis(), zone: ZoneId = ZoneId.systemDefault()): Int =
+        db.withTransaction {
+            val cutoff = now - HistoryCompaction.KEEP_MILLIS
+            val old = events.before(cutoff)
+            if (old.isEmpty()) return@withTransaction 0
+            months.upsertAll(HistoryCompaction.merge(months.listOnce(), HistoryCompaction.summarize(old, zone)))
+            events.deleteBefore(cutoff)
+            old.size
+        }
 
     suspend fun find(packageName: String): MonitoredAppWithProblems? = apps.find(packageName)
 

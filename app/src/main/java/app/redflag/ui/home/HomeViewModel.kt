@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -61,10 +63,10 @@ class HomeViewModel(private val container: AppContainer, private val context: Co
 
     val state: StateFlow<HomeState> = combine(
         settingsPart,
-        combine(repository.monitoredApps, repository.refusals, repository.choiceEvents) { monitored, refusals, events -> Triple(monitored, refusals, events) },
+        combine(repository.monitoredApps, repository.history) { monitored, history -> monitored to history },
         combine(repository.labelOverrides, repository.customProblems) { overrides, customs -> overrides to customs },
     ) { part, data, labels ->
-        val (monitored, refusals, events) = data
+        val (monitored, history) = data
         val (overrides, customs) = labels
         val flagged = monitored.filter { it.problems.isNotEmpty() }
         val names = monitored.associate { it.app.packageName to it.app.appName }
@@ -75,14 +77,14 @@ class HomeViewModel(private val container: AppContainer, private val context: Co
             paused = part.paused,
             resumeAt = part.resumeAt,
             flaggedApps = flagged.size,
-            avoided = refusals.sumOf { it.refusals },
+            avoided = history.refusalsByApp().values.sum(),
             startedAt = part.startedAt,
-            topApp = topInterruptedApp(events, names),
+            topApp = topInterruptedApp(history, names),
             topIssue = issue,
             topIssueTheme = themeTitle ?: R.string.category_custom,
             loaded = true,
         )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeState())
+    }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeState())
 
     /** The title of the theme of an issue: its catalog theme, or the theme a custom issue was put in, or "Custom". */
     private fun themeOf(ref: ProblemRef, customCategory: String?): Int =

@@ -7,10 +7,12 @@ import app.redflag.AppContainer
 import app.redflag.data.Stats
 import app.redflag.data.StatsBucket
 import app.redflag.data.StatsRange
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 
 /** Clés des extras de l'intent, lues aussi par le SavedStateHandle du ViewModel. */
@@ -32,10 +34,10 @@ class AppStatsViewModel(container: AppContainer, handle: SavedStateHandle) : Vie
 
     private val range = MutableStateFlow(StatsRange.DAY)
 
-    val state: StateFlow<AppStatsState> = combine(container.repository.choiceEvents, range) { events, range ->
-        val mine = events.filter { it.packageName == packageName }
-        AppStatsState(range, Stats.buckets(mine, range), allTimeAttempts = mine.size)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppStatsState(StatsRange.DAY, emptyList(), 0))
+    val state: StateFlow<AppStatsState> = combine(container.repository.history, range) { history, range ->
+        val mine = history.forApp(packageName)
+        AppStatsState(range, Stats.buckets(mine, range), allTimeAttempts = mine.attempts)
+    }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppStatsState(StatsRange.DAY, emptyList(), 0))
 
     fun setRange(value: StatsRange) {
         range.value = value

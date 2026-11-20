@@ -14,6 +14,8 @@ import app.redflag.data.MIGRATION_4_5
 import app.redflag.data.MIGRATION_5_6
 import app.redflag.data.MIGRATION_6_7
 import app.redflag.data.MIGRATION_7_8
+import app.redflag.data.MIGRATION_8_9
+import app.redflag.data.HistoryCompaction
 import app.redflag.data.SettingsStore
 import app.redflag.service.FrictionGate
 import kotlinx.coroutines.CoroutineScope
@@ -24,6 +26,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
@@ -39,6 +42,24 @@ class AppContainer(context: Context, database: AppDatabase = openDatabase(contex
 
     /** For what must finish even if the screen that started it goes away (a database write, for example). */
     val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
+    /** When the history was last compacted in this process; 0 = not yet. */
+    @Volatile
+    private var lastCompaction = 0L
+
+    /**
+     * Keeps the history small (see [HistoryCompaction]), at most once a day: at startup and after an answer, since the accessibility
+     * service keeps the process alive for weeks. The start date shown on Home is decided first, from the oldest answer, so that it
+     * does not move once that answer is only counted per month.
+     */
+    fun compactHistoryIfDue(now: Long = System.currentTimeMillis()) {
+        if (now - lastCompaction < HistoryCompaction.EVERY_MILLIS) return
+        lastCompaction = now
+        applicationScope.launch {
+            settings.startedAt(repository.firstChoiceTimestamp() ?: now)
+            repository.compactHistory(now)
+        }
+    }
 
     /**
      * The apps to list: the "Displayed list" setting applies, but a flagged app is always there (otherwise it would stay watched
@@ -61,5 +82,5 @@ class AppContainer(context: Context, database: AppDatabase = openDatabase(contex
 
 private fun openDatabase(context: Context): AppDatabase =
     Room.databaseBuilder(context, AppDatabase::class.java, "conscience.db")
-        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
+        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
         .build()

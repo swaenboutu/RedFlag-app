@@ -73,6 +73,19 @@ data class ChoiceEvent(
     @ColumnInfo(defaultValue = "0") val snoozed: Boolean = false,
 )
 
+/**
+ * The answers of one app during one [month] ("2026-09"), once they are old enough to be counted instead of kept one by one (see
+ * [HistoryCompaction]): [blocked] "No", [bypassed] "Yes", [snoozed] "Don't ask again for…".
+ */
+@Entity(tableName = "choice_months", primaryKeys = ["packageName", "month"])
+data class ChoiceMonth(
+    val packageName: String,
+    val month: String,
+    val blocked: Int,
+    val bypassed: Int,
+    val snoozed: Int,
+)
+
 data class MonitoredAppWithProblems(
     @Embedded val app: MonitoredApp,
     @Relation(parentColumn = "packageName", entityColumn = "packageName")

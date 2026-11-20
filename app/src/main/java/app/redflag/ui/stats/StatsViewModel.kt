@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.redflag.AppContainer
 import app.redflag.util.alphabetical
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -27,10 +29,10 @@ class StatsViewModel(private val container: AppContainer) : ViewModel() {
 
     val state: StateFlow<StatsState> = combine(
         repository.monitoredApps,
-        repository.choiceEvents,
+        repository.history,
         installedCount,
-    ) { monitored, events, installed ->
-        val attempts = events.groupingBy { it.packageName }.eachCount()
+    ) { monitored, history, installed ->
+        val attempts = history.attemptsByApp()
         val apps = monitored
             .map { StatsApp(it.app.packageName, it.app.appName, attempts[it.app.packageName] ?: 0) }
             .sortedWith(compareByDescending<StatsApp> { it.attempts }.thenBy(alphabetical()) { it.appName })
@@ -39,7 +41,7 @@ class StatsViewModel(private val container: AppContainer) : ViewModel() {
             interceptedCount = apps.size,
             rows = apps.mapIndexed { i, app -> StatsRow(app, first = i == 0, last = i == apps.lastIndex) },
         )
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), StatsState(null, 0, emptyList()))
+    }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), StatsState(null, 0, emptyList()))
 
     init {
         // The total counts the same apps as the list of apps (a flagged app is always in it), without loading their icons.

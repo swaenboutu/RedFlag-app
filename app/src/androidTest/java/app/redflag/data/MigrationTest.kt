@@ -29,7 +29,7 @@ class MigrationTest {
         FrameworkSQLiteOpenHelperFactory(),
     )
 
-    private val all = arrayOf(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
+    private val all = arrayOf(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
 
     private fun SupportSQLiteDatabase.insert(table: String, vararg values: Pair<String, Any?>) {
         val cv = ContentValues()
@@ -63,7 +63,7 @@ class MigrationTest {
     fun migrateFromVersion1KeepsEveryUserData() {
         helper.createDatabase(name, 1).apply { fillV1(); close() }
 
-        val db = helper.runMigrationsAndValidate(name, 8, true, *all)
+        val db = helper.runMigrationsAndValidate(name, 9, true, *all)
 
         assertEquals(2, db.count("monitored_apps"))
         assertEquals(3, db.count("problems"))
@@ -199,10 +199,24 @@ class MigrationTest {
     }
 
     @Test
+    fun migrationTo9KeepsEveryAnswerOneByOneAndStartsWithNoMonthlyCount() {
+        helper.createDatabase(name, 8).apply {
+            insert("choice_events", "packageName" to "app.a", "timestamp" to 1_000L, "proceeded" to 0, "snoozed" to 0)
+            insert("choice_events", "packageName" to "app.a", "timestamp" to 2_000L, "proceeded" to 1, "snoozed" to 1)
+            close()
+        }
+
+        val db = helper.runMigrationsAndValidate(name, 9, true, MIGRATION_8_9)
+
+        assertEquals(2, db.count("choice_events"))
+        assertEquals(0, db.count("choice_months"))
+    }
+
+    @Test
     fun everyVersionCanBeMigratedToTheCurrentOne() {
-        for (from in 1..7) {
+        for (from in 1..8) {
             helper.createDatabase("$name-$from", from).close()
-            val db = helper.runMigrationsAndValidate("$name-$from", 8, true, *all)
+            val db = helper.runMigrationsAndValidate("$name-$from", 9, true, *all)
             assertEquals("depuis la version $from", 0, db.count("monitored_apps"))
             db.close()
         }
@@ -211,7 +225,7 @@ class MigrationTest {
     @Test
     fun migratedDatabaseIsUsableByTheRealDatabaseClass() {
         helper.createDatabase(name, 1).apply { fillV1(); close() }
-        helper.runMigrationsAndValidate(name, 8, true, *all).close()
+        helper.runMigrationsAndValidate(name, 9, true, *all).close()
 
         val db = androidx.room.Room.databaseBuilder(
             InstrumentationRegistry.getInstrumentation().targetContext, AppDatabase::class.java, name,

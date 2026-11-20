@@ -120,9 +120,27 @@ interface ChoiceEventDao {
     @Query("SELECT MIN(timestamp) FROM choice_events")
     suspend fun firstTimestamp(): Long?
 
-    @Query(
-        "SELECT packageName, COUNT(*) AS refusals FROM choice_events " +
-            "WHERE proceeded = 0 GROUP BY packageName",
-    )
-    fun observeRefusals(): Flow<List<RefusalCount>>
+    /** The answers older than [before], to count them per month before removing them (see [HistoryCompaction]). */
+    @Query("SELECT * FROM choice_events WHERE timestamp < :before")
+    suspend fun before(before: Long): List<ChoiceEvent>
+
+    @Query("DELETE FROM choice_events WHERE timestamp < :before")
+    suspend fun deleteBefore(before: Long): Int
+}
+
+/** The older answers, counted per app and per month (see [HistoryCompaction]). */
+@Dao
+interface ChoiceMonthDao {
+    @Query("SELECT * FROM choice_months")
+    fun observeAll(): Flow<List<ChoiceMonth>>
+
+    @Query("SELECT * FROM choice_months")
+    suspend fun listOnce(): List<ChoiceMonth>
+
+    @Upsert
+    suspend fun upsertAll(months: List<ChoiceMonth>)
+
+    /** The oldest month with counts ("2026-09"), null when there is none. */
+    @Query("SELECT MIN(month) FROM choice_months")
+    suspend fun firstMonth(): String?
 }

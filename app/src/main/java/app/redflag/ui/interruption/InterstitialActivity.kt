@@ -42,6 +42,8 @@ class InterstitialActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         targetPackage = intent.getStringExtra(EXTRA_PACKAGE) ?: return finish()
+        // The process can live for weeks (accessibility service): the history is kept small from here too, at most once a day.
+        container.compactHistoryIfDue()
 
         // Le bouton retour équivaut à « Non » : ne jamais laisser l'app cible à découvert.
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {

@@ -227,4 +227,29 @@ class AppRepositoryTest {
 
         assertEquals(1, repository.choiceEvents.first().size)
     }
+
+    @Test
+    fun compactingTheHistoryKeepsEveryCountAndOnlyRecentAnswers() = run {
+        val day = 24 * 60 * 60_000L
+        val now = System.currentTimeMillis()
+        val old = now - HistoryCompaction.KEEP_MILLIS - 30 * day
+        db.choiceEventDao().insert(ChoiceEvent(packageName = "app.a", timestamp = old, proceeded = false))
+        db.choiceEventDao().insert(ChoiceEvent(packageName = "app.a", timestamp = old + day, proceeded = true, snoozed = true))
+        db.choiceEventDao().insert(ChoiceEvent(packageName = "app.b", timestamp = old, proceeded = true))
+        repository.recordChoice("app.a", proceeded = false)
+        val before = repository.history.first()
+
+        assertEquals(3, repository.compactHistory(now))
+        assertEquals("nothing left to compact", 0, repository.compactHistory(now))
+
+        val after = repository.history.first()
+        assertEquals(1, after.events.size)
+        assertEquals(before.attemptsByApp(), after.attemptsByApp())
+        assertEquals(before.refusalsByApp(), after.refusalsByApp())
+        assertEquals(listOf(RefusalCount("app.a", 2)), repository.refusals.first())
+        StatsRange.entries.forEach { range ->
+            assertEquals("$range", Stats.buckets(before, range), Stats.buckets(after, range))
+        }
+        assertTrue("the first answer is still known, to its month", repository.firstChoiceTimestamp()!! <= old)
+    }
 }

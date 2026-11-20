@@ -13,8 +13,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         CatalogOverride::class,
         Favorite::class,
         ChoiceEvent::class,
+        ChoiceMonth::class,
     ],
-    version = 8,
+    version = 9,
     exportSchema = true,
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -23,6 +24,21 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun favoriteDao(): FavoriteDao
     abstract fun catalogOverrideDao(): CatalogOverrideDao
     abstract fun choiceEventDao(): ChoiceEventDao
+    abstract fun choiceMonthDao(): ChoiceMonthDao
+}
+
+/**
+ * v9 : the older answers counted per app and per month, so that the history stays small (see [HistoryCompaction]). The table
+ * starts empty: the answers already recorded stay one by one until they are old enough.
+ */
+val MIGRATION_8_9 = object : Migration(8, 9) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            "CREATE TABLE IF NOT EXISTS `choice_months` (`packageName` TEXT NOT NULL, `month` TEXT NOT NULL, " +
+                "`blocked` INTEGER NOT NULL, `bypassed` INTEGER NOT NULL, `snoozed` INTEGER NOT NULL, " +
+                "PRIMARY KEY(`packageName`, `month`))",
+        )
+    }
 }
 
 /** v2 : table des problématiques personnalisées, alimentée avec celles déjà associées à des apps. */

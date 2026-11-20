@@ -17,6 +17,7 @@ class ConscienceApp : Application() {
         container.applicationScope.launch {
             container.icons.preload(container.repository.monitoredApps.first().map { it.app.packageName })
         }
+        container.compactHistoryIfDue()
     }
 }
 

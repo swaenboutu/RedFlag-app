@@ -2,6 +2,7 @@ package app.redflag.data
 
 import java.time.Instant
 import java.time.LocalDate
+import java.time.YearMonth
 import java.time.ZoneId
 
 /** Échelle d'un graphe : une barre par jour, par mois ou par année. */
@@ -37,7 +38,19 @@ object Stats {
         range: StatsRange,
         now: Instant = Instant.now(),
         zone: ZoneId = ZoneId.systemDefault(),
+    ): List<StatsBucket> = buckets(ChoiceHistory(events), range, now, zone)
+
+    /**
+     * Same, from the whole history: the answers already counted per month ([ChoiceHistory.months]) go to their month or year. They
+     * are older than [HistoryCompaction.KEEP_MILLIS], so never in the per-day view.
+     */
+    fun buckets(
+        history: ChoiceHistory,
+        range: StatsRange,
+        now: Instant = Instant.now(),
+        zone: ZoneId = ZoneId.systemDefault(),
     ): List<StatsBucket> {
+        val events = history.events
         val today = now.atZone(zone).toLocalDate()
         val starts = (range.bucketCount - 1 downTo 0).map { back ->
             when (range) {
@@ -55,6 +68,17 @@ object Stats {
                 StatsRange.YEAR -> day.withDayOfYear(1)
             }
             counts[start]?.let { it[event.kind()]++ }
+        }
+        if (range != StatsRange.DAY) {
+            history.months.forEach { month ->
+                val first = YearMonth.parse(month.month).atDay(1)
+                val start = if (range == StatsRange.MONTH) first else first.withDayOfYear(1)
+                counts[start]?.let {
+                    it[0] += month.blocked
+                    it[1] += month.bypassed
+                    it[2] += month.snoozed
+                }
+            }
         }
         return starts.map { start ->
             val c = counts.getValue(start)

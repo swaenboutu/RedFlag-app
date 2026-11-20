@@ -1,6 +1,7 @@
 package app.redflag.ui.home
 
 import app.redflag.data.ChoiceEvent
+import app.redflag.data.ChoiceHistory
 import app.redflag.data.MonitoredAppWithProblems
 import app.redflag.data.ProblemRef
 import app.redflag.util.alphabetical
@@ -16,9 +17,12 @@ data class TopIssue(val ref: ProblemRef, val label: String, val apps: Int)
  * one in alphabetical order. [names]: the name of each app by package (an app that is no longer flagged keeps its package name).
  */
 fun topInterruptedApp(events: List<ChoiceEvent>, names: Map<String, String>): TopApp? =
-    events
-        .groupingBy { it.packageName }
-        .eachCount()
+    topInterruptedApp(ChoiceHistory(events), names)
+
+/** Same, from the whole history (recent answers and older monthly counts). */
+fun topInterruptedApp(history: ChoiceHistory, names: Map<String, String>): TopApp? =
+    history
+        .attemptsByApp()
         .map { (pkg, count) -> TopApp(pkg, names[pkg] ?: pkg, count) }
         .sortedWith(compareByDescending<TopApp> { it.interruptions }.thenBy(alphabetical()) { it.label })
         .firstOrNull()
