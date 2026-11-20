@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -14,14 +15,18 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import app.redflag.R
 import app.redflag.container
 import app.redflag.data.Appearance
+import app.redflag.data.ProblemCatalog
+import app.redflag.data.SampleData
 import app.redflag.data.SettingsStore
 import app.redflag.databinding.ActivitySettingsBinding
 import app.redflag.databinding.ItemSettingRowBinding
 import app.redflag.service.isFrictionServiceEnabled
 import app.redflag.ui.common.AccessibilityDisclosureDialog
 import app.redflag.ui.common.formatPause
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /** Settings: appearance, "Don't ask again" duration, apps list, permissions, help. (The pause of the interruption is on the home screen.) */
 class SettingsActivity : AppCompatActivity() {
@@ -87,8 +92,37 @@ class SettingsActivity : AppCompatActivity() {
             root.setOnClickListener { toggle.toggle() }
             toggle.setOnCheckedChangeListener { _, checked -> settings.setAlwaysShowOnboarding(checked) }
         }
+        setupRow(binding.rowSampleData, R.string.settings_debug_sample_title, R.string.settings_debug_sample_subtitle) { addSampleData() }
+        binding.rowSampleData.chevron.visibility = View.GONE
         setupRow(binding.rowReset, R.string.settings_debug_reset_title, R.string.settings_debug_reset_subtitle) { confirmReset() }
         binding.rowReset.chevron.visibility = View.GONE
+    }
+
+    /**
+     * Debug: fake statistics for a few installed apps picked at random, over the last 3 months (see [SampleData]). An app that is
+     * not flagged yet gets a random issue of the catalog: otherwise it would never have been interrupted. Each tap adds more.
+     */
+    private fun addSampleData() {
+        val c = container
+        val self = packageName
+        c.applicationScope.launch {
+            val apps = withContext(Dispatchers.IO) { c.installedApps.list(hideSystemApps = false) }
+                // Not Red Flag itself, nor another copy of it installed next to it (`app.redflag.android.usage`, for example).
+                .filter { !it.packageName.startsWith(self) }
+                .shuffled()
+                .take(SAMPLE_APPS)
+            apps.forEach { app ->
+                if (c.repository.find(app.packageName) == null) {
+                    c.repository.linkProblem(app.packageName, app.label, ProblemCatalog.allRefs.random())
+                }
+            }
+            val events = SampleData.events(apps.map { it.packageName }, System.currentTimeMillis())
+            c.repository.addChoices(events)
+            withContext(Dispatchers.Main) {
+                val message = getString(R.string.settings_debug_sample_done, events.size, apps.size)
+                Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     /** Efface toutes les données de l'app (base, réglages), comme « Effacer les données » d'Android ; l'app se ferme. */
@@ -144,5 +178,10 @@ class SettingsActivity : AppCompatActivity() {
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
+    }
+
+    private companion object {
+        /** How many apps get fake statistics at each tap. */
+        const val SAMPLE_APPS = 5
     }
 }

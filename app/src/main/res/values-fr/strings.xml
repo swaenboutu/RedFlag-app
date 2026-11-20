@@ -200,6 +200,9 @@
     <string name="settings_debug_already">Le mode debug est déjà activé</string>
     <string name="settings_debug_onboarding_title">Toujours afficher l\'accueil</string>
     <string name="settings_debug_onboarding_subtitle">À chaque lancement de l\'app depuis son icône.</string>
+    <string name="settings_debug_sample_title">Ajouter des données fictives</string>
+    <string name="settings_debug_sample_subtitle">Des réponses au hasard sur les 3 derniers mois, pour quelques apps installées.</string>
+    <string name="settings_debug_sample_done">%1$d réponses ajoutées pour %2$d apps</string>
     <string name="settings_debug_reset_title">Réinitialiser l\'app</string>
     <string name="settings_debug_reset_subtitle">Efface tout, comme au premier lancement.</string>
     <string name="settings_debug_reset_confirm_title">Réinitialiser l\'app ?</string>

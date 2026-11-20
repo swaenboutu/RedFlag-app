@@ -113,6 +113,9 @@ interface ChoiceEventDao {
     @Insert
     suspend fun insert(event: ChoiceEvent)
 
+    @Insert
+    suspend fun insertAll(events: List<ChoiceEvent>)
+
     @Query("SELECT * FROM choice_events ORDER BY timestamp")
     fun observeAll(): Flow<List<ChoiceEvent>>
 

@@ -112,6 +112,12 @@
                     <View style="@style/Widget.Conscience.SettingsDivider" />
 
                     <include
+                        android:id="@+id/rowSampleData"
+                        layout="@layout/item_setting_row" />
+
+                    <View style="@style/Widget.Conscience.SettingsDivider" />
+
+                    <include
                         android:id="@+id/rowReset"
                         layout="@layout/item_setting_row" />
                 </LinearLayout>
