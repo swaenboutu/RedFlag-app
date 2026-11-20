@@ -7,10 +7,12 @@ import app.redflag.data.InstalledApp
 import app.redflag.data.Problem
 import app.redflag.util.alphabetical
 import app.redflag.util.matchesSearch
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -69,7 +71,7 @@ class MainViewModel(private val container: AppContainer) : ViewModel() {
             .let { list -> list.mapIndexed { index, item -> item.copy(last = index == list.lastIndex) } }
 
         AppsState(visible, all.count { it.problems.isNotEmpty() }, filter, loaded = true)
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppsState())
+    }.flowOn(Dispatchers.Default).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), AppsState())
 
     init {
         // Recharge la liste quand le réglage « Liste affichée » ou les apps signalées changent, ou sur demande (reload).
