@@ -96,7 +96,8 @@ object AppDrawer {
                 DebugTap.AlreadyEnabled -> activity.getString(R.string.settings_debug_already)
             }
             debugToast?.cancel()
-            debugToast = Toast.makeText(activity, message, Toast.LENGTH_SHORT).also { it.show() }
+            // Application context: this object outlives the screens, it must not keep one alive through its toast.
+            debugToast = Toast.makeText(activity.applicationContext, message, Toast.LENGTH_SHORT).also { it.show() }
         }
     }
 }
