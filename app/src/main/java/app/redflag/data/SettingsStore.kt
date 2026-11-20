@@ -135,6 +135,18 @@ class SettingsStore(context: Context, private val now: () -> Long = System::curr
         _pauseMinutes.value = value
     }
 
+    private val _dismissedUninstallSuggestions =
+        MutableStateFlow(prefs.getStringSet(KEY_DISMISSED_UNINSTALL, emptySet()).orEmpty().toSet())
+
+    /** The apps for which the user chose "Don't suggest again" on an uninstall suggestion (see [UninstallSuggestions]). */
+    val dismissedUninstallSuggestions: StateFlow<Set<String>> = _dismissedUninstallSuggestions
+
+    fun dismissUninstallSuggestion(packageName: String) {
+        val value = _dismissedUninstallSuggestions.value + packageName
+        prefs.edit { putStringSet(KEY_DISMISSED_UNINSTALL, value) }
+        _dismissedUninstallSuggestions.value = value
+    }
+
     fun setHideSystemApps(value: Boolean) {
         prefs.edit { putBoolean(KEY_HIDE_SYSTEM_APPS, value) }
         _hideSystemApps.value = value
@@ -169,5 +181,6 @@ class SettingsStore(context: Context, private val now: () -> Long = System::curr
         private const val KEY_ONBOARDING_DONE = "onboarding_done"
         private const val KEY_ALWAYS_SHOW_ONBOARDING = "always_show_onboarding"
         private const val KEY_DEBUG_MODE = "debug_mode"
+        private const val KEY_DISMISSED_UNINSTALL = "dismissed_uninstall_suggestions"
     }
 }

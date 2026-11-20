@@ -362,4 +362,8 @@
     <string name="problem_polarization_description">Recommandations qui vous enferment dans votre bulle</string>
     <string name="problem_authoritarian_funding">Financement de régimes autoritaires</string>
     <string name="problem_authoritarian_funding_description">Investisseurs ou partenaires liés à des régimes répressifs</string>
+    <string name="uninstall_suggestion_title">Cette app vous sert-elle encore ?</string>
+    <string name="uninstall_suggestion_text">Ces 3 derniers mois, vous avez renoncé à ouvrir %1$s %2$d fois sur %3$d. Si vous n’en avez plus besoin, vous pouvez la désinstaller.</string>
+    <string name="uninstall_suggestion_open">Réglages de l’app</string>
+    <string name="uninstall_suggestion_dismiss">Ne plus suggérer</string>
 </resources>
