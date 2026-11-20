@@ -161,7 +161,7 @@
     <string name="stats_chart_title_month">Opening attempts per month</string>
     <string name="stats_chart_title_year">Opening attempts per year</string>
     <string name="stats_chart_empty">No attempts in this period</string>
-    <string name="stats_chart_description">%1$s: %2$d attempts, %3$d overridden, %4$d snoozed.</string>
+    <string name="stats_chart_description">%1$s. Attempts: %2$d. Opened: %3$d. Postponed: %4$d.</string>
     <string name="settings_title">Settings</string>
     <string name="settings_section_display">Display</string>
     <string name="settings_appearance_title">Appearance</string>

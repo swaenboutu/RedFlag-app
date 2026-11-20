@@ -46,7 +46,7 @@ fun ItemManagerThemeBinding.bindThemeCard(
 fun problemsSubtitle(context: Context, problemCount: Int): String =
     context.resources.getQuantityString(R.plurals.theme_problems, problemCount, problemCount)
 
-/** « 4 problématiques, 2 cochées » ; le nombre de cochées n'est ajouté que s'il n'est pas nul. */
+/** « 4 enjeux, 2 cochés » ; le nombre de cochés n'est ajouté que s'il n'est pas nul. */
 fun checkedSubtitle(context: Context, problemCount: Int, checkedCount: Int): String {
     val problems = problemsSubtitle(context, problemCount)
     if (checkedCount == 0) return problems

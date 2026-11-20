@@ -172,7 +172,7 @@
     <string name="stats_chart_title_month">Tentatives d’ouverture par mois</string>
     <string name="stats_chart_title_year">Tentatives d’ouverture par an</string>
     <string name="stats_chart_empty">Aucune tentative sur cette période</string>
-    <string name="stats_chart_description">%1$s : %2$d tentatives, %3$d outrepassées, %4$d mises en pause.</string>
+    <string name="stats_chart_description">%1$s. Tentatives : %2$d. Ouvertes : %3$d. Reportées : %4$d.</string>
     <string name="settings_title">Réglages</string>
     <string name="settings_section_display">Affichage</string>
     <string name="settings_appearance_title">Apparence</string>
@@ -261,9 +261,9 @@
         <item quantity="many">%1$d choisis sur %2$d</item>
     </plurals>
     <plurals name="theme_checked">
-        <item quantity="one">%d cochée</item>
-        <item quantity="other">%d cochées</item>
-        <item quantity="many">%d cochées</item>
+        <item quantity="one">%d coché</item>
+        <item quantity="other">%d cochés</item>
+        <item quantity="many">%d cochés</item>
     </plurals>
     <plurals name="theme_apps_flagged">
         <item quantity="one">%d application signalée</item>
