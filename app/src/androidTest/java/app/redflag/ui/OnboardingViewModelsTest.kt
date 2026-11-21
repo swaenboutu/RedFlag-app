@@ -66,7 +66,7 @@ class OnboardingViewModelsTest {
         assumeUserApps(env.context, 1)
         env.repository.setFavorite(refs[0], true)
         env.repository.setFavorite(refs[1], true)
-        val vm = env.viewModel { OnboardingAppsViewModel(env.container, env.context) }
+        val vm = env.viewModel { OnboardingAppsViewModel(env.container, env.context, suggestions = { emptySet() }) }
 
         assertEquals(2, vm.stepCount.await { it != null })
         val rows = vm.rows.await { it.any { row -> row is AppsRow.Choice } }
@@ -86,6 +86,41 @@ class OnboardingViewModelsTest {
         val saved = env.repository.find(app.packageName)
         assertEquals(listOf(refs[0]), saved?.problems?.map { p -> p.toRef() })
         assertFalse("il reste une étape", finished)
+    }
+
+    @Test
+    fun suggestedAppsAreTickedAndListedFirstUntilTheIssueHasApps() = runBlocking {
+        assumeUserApps(env.context, 2)
+        env.repository.setFavorite(refs[0], true)
+        val installed = env.container.installedAppsFlow().first()
+        // The last one alphabetically, so that coming first can only be the suggestion's doing.
+        val suggested = installed.maxBy { it.label.lowercase() }.packageName
+        val vm = env.viewModel { OnboardingAppsViewModel(env.container, env.context, suggestions = { setOf(suggested, "absent.app") }) }
+
+        val choices = vm.rows.await { it.any { row -> row is AppsRow.Choice } }.filterIsInstance<AppsRow.Choice>()
+        assertEquals("listed first", suggested, choices.first().app.packageName)
+        assertEquals("only the installed suggestion is ticked", listOf(suggested), choices.filter { it.checked }.map { it.app.packageName })
+        assertTrue("« Suivant » saves the suggestion", vm.canSave.await { it })
+
+        var finished = false
+        vm.next { finished = true }
+        withTimeoutPoll { finished }
+        assertEquals(listOf(refs[0]), env.repository.find(suggested)?.problems?.map { p -> p.toRef() })
+    }
+
+    @Test
+    fun anAppAlreadyLinkedReplacesTheSuggestions() = runBlocking {
+        assumeUserApps(env.context, 2)
+        env.repository.setFavorite(refs[0], true)
+        val installed = env.container.installedAppsFlow().first()
+        val linked = installed[0]
+        val suggested = installed[1].packageName
+        env.repository.linkProblem(linked.packageName, linked.label, refs[0])
+        val vm = env.viewModel { OnboardingAppsViewModel(env.container, env.context, suggestions = { setOf(suggested) }) }
+
+        val choices = vm.rows.await { it.any { row -> row is AppsRow.Choice } }.filterIsInstance<AppsRow.Choice>()
+        assertEquals("still listed first", suggested, choices.first().app.packageName)
+        assertEquals("the saved choice wins", listOf(linked.packageName), choices.filter { it.checked }.map { it.app.packageName })
     }
 
     @Test

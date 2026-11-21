@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.redflag.AppContainer
 import app.redflag.R
+import app.redflag.data.AppPreselection
 import app.redflag.data.InstalledApp
 import app.redflag.data.ProblemCatalog
 import app.redflag.data.ProblemRef
@@ -53,8 +54,15 @@ sealed interface AppsRow {
 /**
  * Accueil, étape 3 : pour chaque problématique choisie à l'étape 2, cocher les applications concernées.
  * Le choix n'est enregistré qu'avec « Suivant » ; « Skip » passe à la suite sans rien changer.
+ *
+ * Tant qu'aucune app n'est liée à la problématique, les apps installées que [suggestions] y rattache (par défaut
+ * [AppPreselection]) sont cochées d'avance. Elles sont toujours en tête de liste, cochées ou non.
  */
-class OnboardingAppsViewModel(private val container: AppContainer, private val context: Context) : ViewModel() {
+class OnboardingAppsViewModel(
+    private val container: AppContainer,
+    private val context: Context,
+    private val suggestions: (ProblemRef) -> Set<String> = AppPreselection::suggestedFor,
+) : ViewModel() {
     private val repository = container.repository
 
     private val steps = MutableStateFlow<List<AppsStep>?>(null)
@@ -63,6 +71,9 @@ class OnboardingAppsViewModel(private val container: AppContainer, private val c
     private val selected = MutableStateFlow<Set<String>>(emptySet())
     private val _query = MutableStateFlow("")
     private val chosenTotal = MutableStateFlow(0)
+
+    /** Every listed app, alphabetically; [apps] shows them with the current issue's suggestions first. */
+    private var installed: List<InstalledApp> = emptyList()
 
     /** Texte de recherche ; remis à zéro à chaque changement d'étape. */
     val query: StateFlow<String> = _query
@@ -111,6 +122,7 @@ class OnboardingAppsViewModel(private val container: AppContainer, private val c
         viewModelScope.launch {
             val favorites = repository.favorites.first()
             val overrides = repository.labelOverrides.first()
+            installed = container.installedAppsFlow().first().sortedWith(compareBy(alphabetical()) { it.label })
             val chosen = ProblemCatalog.allRefs.filter { it in favorites }
             chosenTotal.value = chosen.size
             // However many issues were chosen, the tour handles the first few: the others wait in the Issues tab.
@@ -121,19 +133,25 @@ class OnboardingAppsViewModel(private val container: AppContainer, private val c
                 AppsStep(i + 1, handled.size, ref, ref.displayLabel(context, overrides[ref.id]), category.title, bodyOf(ref.displayDescription(context), instruction))
             }
             // La sélection de départ est chargée avant d'afficher les apps : un clic ne peut pas être écrasé par ce chargement.
-            steps.value?.firstOrNull()?.let { loadSelection(it.ref) }
-            apps.value = container.installedAppsFlow().first().sortedWith(compareBy(alphabetical()) { it.label })
+            val first = steps.value?.firstOrNull()
+            if (first != null) loadSelection(first.ref) else apps.value = installed
         }
     }
 
-    /** Reprend ce qui est déjà associé à la problématique, pour ne rien défaire en revenant sur une étape. */
+    /**
+     * Reprend ce qui est déjà associé à la problématique, pour ne rien défaire en revenant sur une étape. Si rien ne l'est encore,
+     * les apps installées suggérées pour elle sont cochées d'avance ; elles passent en tête de liste dans tous les cas.
+     */
     private suspend fun loadSelection(ref: ProblemRef) {
         val linked = repository.monitoredApps.first()
             .filter { app -> app.problems.any { it.matches(ref) } }
             .map { it.app.packageName }
             .toSet()
+        val suggested = suggestions(ref).intersect(installed.map { it.packageName }.toSet())
         initiallyLinked.value = linked
-        selected.value = linked
+        selected.value = linked.ifEmpty { suggested }
+        // sortedBy is stable: the alphabetical order holds inside both groups.
+        apps.value = installed.sortedBy { it.packageName !in suggested }
     }
 
     private fun bodyOf(description: String?, instruction: String): String {
