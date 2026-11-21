@@ -83,8 +83,26 @@
         <entry id="who_decides">
             <question>Qui décide quelles applications posent problème ?</question>
             <answer>
-                C’est vous. L’application ne rend aucun verdict et ne tient aucune liste d’applications « mauvaises » : vous
-                choisissez, parmi une liste d’enjeux ou les vôtres, ceux qui comptent pour vous.
+                C’est vous. L’application ne rend aucun verdict : vous choisissez, parmi une liste d’enjeux ou les vôtres, ceux qui
+                comptent pour vous, et les applications que vous y associez.
+
+                Pendant l’accueil, certaines applications sont cochées d’avance pour vous aider (voir la question suivante), mais
+                rien n’est signalé sans votre accord.
+            </answer>
+        </entry>
+        <entry id="preselection">
+            <question>Pourquoi des applications sont-elles déjà cochées pendant l’accueil ?</question>
+            <answer>
+                Pour vous faire gagner du temps. Red Flag contient une liste d’applications parmi les plus téléchargées du Play
+                Store, chacune rattachée aux enjeux qui lui sont le plus souvent reprochés dans la presse, les enquêtes ou les
+                décisions de justice (collecte de données, conception addictive, conditions de travail des livreurs…).
+
+                Pour chaque enjeu que vous avez choisi, les applications de cette liste installées sur votre téléphone sont
+                cochées d’avance et placées en tête. Cette liste reste sur votre téléphone, comme tout le reste.
+
+                Ces suggestions sont données à titre indicatif : elles ne sont ni complètes ni un jugement définitif. Vous pouvez
+                décocher une application avant de continuer, ou la retirer plus tard depuis l’onglet Applications ou l’onglet
+                Enjeux, à tout moment.
             </answer>
         </entry>
         <entry id="free_software">

@@ -87,8 +87,25 @@
         <entry id="who_decides">
             <question>Who decides which apps are problematic?</question>
             <answer>
-                You do. The app gives no verdict and keeps no list of “bad” apps: you choose, among a list of issues or your own,
-                the ones that matter to you.
+                You do. The app gives no verdict: you choose, among a list of issues or your own, the ones that matter to you, and
+                the apps you link to them.
+
+                During the welcome tour, some apps are ticked in advance to help you (see the next question), but nothing is flagged
+                without your consent.
+            </answer>
+        </entry>
+        <entry id="preselection">
+            <question>Why are some apps already ticked during the welcome tour?</question>
+            <answer>
+                To save you time. Red Flag holds a list of some of the most downloaded apps on the Play Store, each linked to the
+                issues most often raised about it in the press, investigations or court rulings (data collection, addictive design,
+                working conditions of delivery riders…).
+
+                For each issue you chose, the apps from this list that are installed on your phone are ticked in advance and listed
+                first. The list stays on your phone, like everything else.
+
+                These suggestions are only a guide: they are neither complete nor a final judgement. You can untick an app before
+                moving on, or remove it later from the Apps tab or the Issues tab, at any time.
             </answer>
         </entry>
         <entry id="free_software">
